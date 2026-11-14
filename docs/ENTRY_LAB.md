@@ -125,3 +125,31 @@ invoca. Falta construir el contexto retenido y demostrar las traducciones,
 permisos y barreras requeridos por XNU. Los tamaños de arena y segmentos son
 geometría del ensayo y no miden memoria residente de AtlanticOS.
 [Manifiesto de las pruebas](../evidence/image-materialize-20261113/manifest.json).
+
+## Traducciones EL1 y conservación de ATLC
+
+El modo translation coloca el Mach-O de prueba con cabecera RO y código RX.
+Instala ATLC, SecureDT y boot_args, y activa tablas EL1 de 4 KiB y direcciones
+virtuales de 39 bits. El código original verifica los registros TTBR, TCR y
+SCTLR activos y recorre las páginas de cada segmento. Lee los datos y su
+relleno desde las direcciones altas, escribe y restaura una palabra de datos,
+y ejecuta una rutina aislada del fixture.
+
+La escritura intencional al código y a la cabecera falla con ESR 0x9600004f.
+La ejecución intencional de una página RW/NX falla con ESR 0x8600000f. El
+vector reconoce únicamente las direcciones y clases de fallo esperadas. Al
+cambiar ambas raíces, las lecturas por las direcciones altas continúan y los
+alias bajos de la arena dejan de traducir. La prueba vuelve a localizar ATLC
+desde una copia de los argumentos y comprueba el árbol y el trailer completos.
+
+~~~sh
+python3 tools/build_entry.py --probe translation --output work/entry-qemu-translation
+python3 tools/emulate_entry.py --build work/entry-qemu-translation
+~~~
+
+Las doce ejecuciones de los seis modos pasan desde EL1 y EL2. El punto de
+entrada del Mach-O permanece sin invocar. Las tablas de este ensayo son del
+BSP QEMU y comprueban el contrato de datos y permisos del laboratorio. El
+arranque real todavía debe demostrar cómo XNU instala y sustituye sus propias
+tablas, incluido el alcance y el costo de las asignaciones iniciales.
+[Manifiesto](../evidence/qemu-retained-translation-20261113/manifest.json).

@@ -14,7 +14,7 @@ los cinco puntos de crédito adicional. [Registro de la revisión anterior](../e
 |---|---:|---:|---|
 | Infraestructura inicial | 10 | 10 → 10 | Clang reproducible desde fuentes, MIG oficial y CI. C y C++ tienen pruebas propias en el compilador |
 | Integración nativa y enlace | 25 | 10 → 13 | Metadata C++ del allocator verificada y runtime Blocks nativo de XNU, catálogo ARM, regiones compartidas con commpage, metadata nativa de versión y consola nativa con salida a RAM. 168 unidades base y 26 RPC en enlace estricto, con 346 símbolos pendientes y cero duplicados. Sigue pendiente el Mach-O |
-| Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Se verificó la colocación del fixture Mach-O. Faltan contexto retenido, propiedad de RAM y traducciones para XNU |
+| Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Colocación de un Mach-O y conservación del contexto ATLC tras cambiar ambas raíces en QEMU. Faltan ownership y tablas del BSP para XNU |
 | Bootstrap Mach operativo | 15 | 0 → 0 | Pendiente ejecutar XNU con VM/allocator y un contexto Mach instrumentado |
 | BSP e instrumentación física G20 | 20 | 0 → 0 | Los dos overlays del mirror coinciden en GIC, timer, CPU y PSCI. Falta ejecutar e instrumentar el BSP original en el T700 |
 | Carga temporal y recuperación independiente | 10 | 3 → 3 | Identidad y bootloader desbloqueado observados. La carga temporal y la recuperación independiente tras un fallo del payload siguen pendientes. El U-Boot RETBR estudiado deriva `boot` a la partición. Falta acreditar el comportamiento del amxmx de la unidad |
@@ -34,6 +34,7 @@ placas conservan su alcance posterior.
 [Evidencia de compilación y enlace](../evidence/xnu-ram-console-20261113/manifest.json) ·
 [Timer e IRQ en QEMU](../evidence/qemu-timer-irq-20261113/manifest.json) ·
 [Colocación del fixture](../evidence/image-materialize-20261113/manifest.json) ·
+[Contexto retenido y traducciones en QEMU](../evidence/qemu-retained-translation-20261113/manifest.json) ·
 [Mirror RETBR y pruebas físicas pendientes](STOCK_FIRMWARE_ANALYSIS.md).
 
 El próximo hito sustantivo es un **ejecutable estático XNU real enlazado**, con

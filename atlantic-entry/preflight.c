@@ -2,6 +2,9 @@
 #include <atlantic/entry.h>
 #include <atlantic/fdt.h>
 #include <atlantic/boot_tree.h>
+#if ATL_TEST_TRANSLATION
+#include "translation_probe.h"
+#endif
 #ifndef ATL_BUILD_ID
 #define ATL_BUILD_ID "UNIDENTIFIED"
 #endif
@@ -126,6 +129,9 @@ void atl_entry_main(const struct AtlanticEntryCapture *c) {
 #if ATL_TEST_TIMER_IRQ
     extern int atl_irq_probe(const struct AtlanticEntryCapture *);
     if (atl_irq_probe(c)) finish(1);
+#endif
+#if ATL_TEST_TRANSLATION
+    if (atl_translation_probe(&boot_inventory, c, xnu_boot_tree, (uint32_t)tree_bytes)) finish(1);
 #endif
     line("PASS:ENTRY_CAPTURE_DTB_TIMER\nNO_XNU_BOOT_CLAIM\n");
     finish(0);

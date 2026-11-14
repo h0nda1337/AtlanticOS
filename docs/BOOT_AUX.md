@@ -31,9 +31,9 @@ perfil ahora ocupa 560 bytes y contiene un memory-map sin cargas opcionales.
 El productor de boot_args coincide en los 1 152 bytes con el inicializador
 nativo, y las cinco pruebas QEMU existentes pasan desde EL1 y EL2.
 
-Queda por unir este registro a la validación de ownership y traducción del
-Platform Expert, y medir su conservación cuando la imagen real entre en
-arm_init y arm_vm_init. Los campos propuestos para framebuffer, fallback y
+La prueba de traducciones de QEMU recupera el trailer después del reemplazo
+de las tablas. Queda por unir esta validación al Platform Expert y verificar
+su conservación cuando la imagen real entre en arm_init y arm_vm_init. Los campos propuestos para framebuffer, fallback y
 handoff pertenecen al contexto completo de firmware. El trailer de arranque
 v1 contiene únicamente los datos de la tabla.
 [Manifiesto de evidencia](../evidence/boot-aux-and-native-tree-20261113/manifest.json).

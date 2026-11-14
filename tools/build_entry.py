@@ -23,13 +23,27 @@ SOURCES=['atlantic-entry/entry.S','atlantic-entry/preflight.c','atlantic-entry/l
 TIMER_IRQ_SOURCES = ['platforms/qemu-virt/timer_irq_probe.c', 'platforms/qemu-virt/timer_irq_vectors.S']
 MATERIALIZE_SOURCES = ['atlantic-core/image_materialize.c', 'include/atlantic/image_materialize.h',
                        'platforms/qemu-virt/materialize_probe.c']
+TRANSLATION_FIXTURE = 'evidence/native-split-and-context-locator-20261113/native-split.macho'
+TRANSLATION_FIXTURE_SHA256 = '06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55'
+TRANSLATION_LINKER_SCRIPT = 'platforms/qemu-virt/translation.ld'
+TRANSLATION_UNITS = [
+    'atlantic-core/macho.c', 'atlantic-core/boot_prepare.c', 'atlantic-core/image_materialize.c',
+    'atlantic-core/boot_locator.c', 'atlantic-core/boot_aux.c', 'platforms/qemu-virt/translation_probe.c',
+    'platforms/qemu-virt/translation_vectors.S', 'tests/entry/translation_image.S',
+]
+TRANSLATION_SOURCES = [
+    *TRANSLATION_UNITS, 'include/atlantic/image_materialize.h', 'include/atlantic/boot_locator.h',
+    'include/atlantic/boot_aux.h', 'platforms/qemu-virt/translation_probe.h',
+    TRANSLATION_LINKER_SCRIPT, TRANSLATION_FIXTURE,
+]
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--board',choices=['qemu-virt'],default='qemu-virt')
     parser.add_argument('--output',type=Path,default=ROOT/'work/entry-qemu')
-    parser.add_argument('--probe',choices=['normal','el1-trap','boot-args','timer-irq','materialize'],default='normal')
+    parser.add_argument('--probe',choices=['normal','el1-trap','boot-args','timer-irq',
+                                           'materialize','translation'],default='normal')
     args=parser.parse_args()
     cc,ld,objcopy=(shutil.which(x) for x in ['clang','ld.lld','llvm-objcopy'])
     if not all((cc,ld,objcopy)):
@@ -39,9 +53,15 @@ def main():
         raise SystemExit('Build output must remain under work/')
     out.mkdir(parents=True,exist_ok=True)
     sources = SOURCES + (TIMER_IRQ_SOURCES if args.probe == 'timer-irq' else [])
+    link_script = 'atlantic-entry/link.ld'
     if args.probe == 'materialize':
         sources += MATERIALIZE_SOURCES
+    if args.probe == 'translation':
+        sources = list(dict.fromkeys(sources + TRANSLATION_SOURCES))
+        link_script = TRANSLATION_LINKER_SCRIPT
     hashes={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources}
+    if args.probe == 'translation' and hashes[TRANSLATION_FIXTURE] != TRANSLATION_FIXTURE_SHA256:
+        raise SystemExit('Translation fixture differs from the pinned split Mach-O')
     build_id=hashlib.sha256(json.dumps({'sources':hashes,'probe':args.probe},sort_keys=True,separators=(',',':')).encode()).hexdigest()
     flags=['--target=aarch64-none-elf','-mcpu=cortex-a57','-mgeneral-regs-only','-mstrict-align',
            '-std=c11','-ffreestanding','-fno-builtin','-fno-stack-protector',
@@ -50,7 +70,10 @@ def main():
            '-ffile-prefix-map='+str(ROOT)+'=.', '-DATL_TEST_EL1_TRAP='+str(int(args.probe=='el1-trap')),
            '-DATL_TEST_BOOT_ARGS='+str(int(args.probe=='boot-args')),
            '-DATL_TEST_TIMER_IRQ='+str(int(args.probe=='timer-irq')),
-           '-DATL_TEST_MATERIALIZE='+str(int(args.probe=='materialize'))]
+           '-DATL_TEST_MATERIALIZE='+str(int(args.probe=='materialize')),
+           '-DATL_TEST_TRANSLATION='+str(int(args.probe=='translation'))]
+    if args.probe == 'translation':
+        flags += ['-Iplatforms/qemu-virt']
     commands=[]
     logs=[]
     def run(command):
@@ -71,12 +94,14 @@ def main():
                           'platforms/qemu-virt/materialize_probe.c','tests/entry/boot_image.S']
     if args.probe=='timer-irq':
         compile_sources += TIMER_IRQ_SOURCES
+    if args.probe == 'translation':
+        compile_sources += TRANSLATION_UNITS
     for source in compile_sources:
         obj=out/(Path(source).stem+'.o')
         run([cc,*flags,'-c',source,'-o',str(obj)])
         objects.append(str(obj))
     elf,binary=out/'entry.elf',out/'entry.bin'
-    run([ld,'--defsym=ATL_LINK_BASE=0x40080000','-T','atlantic-entry/link.ld',
+    run([ld,'--defsym=ATL_LINK_BASE=0x40080000','-T',link_script,
          '-Map='+str(out/'entry.map'),'-o',str(elf),*objects])
     run([objcopy,'-O','binary',str(elf),str(binary)])
     data=binary.read_bytes()
@@ -85,6 +110,10 @@ def main():
     memory_bytes=struct.unpack_from('<Q',data,16)[0]
     if not len(data)<=memory_bytes<2*1024*1024:
         raise SystemExit('Invalid image file/memory bounds')
+    if args.probe == 'translation':
+        embedded = (ROOT / TRANSLATION_FIXTURE).read_bytes() + bytes.fromhex(TRANSLATION_FIXTURE_SHA256)
+        if data.count(embedded) != 1:
+            raise SystemExit('Translation fixture and embedded ATLC digest do not match')
     raw_elf=elf.read_bytes()
     if raw_elf[:6]!=b'\x7fELF\x02\x01' or struct.unpack_from('<H',raw_elf,18)[0]!=183:
         raise SystemExit('Invalid AArch64 ELF')

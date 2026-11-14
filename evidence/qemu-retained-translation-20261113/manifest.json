@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "label": "EMULATED",
+  "scope": "QEMU_EL1_RETAINED_BOOT_DATA_AFTER_TTBR_SWITCH_AND_REAL_PERMISSION_FAULTS",
+  "artifacts": [
+    {
+      "path": "boot-args-regression.json",
+      "sha256": "460bff0ef9eee47784566025d36e6addff831795bc89e6589e5b0c79f1963d47"
+    },
+    {
+      "path": "build.json",
+      "sha256": "4d53f90c153097f094e0dae01e674e20a6c6c7f3667d066a13282ac5156897f7"
+    },
+    {
+      "path": "el1-trap-regression.json",
+      "sha256": "9ba16c456b2c32736b88c6ffa60e8c449dc45f25b186dbddcb37f68979f1e422"
+    },
+    {
+      "path": "emulation.json",
+      "sha256": "1bda715185c55c9bbac96d3f88cdacab33129b5fca38690f4547372fbef55b36"
+    },
+    {
+      "path": "entry.map",
+      "sha256": "45a802625bd56c0d05ce7ad56e6535ca9f7f0943a9bdd1fb075fd05ba78a596c"
+    },
+    {
+      "path": "materialize-regression.json",
+      "sha256": "16b4fc76d91581265959b1029969be1522945d55b10f37c8057c439ff77bb7e5"
+    },
+    {
+      "path": "normal-regression.json",
+      "sha256": "15a039dd859f2aa9800ece5e7ed78eb8e40a49e3b95b99905d9f161321ad5043"
+    },
+    {
+      "path": "qemu-el1.log",
+      "sha256": "5869c39d49007cc66f46d10dcf187422a87669bcfaab06e32e8bd69dcc64544f"
+    },
+    {
+      "path": "qemu-el2.log",
+      "sha256": "efa8a77e64d03938f2f53123ed8ceecaa9159c27a159f72875361cdd0d677d31"
+    },
+    {
+      "path": "timer-irq-regression.json",
+      "sha256": "18014c189895f734a7a133a937f7499f9f382b098541d7cfdd5bc4ff7f12cc2c"
+    }
+  ]
+}

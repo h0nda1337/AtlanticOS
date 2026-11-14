@@ -13,6 +13,52 @@ import subprocess
 
 ROOT=Path(__file__).resolve().parents[1]
 
+TRANSLATION_VALUES = {
+    'RX_STORE_ESR': 0x9600004f,
+    'HEADER_STORE_ESR': 0x9600004f,
+    'RW_DATA_EXEC_ESR': 0x8600000f,
+    'TRANSLATION_IMAGE_PA': 0x42004000,
+    'TRANSLATION_ENTRY_VA': 0xfffffff007014000,
+    'TRANSLATION_TRAILER_VA': 0xfffffff00701ff00,
+    'TRANSLATION_TREE_VA': 0xfffffff007020000,
+    'TRANSLATION_BOOT_ARGS_VA': 0xfffffff007024000,
+}
+TRANSLATION_MARKERS = (
+    'PASS:TRANSLATION_ATLC_FIRST_MAP',
+    'PASS:TRANSLATION_HIGH_RX_EXEC_RO_STORE_FAULT_RW_NX_EXEC_FAULT',
+    'PASS:TRANSLATION_ATLC_REPLACEMENT_MAP',
+    'PASS:TRANSLATION_REPLACED_ROOTS_RETAINED_HIGH_BYTES_LOW_ALIAS_REMOVED',
+    'FIXTURE_ENTRY_NOT_EXECUTED',
+)
+
+
+def check_translation(log, el):
+    for key, expected in TRANSLATION_VALUES.items():
+        values = re.findall(r'^' + key + r'=0x([0-9A-F]{16})$', log, re.M)
+        if len(values) != 1 or int(values[0], 16) != expected:
+            raise SystemExit(f'EL{el} translation evidence differs for {key}')
+    lines = log.splitlines()
+    if any(lines.count(marker) != 1 for marker in TRANSLATION_MARKERS):
+        raise SystemExit(f'EL{el} translation evidence missing')
+    positions = [lines.index(marker) for marker in TRANSLATION_MARKERS]
+    if positions != sorted(positions):
+        raise SystemExit(f'EL{el} translation stage order differs')
+    return {
+        'fixture_image_pa': TRANSLATION_VALUES['TRANSLATION_IMAGE_PA'],
+        'fixture_entry_va': TRANSLATION_VALUES['TRANSLATION_ENTRY_VA'],
+        'retained_trailer_va': TRANSLATION_VALUES['TRANSLATION_TRAILER_VA'],
+        'retained_tree_va': TRANSLATION_VALUES['TRANSLATION_TREE_VA'],
+        'retained_boot_args_va': TRANSLATION_VALUES['TRANSLATION_BOOT_ARGS_VA'],
+        'rx_store_esr': TRANSLATION_VALUES['RX_STORE_ESR'],
+        'header_store_esr': TRANSLATION_VALUES['HEADER_STORE_ESR'],
+        'rw_data_execute_esr': TRANSLATION_VALUES['RW_DATA_EXEC_ESR'],
+        'active_roots_replaced': True,
+        'managed_identity_aliases_removed': True,
+        'atlc_decoded_both_maps': True,
+        'fixture_helper_executed': True,
+        'fixture_entry_executed': False,
+    }
+
 
 def main():
     p=argparse.ArgumentParser(description=__doc__)
@@ -21,6 +67,7 @@ def main():
     folder=args.build.resolve()
     binary=folder/'entry.bin'
     meta=json.loads((folder/'build.json').read_text())
+    probe=meta['probe']
     if hashlib.sha256(binary.read_bytes()).hexdigest()!=meta['image_sha256']:
         raise SystemExit('Image differs from build report')
     for rel,expected in meta['sources'].items():
@@ -32,8 +79,10 @@ def main():
     records=[]
     for el,virtualization in [(1,'off'),(2,'on')]:
         machine='virt,virtualization='+virtualization
-        if meta.get('probe')=='timer-irq':
+        if probe=='timer-irq':
             machine += ',secure=off,gic-version=3'
+        if probe=='translation':
+            machine += ',secure=off'
         command=[qemu,'-machine',machine,'-cpu','cortex-a57',
                  '-m','128M','-smp','1','-nographic','-monitor','none','-serial','stdio',
                  '-nic','none','-no-reboot','-semihosting-config','enable=on,target=native',
@@ -58,6 +107,7 @@ def main():
         candidate=None
         timer_irq=None
         materialized=False
+        translation=None
         if meta.get('probe')=='timer-irq':
             expected_irq = {'GIC_VERSION':[3], 'EOI_MODE':[0], 'SHOT':[1,2],
                 'INTID':[27,27], 'ACK_TOTAL':[1,2], 'EOI_TOTAL':[1,2],
@@ -90,6 +140,11 @@ def main():
                 'CANDIDATE_BOOTSTRAP_BYTES=0x0000000001E00000' not in log):
                 raise SystemExit('Candidate record/block reach differs from independent expected bytes')
             candidate=hashlib.sha256(expected).hexdigest()
+        if probe=='translation':
+            if log.splitlines().count('BUILD='+meta['build_id']) != 1:
+                raise SystemExit(f'EL{el} translation build identity differs')
+            translation=check_translation(log, el)
+            materialized=True
         result_ok = (esr and int(esr[1],16)==0xf2000a71 and 'TEST:EL1_BRK_EXPECTED' in log
                      and 'ATLANTIC_ENTRY_EXCEPTION' in log) if is_trap else 'PASS:ENTRY_CAPTURE_DTB_TIMER' in log
         if (r.returncode!=expected_exit or not observed or int(observed[1],16)!=el or not execution or int(execution[1],16)!=1
@@ -101,6 +156,7 @@ def main():
                         'candidate_boot_args_sha256':candidate,
                         'virtual_timer_interrupts':timer_irq,
                         'materialized_fixture_readback':materialized,
+                        'translation':translation,
                         'log_sha256':hashlib.sha256((folder/f'qemu-el{el}.log').read_bytes()).hexdigest(),
                         'command':[Path(command[0]).name,*[s.replace(str(ROOT),'<ROOT>') for s in command[1:]]]})
     report={'schema_version':1,'label':'EMULATED','scope':'ORIGINAL_ARM64_ENTRY_ONLY_NOT_XNU_NOT_G20',
