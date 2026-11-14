@@ -25,7 +25,8 @@ int atl_boot_inventory(const struct AtlanticFdtView *view, struct AtlanticBootIn
  * The supplied range must be wholly contained in declared RAM. */
 int atl_boot_exclude(struct AtlanticBootInventory *inventory, uint64_t start, uint64_t bytes);
 /* Produce only the native XNU bootstrap tree for the observed primary CPU.
- * It contains /chosen DRAM metadata, /defaults, and /cpus/cpu. It does not
+ * It contains /chosen DRAM metadata, an empty /chosen/memory-map, /defaults,
+ * and /cpus/cpu. It does not
  * construct boot_args, peripheral bindings, page tables, or an allocator map.
  * All original FDT declarations/reservations remain in the separate inventory.
  * Output must be 8-byte aligned and distinct from inputs and used. On failure

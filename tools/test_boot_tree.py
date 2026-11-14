@@ -7,6 +7,7 @@ import hashlib
 import json
 from pathlib import Path
 import platform
+import re
 import shutil
 import subprocess
 
@@ -44,7 +45,10 @@ def main():
     run('host-build',[cc,*flags,str(ROOT/'tests/c/test_boot_tree.c'),str(ROOT/'atlantic-core/fdt.c'),
                       str(ROOT/'atlantic-core/boot_tree.c'),'-o',str(exe)])
     result=run('host-tests',[str(exe)])
-    if 'PASS: boot inventory' not in result:raise RuntimeError('Missing actual test completion')
+    match=re.fullmatch(r'PASS: boot inventory, reservation union, native tree wire (\d+) bytes, '
+                       r'empty /chosen/memory-map, all (\d+) buffer truncations, (\d+) FDT mutations\n',result)
+    if not match:raise RuntimeError('Missing actual test completion')
+    tree_bytes,truncations,mutations=map(int,match.groups())
     run('file-harness-build',[cc,*flags,'-D_POSIX_C_SOURCE=200809L',str(ROOT/'tools/boot_tree_check.c'),
          str(ROOT/'atlantic-core/fdt.c'),str(ROOT/'atlantic-core/boot_tree.c'),'-o',str(out/'inspect-dtb')])
     samples=[]
@@ -88,11 +92,13 @@ def main():
     report={'schema_version':1,'label':'HOST_TESTED',
         'scope':'ORIGINAL_BOOT_TREE_HOST_EXECUTION_AND_ARM64_OBJECTS_ONLY_NOT_XNU_OR_PHONE_EXECUTION',
         'inputs':{p:digest(ROOT/p) for p in SOURCES},'commands':commands,'sanitizers':args.sanitize,
-        'host_exit_code':0,'buffer_truncations':504,'fdt_mutations':5000,'native_xnu_abi':abi,
+        'host_exit_code':0,'native_tree_bytes':tree_bytes,'chosen_memory_map_empty':True,
+        'buffer_truncations':truncations,'fdt_mutations':mutations,'native_xnu_abi':abi,
         'compiler_version':subprocess.check_output([cc,'--version'],text=True).splitlines()[0],
         'objects':{p.name:digest(p) for p in sorted(out.glob('*.o'))},'declaration_probes':samples,
         'kernel_linked':False,'xnu_executed':False,'phone_accessed':False}
     (out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
-    print(json.dumps({'host_passed':True,'sanitizers':args.sanitize,'native_abi_checked':abi is not None}))
+    print(json.dumps({'host_passed':True,'sanitizers':args.sanitize,'native_abi_checked':abi is not None,
+                      'native_tree_bytes':tree_bytes,'chosen_memory_map_empty':True}))
 
 if __name__=='__main__':main()

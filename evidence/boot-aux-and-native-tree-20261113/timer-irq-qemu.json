@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "label": "EMULATED",
+  "scope": "ORIGINAL_ARM64_ENTRY_ONLY_NOT_XNU_NOT_G20",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)",
+  "image_sha256": "af77e32966e2c6f17e7981a60803ae06f790d0188163f23d5803ebbf93adf55a",
+  "build_id": "1ed1648d6422180e9f49d63a02d8e6be6924d68591574b1c565252ca9b826a2f",
+  "runs": [
+    {
+      "expected_el": 1,
+      "observed_el": 1,
+      "execution_el": 1,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "probe": "timer-irq",
+      "boot_data_checked": true,
+      "native_tree_bytes": 560,
+      "candidate_boot_args_sha256": null,
+      "virtual_timer_interrupts": {
+        "GIC_VERSION": [
+          3
+        ],
+        "EOI_MODE": [
+          0
+        ],
+        "SHOT": [
+          1,
+          2
+        ],
+        "INTID": [
+          27,
+          27
+        ],
+        "ACK_TOTAL": [
+          1,
+          2
+        ],
+        "EOI_TOTAL": [
+          1,
+          2
+        ],
+        "TIMER_CTL_IRQ": [
+          5,
+          5
+        ],
+        "TIMER_CTL_DISARMED": [
+          3,
+          3
+        ],
+        "TIMER_CTL_MASKED_EXPIRED": [
+          7,
+          7
+        ],
+        "GIC_ACTIVE_BEFORE": [
+          134217728,
+          134217728
+        ],
+        "GIC_ACTIVE_AFTER": [
+          0,
+          0
+        ],
+        "GIC_PENDING_AFTER": [
+          0,
+          0
+        ]
+      },
+      "materialized_fixture_readback": false,
+      "log_sha256": "dbbebbfe1c03416c07bbee75043fa11fb55410d1cf1cd09fdfed0d95786105b8",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt,virtualization=off,secure=off,gic-version=3",
+        "-cpu",
+        "cortex-a57",
+        "-m",
+        "128M",
+        "-smp",
+        "1",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "<ROOT>/work/entry-tree560-20261113-timer-irq/entry.bin"
+      ]
+    },
+    {
+      "expected_el": 2,
+      "observed_el": 2,
+      "execution_el": 1,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "probe": "timer-irq",
+      "boot_data_checked": true,
+      "native_tree_bytes": 560,
+      "candidate_boot_args_sha256": null,
+      "virtual_timer_interrupts": {
+        "GIC_VERSION": [
+          3
+        ],
+        "EOI_MODE": [
+          0
+        ],
+        "SHOT": [
+          1,
+          2
+        ],
+        "INTID": [
+          27,
+          27
+        ],
+        "ACK_TOTAL": [
+          1,
+          2
+        ],
+        "EOI_TOTAL": [
+          1,
+          2
+        ],
+        "TIMER_CTL_IRQ": [
+          5,
+          5
+        ],
+        "TIMER_CTL_DISARMED": [
+          3,
+          3
+        ],
+        "TIMER_CTL_MASKED_EXPIRED": [
+          7,
+          7
+        ],
+        "GIC_ACTIVE_BEFORE": [
+          134217728,
+          134217728
+        ],
+        "GIC_ACTIVE_AFTER": [
+          0,
+          0
+        ],
+        "GIC_PENDING_AFTER": [
+          0,
+          0
+        ]
+      },
+      "materialized_fixture_readback": false,
+      "log_sha256": "1510db0f9b7c966115a4de134d065e7f9d5e6c18e5aef81525110c271d1e659d",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt,virtualization=on,secure=off,gic-version=3",
+        "-cpu",
+        "cortex-a57",
+        "-m",
+        "128M",
+        "-smp",
+        "1",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "<ROOT>/work/entry-tree560-20261113-timer-irq/entry.bin"
+      ]
+    }
+  ],
+  "xnu_executed": false,
+  "phone_accessed": false,
+  "network_enabled": false,
+  "disks_attached": false
+}

@@ -54,7 +54,7 @@ def main():
         expected_exit=1 if is_trap else 0
         esr=re.search(r'ESR=0x([0-9A-F]+)',log)
         tree=re.search(r'XNU_TREE_BYTES=0x([0-9A-F]+)',log)
-        data_ok=bool(tree and int(tree[1],16)==504 and 'PASS:BOOT_DATA_DECLARATIONS_XNU_TREE_ONLY' in log)
+        data_ok=bool(tree and int(tree[1],16)==560 and 'PASS:BOOT_DATA_DECLARATIONS_XNU_TREE_ONLY' in log)
         candidate=None
         timer_irq=None
         materialized=False
@@ -82,7 +82,7 @@ def main():
             struct.pack_into('<HH',expected,0,2,2)
             struct.pack_into('<4Q',expected,8,0xfffffff007000000,0x42000000,0x2000000,0x42024000)
             struct.pack_into('<I',expected,88,0x41544c31)
-            struct.pack_into('<QI',expected,96,0xfffffff00701c000,504)
+            struct.pack_into('<QI',expected,96,0xfffffff00701c000,560)
             expected[108:110]=b'-v';struct.pack_into('<Q',expected,1144,0x8000000)
             if (not wire or bytes.fromhex(wire[1])!=expected or
                 'PASS:BOOT_ARGS_CANDIDATE_ONLY' not in log or 'CANDIDATE_NOT_PLACED_OR_MAPPED' not in log or

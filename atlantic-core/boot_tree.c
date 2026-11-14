@@ -234,12 +234,14 @@ static void node(struct Writer *w, uint32_t props, uint32_t children, const char
 }
 static void emit(struct Writer *w, uint64_t base, uint64_t size, uint32_t cpu, uint32_t freq) {
     node(w,1,3,"/",2);
-    node(w,4,0,"chosen",7);
+    node(w,4,1,"chosen",7);
     number(w,"dram-base",base,8);
     /* A zero-length unknown property aligns the following uint64_t payload to
      * 8 bytes while preserving the native 4-byte property stride. */
     property(w,"atlantic,padding",0,0);
     number(w,"dram-size",size,8);
+    /* Native arm_vm_prot_init requires this node even without a TrustCache. */
+    node(w,1,0,"memory-map",sizeof("memory-map"));
     node(w,1,0,"defaults",9);
     node(w,1,1,"cpus",5);
     node(w,4,0,"cpu",4);

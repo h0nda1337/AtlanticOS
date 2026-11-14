@@ -47,7 +47,7 @@ def main():
     assert stats['mutations']==10000 and stats['directed_rejections']>=28
     blob=record.read_bytes();assert len(blob)==1152
     assert struct.unpack_from('<HH',blob)==(2,2) and not any(blob[40:88])
-    assert struct.unpack_from('<Q',blob,96)[0]==0xfffffff00701c000
+    assert struct.unpack_from('<QI',blob,96)==(0xfffffff00701c000,560)
     obj=out/'boot-prepare-arm64.o'
     run('arm64-build',[cc,'--target=aarch64-none-elf','-mstrict-align','-std=c11','-O2','-ffreestanding','-fno-builtin',
                        '-fno-stack-protector','-Wall','-Wextra','-Werror','-I'+str(ROOT/'include'),

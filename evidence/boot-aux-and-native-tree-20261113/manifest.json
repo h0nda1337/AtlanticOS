@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "NATIVE_SECUREDT_MEMORY_MAP_AND_RETAINED_ATLC_WIRE_HOST_AND_QEMU",
+  "artifacts": [
+    {
+      "path": "aux-host-tests.log",
+      "sha256": "ac5ee02815af99c34279c7f4259c8aaaaaad1b29f774279cdc5311196f9e9990"
+    },
+    {
+      "path": "aux-report.json",
+      "sha256": "dd298d1bb96dc115607450d3ab04b51939e01226004ad187dbf43c22e1bcccd8"
+    },
+    {
+      "path": "boot-args-host-tests.log",
+      "sha256": "1c4f6d2369f43231e0174ae6e37ba2cff7d125399563b105c94d26ae391d635b"
+    },
+    {
+      "path": "boot-args-qemu-el1.log",
+      "sha256": "f7abdf636b16ee7e93aa317817e04b2f37c56c934b395cc5af428fb699c6d263"
+    },
+    {
+      "path": "boot-args-qemu-el2.log",
+      "sha256": "7392c30c562b4c00facb6b40c1dcdb5ed719d858724086ac704bfcdc533b12f4"
+    },
+    {
+      "path": "boot-args-qemu.json",
+      "sha256": "fd71ce0c2172e45bea64c14330381b2aed52b56c0ff01d754772dd31b0ef3f3e"
+    },
+    {
+      "path": "boot-args-report.json",
+      "sha256": "f907d5d1a91bd4ea615fec33f15ce1b1e34b28e1d8d8a98907c9006f09f72d80"
+    },
+    {
+      "path": "candidate-boot-args.bin",
+      "sha256": "a5d4235f41859ab8f0fb9022e9b2bde6855b5d5f13043c5f715f25085bcfc68c"
+    },
+    {
+      "path": "el1-trap-qemu.json",
+      "sha256": "a14daa6c14bf762e942552ed85be8774afbd96c79aee0a8233bcf6fcc58d01af"
+    },
+    {
+      "path": "materialize-qemu.json",
+      "sha256": "06026265bf2642b2cebccc60bac17d61d6f6efc275eb6f45ec4ee0cacdcf128a"
+    },
+    {
+      "path": "native-boot-abi.o",
+      "sha256": "19a2942f982a94c3be64a7f603427b5a58d67a629be07376f52a9575a4fdd244"
+    },
+    {
+      "path": "normal-qemu.json",
+      "sha256": "9298d0ddaccb1624a3750b91aa1aad17453c652af6411a76adb75a92e278bd3d"
+    },
+    {
+      "path": "target-imports.log",
+      "sha256": "54b7bb58434aefb925f2ce3028317d98e9aa91243678d4807736fa98a76c5b28"
+    },
+    {
+      "path": "timer-irq-qemu.json",
+      "sha256": "13db6d0b19935de7c277c02dcd5dc36e897276a0cdb489e86756526f3f67af30"
+    },
+    {
+      "path": "tree-host-tests.log",
+      "sha256": "4aa10b8a00a76b0bc36f6fbbdc15c5e6439c9c861308343558a495d36a05506a"
+    },
+    {
+      "path": "tree-report.json",
+      "sha256": "ee70ea918aa9d64d3fd6525c96c369bcdcc85b11f4b5b191f116a24dd783eff0"
+    }
+  ]
+}

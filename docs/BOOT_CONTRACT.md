@@ -94,9 +94,10 @@ wire compatible con los tipos nativos, versión/revisión 2 y vídeo cero. Contr
 el alcance por bloques del perfil compilado y coloca el contexto propuesto
 después de la imagen. La colocación del Mach-O de prueba se ejecuta en el
 laboratorio QEMU. El localizador numérico deriva desde el boot_args nativo
-copiado el trailer de 256 bytes justo antes del árbol. El BSP todavía debe
-construir e instalar ese trailer y comprobar ownership, traducciones y cobertura
-de asignaciones nativas tempranas.
+copiado el trailer de 256 bytes justo antes del árbol. El productor común
+instala [el trailer, SecureDT y boot_args](BOOT_AUX.md) en la arena propia
+declarada. El BSP debe acreditar ownership, traducciones y cobertura de las
+asignaciones nativas tempranas.
 
 ## ABI BSP en ejecución
 

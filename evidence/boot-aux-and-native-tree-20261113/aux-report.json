@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "ATLC_V1_BOOT_AUX_WIRE_AND_TRANSACTIONAL_PLACEMENT",
+  "inputs": {
+    "atlantic-core/boot_aux.c": "7399ec6e5d21c76d2cf88f59a4e9b36c317b5f276a9b79a2411012df307064c2",
+    "atlantic-core/boot_locator.c": "12fdd9469e6f9dc8c62441f0c70cf8549f799baa043d73ce8bdb26b364babe31",
+    "atlantic-core/boot_prepare.c": "282132fe1dcdd141ae48e3c2bb21d9b927768aea0cf0a8c3f2ab889a8e1e243f",
+    "atlantic-core/boot_tree.c": "bdae878f383f76755d350495b334935c0b1ab89a734ba841c27d844d5e4305db",
+    "atlantic-core/fdt.c": "b8d9a0a6f33a7016c0b57ec1bd11ae7fc397a637c2af6d29898767d7b00f3a2e",
+    "atlantic-core/macho.c": "0ef318a01a5944398b343ec82f5d046dbc8a942473021f5f7c6db29279975076",
+    "include/atlantic/boot_aux.h": "aa9439ed7773e614237de9705d14002e94c871c9bc08e1e96fb3ec6e02af6354",
+    "include/atlantic/boot_locator.h": "718d58eb4394e29b7be398e4d02af4f6bdbd0da74c4db08451fe77c2a7e06551",
+    "include/atlantic/boot_prepare.h": "beffc303558bdbed0d4a63fab4defde01cb96c491a82e3db9221180d2fc6b27e",
+    "include/atlantic/boot_tree.h": "4fb0b61c2a2b8f180fa39ca8df2ea3e50828af0242104ab72037c6356ebc15b9",
+    "include/atlantic/fdt.h": "dcfb68be452c03828559d671459e2890606ee4d37cc5d3afb395848f3361a6d3",
+    "include/atlantic/macho.h": "6b9c78d2908b06accaec84f3eef8aa2d5daa6b091ea9e7911445029744d64ed3",
+    "include/atlantic/image_materialize.h": "6aa4038bda965068477d4adfb1a4901d8b6c618750f4a4c70debab544dfe6070",
+    "tests/c/test_boot_aux.c": "fc58be02b0b0677d976be745522c66f40afef8551eb496151160e93ce71bf7e7",
+    "evidence/native-split-and-context-locator-20261113/native-split.macho": "06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55",
+    "tools/test_boot_aux.py": "3088ec44a330a6f29d2c1ac6518dec9caf174d4d83e350d42d1b2693daab6067"
+  },
+  "commands": [
+    [
+      "clang",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iinclude",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "atlantic-core/boot_aux.c",
+      "atlantic-core/boot_locator.c",
+      "atlantic-core/boot_prepare.c",
+      "atlantic-core/boot_tree.c",
+      "atlantic-core/fdt.c",
+      "atlantic-core/macho.c",
+      "tests/c/test_boot_aux.c",
+      "-o",
+      "<ROOT>/work/boot-aux-v1-20261113/boot-aux-host"
+    ],
+    [
+      "<ROOT>/work/boot-aux-v1-20261113/boot-aux-host",
+      "<ROOT>/evidence/native-split-and-context-locator-20261113/native-split.macho"
+    ],
+    [
+      "clang",
+      "--target=aarch64-none-elf",
+      "-mcpu=cortex-a57",
+      "-mstrict-align",
+      "-mgeneral-regs-only",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-O2",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-Iinclude",
+      "-c",
+      "atlantic-core/boot_aux.c",
+      "-o",
+      "<ROOT>/work/boot-aux-v1-20261113/boot-aux-arm64.o"
+    ],
+    [
+      "llvm-nm",
+      "--undefined-only",
+      "<ROOT>/work/boot-aux-v1-20261113/boot-aux-arm64.o"
+    ]
+  ],
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "wire_bytes": 256,
+  "native_tree_bytes": 560,
+  "boot_args_bytes": 1152,
+  "transactional_rejections": 31,
+  "arm64_object_sha256": "8d29f004923a1f98a8b2eee9b414a36d7d027961d44dbdf34a7964ab83c8a813",
+  "arm64_imports": [
+    "atl_xnu_boot_locate"
+  ],
+  "xnu_executed": false,
+  "phone_accessed": false
+}

@@ -18,7 +18,7 @@ static void defaults(void) {
     inventory.reserved[0]=(struct AtlanticPhysicalRange){0x40080000,0x200000};
     inventory.reserved[1]=(struct AtlanticPhysicalRange){0x44000000,0x100000};
     memset(command,' ',sizeof(command)); command[0]='-'; command[1]='v';
-    request=(struct AtlanticBootRequest){0x42000000,0x2000000,504,4096,command,2};
+    request=(struct AtlanticBootRequest){0x42000000,0x2000000,560,4096,command,2};
 }
 static int check(void) {
     struct { uint64_t head; struct AtlanticBootPreparation value; uint64_t tail; } guarded;

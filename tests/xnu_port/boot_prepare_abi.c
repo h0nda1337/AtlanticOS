@@ -23,6 +23,6 @@ const boot_args atl_native_boot_reference={
     .Revision=kBootArgsRevision2,.Version=kBootArgsVersion2,
     .virtBase=UINT64_C(0xfffffff007000000),.physBase=0x42000000,.memSize=0x2000000,
     .topOfKernelData=0x42024000,.machineType=0x41544c31,
-    .deviceTreeP=(void *)UINT64_C(0xfffffff00701c000),.deviceTreeLength=504,
+    .deviceTreeP=(void *)UINT64_C(0xfffffff00701c000),.deviceTreeLength=560,
     .CommandLine="-v",.memSizeActual=0x8000000,
 };

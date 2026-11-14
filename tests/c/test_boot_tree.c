@@ -11,6 +11,7 @@ static uint64_t u64(const uint8_t *p) { return u32(p)|(uint64_t)u32(p+4)<<32; }
 enum Mode { NORMAL, CELLS_ONE, GAP, OVERLAP, DYNAMIC, BAD_RANGES, DUP_CELLS, DUP_CPU,
             RESERVED_OVERFLOW, RAM_OVERFLOW, DISABLED_CPU, AFF3, BAD_REG, MISSING_RAM,
             BAD_CELLS, BAD_RES_CELLS, TOO_MANY_RAM, TOO_MANY_RESERVED, TOO_MANY_CPUS };
+enum { NATIVE_TREE_BYTES = 560, FDT_MUTATIONS = 5000 };
 struct Fixture { uint8_t p[4096]; uint32_t at,strings; };
 static void word(struct Fixture *f,uint32_t n) { put32(f->p+f->at,n);f->at+=4; }
 static void begin(struct Fixture *f,const char *name) {
@@ -92,6 +93,7 @@ static size_t native_node(const uint8_t *tree,size_t limit,size_t at,const char 
     uint32_t props=u32(tree+at),children=u32(tree+at+4);at+=8;
     unsigned named=0;
     assert(props<=8 && children<=3);
+    if(!strcmp(expected,"memory-map")) assert(props==1 && children==0);
     for(uint32_t i=0;i<props;++i) {
         assert(at+36<=limit && memchr(tree+at,0,32));
         const char *name=(const char *)tree+at;uint32_t n=u32(tree+at+32);at+=36;
@@ -112,6 +114,9 @@ static size_t native_node(const uint8_t *tree,size_t limit,size_t at,const char 
         at=native_node(tree,limit,at,"chosen",1);
         at=native_node(tree,limit,at,"defaults",1);
         at=native_node(tree,limit,at,"cpus",1);
+    } else if(!strcmp(expected,"chosen")) {
+        assert(props==4 && children==1);
+        at=native_node(tree,limit,at,"memory-map",2);
     } else if(!strcmp(expected,"cpus")) { assert(children==1);at=native_node(tree,limit,at,"cpu",2); }
     else assert(children==0);
     return at;
@@ -145,14 +150,16 @@ int main(void) {
     assert(atl_boot_exclude(&m,m.ram[0].start+0x8000,4096)==0 && m.reserved_count==2);
     assert(atl_boot_exclude(&m,0,4096)==ATL_BOOT_SCHEMA);
     assert(atl_xnu_boot_tree(&m,0x80000100,62500000,out,sizeof(out),&used)==0);
-    assert(used==504 && native_node(out,used,0,"/",0)==used);
+    assert(used==NATIVE_TREE_BYTES && native_node(out,used,0,"/",0)==used);
     struct AtlanticBootInventory saved=m;
-    assert(atl_xnu_boot_tree(&m,0x100,62500000,out,sizeof(out),&used)==0 && !memcmp(&m,&saved,sizeof(m)));
+    memset(out,0xa5,sizeof(out));
+    assert(atl_xnu_boot_tree(&m,0x100,62500000,out,NATIVE_TREE_BYTES,&used)==0 && !memcmp(&m,&saved,sizeof(m)));
+    assert(used==NATIVE_TREE_BYTES && native_node(out,used,0,"/",0)==used);
+    for(size_t j=used;j<sizeof(out);++j)assert(out[j]==0xa5);
     assert(atl_xnu_boot_tree(&m,0x100,62500000,&m,sizeof(m),&used)==ATL_BOOT_BUFFER && !memcmp(&m,&saved,sizeof(m)));
     assert(atl_xnu_boot_tree(&m,0x100,62500000,out,sizeof(out),(size_t *)&m)==ATL_BOOT_BUFFER && !memcmp(&m,&saved,sizeof(m)));
     assert(atl_xnu_boot_tree(&m,0x100,UINT64_C(0x100000000),out,sizeof(out),&used)==ATL_BOOT_CPU);
-    used=504;
-    for(size_t n=0;n<used;++n) {
+    for(size_t n=0;n<NATIVE_TREE_BYTES;++n) {
         size_t wrote=123;memset(out,0xa5,sizeof(out));
         assert(atl_xnu_boot_tree(&m,0x100,62500000,out,n,&wrote)==ATL_BOOT_BUFFER && wrote==0);
         for(size_t j=0;j<sizeof(out);++j)assert(out[j]==0xa5);
@@ -170,11 +177,12 @@ int main(void) {
     uint8_t original[4096];memcpy(original,f.p,sizeof(original));
     assert(atl_boot_inventory(&v,(struct AtlanticBootInventory *)f.p)==ATL_BOOT_BUFFER && !memcmp(original,f.p,sizeof(original)));
     uint32_t seed=0x81fd2311;
-    for(unsigned i=0;i<5000;++i) {
+    for(unsigned i=0;i<FDT_MUTATIONS;++i) {
         size_t n=fixture(&f,NORMAL);
         for(unsigned j=0;j<4;++j) { seed^=seed<<13;seed^=seed>>17;seed^=seed<<5;f.p[seed%n]^=(uint8_t)(seed>>24); }
         if(atl_fdt_open(f.p,n,&v)==0)(void)atl_boot_inventory(&v,&m);
     }
-    puts("PASS: boot inventory, reservation union, native tree wire, all 504 buffer truncations, 5000 FDT mutations");
+    printf("PASS: boot inventory, reservation union, native tree wire %d bytes, empty /chosen/memory-map, "
+           "all %d buffer truncations, %d FDT mutations\n",NATIVE_TREE_BYTES,NATIVE_TREE_BYTES,FDT_MUTATIONS);
     return 0;
 }

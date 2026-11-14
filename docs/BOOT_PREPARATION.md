@@ -132,6 +132,7 @@ atl_xnu_boot_locate valida la forma ATL1, la geometría inicial por bloques,
 la alineación y la KVA del árbol. Devuelve PA/VA numéricas y conserva el
 resultado intacto ante un error. Pasan cuatro entradas válidas y 34 rechazos
 con ASan/UBSan, usando la referencia extraída del inicializador nativo ARM64.
-Todavía se requiere construir el trailer, comprobar el final efectivo de la
-imagen, traducir las direcciones de cada span y verificar su lifetime.
+El productor común ya instala el trailer, el árbol y los boot_args en la arena
+declarada. Falta probar en el kernel el final efectivo de la imagen, la
+traducción de cada rango y su conservación por el allocator y el BSP.
 [Manifiesto](../evidence/native-split-and-context-locator-20261113/manifest.json).

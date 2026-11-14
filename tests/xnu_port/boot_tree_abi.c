@@ -11,4 +11,8 @@ _Static_assert(sizeof(DeviceTreeNodeProperty)==36,"native property header bytes"
 _Static_assert(offsetof(DeviceTreeNodeProperty,length)==32,"native property length");
 _Static_assert(kPropNameLength==32 && kDTMaxPropertyNameLength==31,"native property name capacity");
 _Static_assert(__alignof__(DeviceTreeNode)==4 && __alignof__(DeviceTreeNodeProperty)==4,"native header alignment");
+_Static_assert(sizeof(DeviceTreeNode)+sizeof(DeviceTreeNodeProperty)+((sizeof("memory-map")+3u)&~3u)==56,
+    "name-only native memory-map node bytes");
 _Static_assert(__builtin_types_compatible_p(__typeof__(&SecureDTInit),void (*)(void const *,size_t)),"native initializer ABI");
+_Static_assert(__builtin_types_compatible_p(__typeof__(&SecureDTLookupEntry),int (*)(const DTEntry,const char *,DTEntry *)),
+    "native memory-map lookup ABI");

@@ -50,7 +50,10 @@ existir una sola vez entre los CPU disponibles del FDT; AFF3 no representable
 en el campo nativo de 32 bits se rechaza. La interpretación de reg se contrasta
 con el [binding ARM de CPU](https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/cpus.yaml).
 
-El árbol de 504 bytes usa stores little endian y cabeceras nativas de nodo de
+El árbol actual de 560 bytes incluye /chosen/memory-map con solo name. La
+búsqueda de ese nodo en arm_vm_prot_init exige éxito incluso cuando se omite
+la propiedad TrustCache. La forma ARM64 y la firma de SecureDTLookupEntry se
+comprueban contra los headers nativos. El árbol usa stores little endian y cabeceras nativas de nodo de
 8 bytes y propiedad de 36. Los valores de DRAM quedan alineados a ocho bytes;
 una propiedad vacía de padding conserva el stride nativo de cuatro bytes.
 El layout se comprueba con los tipos reales de device_tree.h del XNU fijado,
@@ -68,7 +71,7 @@ inspección usa archivos regulares de host y nunca un dispositivo de bloques.
 - ASan/UBSan: esquemas de una y dos celdas, direcciones por encima de 4 GiB,
   unión de reservas, overflow, duplicados, reservas dinámicas, límites de tablas,
   aliases y CPU no disponible o sin representación nativa.
-- Los 504 tamaños de destino insuficientes dejan el buffer intacto. Un lector
+- Los 560 tamaños de destino insuficientes dejan el buffer intacto. Un lector
   independiente comprueba nombres, longitudes, counts, valores, padding y
   alineación de la salida. Se prueban 5.000 mutaciones FDT.
 - El fixture de ABI compila con los carriles experimental y estándar contra
@@ -83,7 +86,10 @@ inspección usa archivos regulares de host y nunca un dispositivo de bloques.
 La imagen normal tiene 13.320 bytes de archivo y reserva 96.912 bytes de imagen,
 BSS y stack según el linker. **Esto no mide el consumo de un firmware XNU ni
 satisface el objetivo de menos de 100 MiB.** No hay discos o red en estos runs.
-La [evidencia](../evidence/boot-data-bridge-20261023/manifest.json) conserva
+La [prueba actual](../evidence/boot-aux-and-native-tree-20261113/manifest.json)
+incluye diez ejecuciones QEMU del árbol ampliado y comprueba que los 1 152 bytes
+de boot_args coinciden con el inicializador nativo. La
+[evidencia de octubre](../evidence/boot-data-bridge-20261023/manifest.json) conserva
 comandos, hashes, mapas y logs; no contiene imágenes OEM.
 
 ## Contraste offline del candidato G20
