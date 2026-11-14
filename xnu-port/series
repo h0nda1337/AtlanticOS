@@ -32,3 +32,4 @@
 0032-select-separately-proved-cpp-layout-metadata.patch
 0033-retain-arm-feature-storage-without-bsd-sysctls.patch
 0034-retain-native-shared-region-upl-and-rsr-state.patch
+0035-select-output-only-ram-native-console.patch

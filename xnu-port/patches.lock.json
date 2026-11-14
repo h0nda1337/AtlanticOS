@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
-  "port_id": "fd1823dacb981a6375773de84177022ea7c66e0a24229a9bdc422690b9e7e9d0",
+  "port_id": "b3284f535d9f191aeb20be64907a62b710aa901e928028ebfa6f75b155fa5008",
   "patches": {
     "0001-add-atlantic-arm64-laboratory-profile.patch": "68f342277d68cbd35f532a0fcfe35f99742569f960a7f37fa155c774055e1d5c",
     "0002-define-atlantic-laboratory-boot-line-abi.patch": "5c62558a6221b17377966b5b4c678004cd813fd37cacdf6849cc9dd011f6ea84",
@@ -36,7 +36,8 @@
     "0031-retain-native-vm-wait-and-page-worker-synchronization.patch": "c59637a09576cbdb41d404f853052ad4ad395afd26ba5f74c257536d2055de97",
     "0032-select-separately-proved-cpp-layout-metadata.patch": "9433f9de329bec6f2d7b549bc946d2fcf7788757b1218b9feb37d5b2caafd128",
     "0033-retain-arm-feature-storage-without-bsd-sysctls.patch": "8f84542eb436d0475394518835218e8d458eeb655e063e0d4f3edca341a02b19",
-    "0034-retain-native-shared-region-upl-and-rsr-state.patch": "d1e9178f441c20155f7022e8596191e2c337a47a603f8a483aebe21ed7d3b9a5"
+    "0034-retain-native-shared-region-upl-and-rsr-state.patch": "d1e9178f441c20155f7022e8596191e2c337a47a603f8a483aebe21ed7d3b9a5",
+    "0035-select-output-only-ram-native-console.patch": "0336735937bacf706d94fedd477221291a9bddb859b916a4a3a20868a9cf30af"
   },
   "canonical_lf_files": [
     {
@@ -47,7 +48,7 @@
     {
       "path": "osfmk/kern/startup.c",
       "preimage_sha256": "0196b64546c2845df7898fcab3203017f08fe2477df7ab0946dd7433097d13c5",
-      "postimage_sha256": "76a310854d6f1a1c8e8c40de11aea79fcdf62bbbc32076d58c72cfcc5b0036ec"
+      "postimage_sha256": "ee42bb776e6a46165cb0726eead4a15a9e26ac14012b5895ca05fb953d0cad6d"
     },
     {
       "path": "osfmk/kern/startup.h",
@@ -297,12 +298,12 @@
     {
       "path": "pexpert/pexpert/atlantic_log.h",
       "preimage_sha256": null,
-      "postimage_sha256": "7bd3c82f2d2a48f131a4be729d02b7ba3c6bbb6c32a5c6cdf8691cbea248bbdd"
+      "postimage_sha256": "77f1b43977e186e409b1a2a9af39a93a0d06592ff9083d0eb37602308f362190"
     },
     {
       "path": "osfmk/kern/atlantic_early_log.c",
       "preimage_sha256": null,
-      "postimage_sha256": "4a090df63f1be923bcda879a75c52a0dc51ce827437a502a7cff8a7055e0cb4d"
+      "postimage_sha256": "95d81719a0e747734847959431137f2f75bba863dc50b18baa28d1ddf1342560"
     },
     {
       "path": "osfmk/vm/vm_object.c",
@@ -323,6 +324,26 @@
       "path": "osfmk/vm/atlantic_rsr_version.c",
       "preimage_sha256": null,
       "postimage_sha256": "fa0008921dccfc7d0d15ca17d2c62e2f4fa9d347b358766d3cc8a778df6d40f3"
+    },
+    {
+      "path": "osfmk/console/serial_console.c",
+      "preimage_sha256": "d5a484afab3bfdd1e06fafa3d67c1d15a07afc847f84c010d7b3ff1fa54e8119",
+      "postimage_sha256": "589cc95a25df034a81496dce19e5a17b88c3d8c9061827f22499fd1d8c618208"
+    },
+    {
+      "path": "osfmk/console/serial_general.c",
+      "preimage_sha256": "106264ee7ce6885a4773daf90689c6f5394681c75d231a8a526668116cf6bb19",
+      "postimage_sha256": "a598ccc4b6784b11bc655feaaeeb8bdcc0ea0f786d0ab6d4c8a66bb733c14cb6"
+    },
+    {
+      "path": "osfmk/console/serial_protos.h",
+      "preimage_sha256": "e43de6e6cc6408d3484950b776fef700ff25ed958612ed80c7352e1c5c16721a",
+      "postimage_sha256": "e1050afb5bb73d9f5ed543df2854b913cfdab5f52fdfb24a762457eed4f7e58b"
+    },
+    {
+      "path": "osfmk/arm/arm_init.c",
+      "preimage_sha256": "a000dc4ca2d508f1498e1bb267e66e48a56817d098d48ac9c9c96095f0fc5f03",
+      "postimage_sha256": "c4bdd0cac1e09773a4315e6d42a6bbfdf2165077f1db7cc480af77ef809c0072"
     }
   ],
   "scope": "LABORATORY_ONLY_NOT_G20_PORT_OR_KERNEL_BOOT"

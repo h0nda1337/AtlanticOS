@@ -1,0 +1,288 @@
+AtlanticOS: select native console queue with an output-only RAM transport.
+
+diff --git a/osfmk/console/serial_console.c b/osfmk/console/serial_console.c
+--- a/osfmk/console/serial_console.c
++++ b/osfmk/console/serial_console.c
+@@ -47,6 +47,10 @@
+ #include <kern/sched_prim.h>
+ #include <libkern/section_keywords.h>
+ 
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++#include <pexpert/atlantic_log.h>
++#endif
++
+ #if __arm64__
+ #include <machine/machine_routines.h>
+ #include <arm/cpu_data_internal.h>
+@@ -110,8 +114,10 @@
+ #define MAX_FLUSH_SIZE_LOCK_HELD 16
+ #define MAX_TOTAL_FLUSH_SIZE (MAX(2, MAX_CPUS) * CPU_CONS_BUF_SIZE)
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ extern int serial_getc(void);
+ extern void serial_putc_options(char, bool);
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ #if DEBUG || DEVELOPMENT
+ TUNABLE(bool, allow_printf_from_interrupts_disabled_context, "nointr_consio", false);
+@@ -119,6 +125,16 @@
+ #define allow_printf_from_interrupts_disabled_context false
+ #endif
+ 
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++SECURITY_READ_ONLY_EARLY(struct console_ops) cons_ops[] = {
++	[ATLANTIC_RAM_CONS_INDEX] = {
++		.putc = atlantic_console_memory_putc, .getc = NULL,
++	},
++};
++
++SECURITY_READ_ONLY_EARLY(uint32_t) nconsops = sizeof(cons_ops) / sizeof(cons_ops[0]);
++SECURITY_READ_ONLY_LATE(uint32_t) cons_ops_index = ATLANTIC_RAM_CONS_INDEX;
++#else
+ SECURITY_READ_ONLY_EARLY(struct console_ops) cons_ops[] = {
+ 	{
+ 		.putc = serial_putc_options, .getc = _serial_getc,
+@@ -135,13 +151,16 @@
+ #else
+ SECURITY_READ_ONLY_LATE(uint32_t) cons_ops_index = VC_CONS_OPS;
+ #endif
++#endif /* CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ LCK_GRP_DECLARE(console_lck_grp, "console");
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ /* If the NMI string is entered into the console, the system will enter the debugger. */
+ #define NMI_STRING_SIZE 32
+ char nmi_string[NMI_STRING_SIZE] = "afDIGHr84A84jh19Kphgp428DNPdnapq";
+ static int nmi_counter           = 0;
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ /**
+  * This is used to prevent console output from going through the console ring
+@@ -626,6 +645,7 @@
+ 	console_write(&c, 1);
+ }
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ /**
+  * Wrapper around the platform-dependent serial input method which handles
+  * waiting for a new character and checking for the NMI string.
+@@ -680,6 +700,7 @@
+ 		return -1;
+ 	}
+ }
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ /**
+  * Block until a character is available from the console and return it.
+@@ -690,7 +711,11 @@
+ console_read_char(void)
+ {
+ 	const uint32_t idx = get_cons_ops_index();
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++	return cons_ops[idx].getc ? cons_ops[idx].getc(true) : -1;
++#else
+ 	return cons_ops[idx].getc(true);
++#endif
+ }
+ 
+ /**
+@@ -703,7 +728,11 @@
+ console_try_read_char(void)
+ {
+ 	const uint32_t idx = get_cons_ops_index();
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++	return cons_ops[idx].getc ? cons_ops[idx].getc(false) : -1;
++#else
+ 	return cons_ops[idx].getc(false);
++#endif
+ }
+ 
+ #ifdef CONFIG_XNUPOST
+diff --git a/osfmk/console/serial_general.c b/osfmk/console/serial_general.c
+--- a/osfmk/console/serial_general.c
++++ b/osfmk/console/serial_general.c
+@@ -39,10 +39,13 @@
+ #include <console/serial_protos.h>
+ #include <libkern/section_keywords.h>
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ extern void cons_cinput(char ch);               /* The BSD routine that gets characters */
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ SECURITY_READ_ONLY_LATE(unsigned int) serialmode;                               /* Serial mode keyboard and console control */
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ /*
+  *  This routine will start a thread that polls the serial port, listening for
+  *  characters that have been typed.
+@@ -95,13 +98,19 @@
+ 	thread_block((thread_continue_t)serial_keyboard_poll); /* Wait for it */
+ 	panic("serial_keyboard_poll: Shouldn't never ever get here...");
+ }
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ boolean_t
+ console_is_serial(void)
+ {
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++	return FALSE; /* This profile contains only the RAM console route. */
++#else
+ 	return cons_ops_index == SERIAL_CONS_OPS;
+-}
+-
++#endif
++}
++
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ int
+ switch_to_video_console(void)
+ {
+@@ -139,6 +148,7 @@
+ 		cons_ops_index = ops;
+ 	}
+ }
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ void
+ console_printbuf_state_init(struct console_printbuf_state * data, int write_on_newline, int can_block)
+diff --git a/osfmk/console/serial_protos.h b/osfmk/console/serial_protos.h
+--- a/osfmk/console/serial_protos.h
++++ b/osfmk/console/serial_protos.h
+@@ -42,9 +42,11 @@
+ #include <stdbool.h>
+ #include <libkern/section_keywords.h>
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ void serial_keyboard_init(void);
+ void serial_keyboard_start(void) __dead2;
+ void serial_keyboard_poll(void) __dead2;
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ /* Boot serial mode (see bits below). */
+ extern uint32_t serialmode;
+@@ -88,8 +90,10 @@
+ 
+ void console_init(void);
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ int _serial_getc(bool wait);
+ int _vcgetc(bool wait);
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ struct console_ops {
+ 	void (*putc)(char, bool);
+@@ -97,12 +101,18 @@
+ };
+ 
+ boolean_t console_is_serial(void);
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ int switch_to_serial_console(void);
+ int switch_to_video_console(void);
+ void switch_to_old_console(int old_console);
++#endif /* !CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ #define SERIAL_CONS_OPS 0
+ #define VC_CONS_OPS 1
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++/* Index in the separate array selected by the RAM profile. */
++#define ATLANTIC_RAM_CONS_INDEX 0
++#endif
+ 
+ #ifdef XNU_KERNEL_PRIVATE
+ 
+diff --git a/osfmk/arm/arm_init.c b/osfmk/arm/arm_init.c
+--- a/osfmk/arm/arm_init.c
++++ b/osfmk/arm/arm_init.c
+@@ -570,6 +570,11 @@
+ 
+ 	PE_consistent_debug_inherit();
+ 
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++	/* Select PE RAM output after the native VM setup above. */
++	kernel_startup_initialize_upto(STARTUP_SUB_KPRINTF);
++	kprintf("kprintf initialized\n");
++#else
+ 	/* Setup debugging output. */
+ 	const unsigned int serial_exists = serial_init();
+ 	kernel_startup_initialize_upto(STARTUP_SUB_KPRINTF);
+@@ -614,6 +619,7 @@
+ 		disableConsoleOutput = FALSE;     /* Allow printfs to happen */
+ 	}
+ 	PE_create_console();
++#endif /* CONFIG_ATLANTIC_RAM_CONSOLE */
+ 
+ 	/* setup console output */
+ 	PE_init_printf(FALSE);
+diff --git a/osfmk/kern/startup.c b/osfmk/kern/startup.c
+--- a/osfmk/kern/startup.c
++++ b/osfmk/kern/startup.c
+@@ -817,7 +817,9 @@
+ 	/*
+ 	 * This will start displaying progress to the user, start as early as possible
+ 	 */
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ 	initialize_screen(NULL, kPEAcquireScreen);
++#endif
+ 
+ 	/*
+ 	 *	Initialize the shared region module.
+@@ -926,7 +928,9 @@
+ 	 */
+ 	kdebug_free_early_buf();
+ 
++#if !CONFIG_ATLANTIC_RAM_CONSOLE
+ 	serial_keyboard_init();         /* Start serial keyboard if wanted */
++#endif
+ 
+ 	vm_page_init_local_q(machine_info.max_cpus);
+ 
+diff --git a/osfmk/kern/atlantic_early_log.c b/osfmk/kern/atlantic_early_log.c
+--- a/osfmk/kern/atlantic_early_log.c
++++ b/osfmk/kern/atlantic_early_log.c
+@@ -30,6 +30,27 @@
+ SECURITY_READ_ONLY_LATE(atlantic_putc_t) PE_kputc = memory_putc;
+ SECURITY_READ_ONLY_LATE(atlantic_putc_t) PE_putc = memory_putc;
+ 
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++/* Disable the physical serial side channel in consdebug_putc. */
++SECURITY_READ_ONLY_LATE(bool) disable_serial_output = true;
++
++void
++atlantic_console_memory_putc(char character, bool poll)
++{
++    (void)poll; /* RAM append has no hardware wait or sleeping mode. */
++    memory_putc(character);
++}
++
++void
++PE_init_printf(boolean_t vm_initialized)
++{
++    if (vm_initialized || PE_putc != memory_putc) {
++        panic("AtlanticOS RAM console received an invalid printf phase");
++    }
++    PE_putc = console_write_char;
++}
++#endif
++
+ __attribute__((noinline)) void
+ kprintf(const char *format, ...)
+ {
+diff --git a/pexpert/pexpert/atlantic_log.h b/pexpert/pexpert/atlantic_log.h
+--- a/pexpert/pexpert/atlantic_log.h
++++ b/pexpert/pexpert/atlantic_log.h
+@@ -2,6 +2,14 @@
+ #ifndef _PEXPERT_ATLANTIC_LOG_H_
+ #define _PEXPERT_ATLANTIC_LOG_H_
+ #include <atlantic/early_log.h>
++
++#if CONFIG_ATLANTIC_RAM_CONSOLE
++#include <stdbool.h>
++#if !CONFIG_ATLANTIC_FIRMWARE || defined(MACH_BSD) || defined(IOKIT)
++#error RAM console requires the explicit firmware-only XNU profile
++#endif
++void atlantic_console_memory_putc(char character, bool poll);
++#endif
+ 
+ /* Private boot diagnostics, not native console initialization or serial I/O.
+  * The caller must satisfy the normal-RAM and writable-buffer contract of

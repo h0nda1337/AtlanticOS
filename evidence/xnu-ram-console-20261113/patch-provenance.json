@@ -1,0 +1,35 @@
+{
+  "base": "fd1823dacb981a63",
+  "guard": "CONFIG_ATLANTIC_RAM_CONSOLE",
+  "diff_sha256": "0336735937bacf706d94fedd477221291a9bddb859b916a4a3a20868a9cf30af",
+  "files": {
+    "osfmk/console/serial_console.c": {
+      "before": "d5a484afab3bfdd1e06fafa3d67c1d15a07afc847f84c010d7b3ff1fa54e8119",
+      "after": "589cc95a25df034a81496dce19e5a17b88c3d8c9061827f22499fd1d8c618208"
+    },
+    "osfmk/console/serial_general.c": {
+      "before": "106264ee7ce6885a4773daf90689c6f5394681c75d231a8a526668116cf6bb19",
+      "after": "a598ccc4b6784b11bc655feaaeeb8bdcc0ea0f786d0ab6d4c8a66bb733c14cb6"
+    },
+    "osfmk/console/serial_protos.h": {
+      "before": "e43de6e6cc6408d3484950b776fef700ff25ed958612ed80c7352e1c5c16721a",
+      "after": "e1050afb5bb73d9f5ed543df2854b913cfdab5f52fdfb24a762457eed4f7e58b"
+    },
+    "osfmk/arm/arm_init.c": {
+      "before": "a000dc4ca2d508f1498e1bb267e66e48a56817d098d48ac9c9c96095f0fc5f03",
+      "after": "c4bdd0cac1e09773a4315e6d42a6bbfdf2165077f1db7cc480af77ef809c0072"
+    },
+    "osfmk/kern/startup.c": {
+      "before": "76a310854d6f1a1c8e8c40de11aea79fcdf62bbbc32076d58c72cfcc5b0036ec",
+      "after": "ee42bb776e6a46165cb0726eead4a15a9e26ac14012b5895ca05fb953d0cad6d"
+    },
+    "osfmk/kern/atlantic_early_log.c": {
+      "before": "4a090df63f1be923bcda879a75c52a0dc51ce827437a502a7cff8a7055e0cb4d",
+      "after": "95d81719a0e747734847959431137f2f75bba863dc50b18baa28d1ddf1342560"
+    },
+    "pexpert/pexpert/atlantic_log.h": {
+      "before": "7bd3c82f2d2a48f131a4be729d02b7ba3c6bbb6c32a5c6cdf8691cbea248bbdd",
+      "after": "77f1b43977e186e409b1a2a9af39a93a0d06592ff9083d0eb37602308f362190"
+    }
+  }
+}

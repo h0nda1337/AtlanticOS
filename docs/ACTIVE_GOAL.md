@@ -229,3 +229,8 @@ pendientes de 379 a 365, sin dependencias nuevas. Quedan pendientes la imagen,
 el arranque físico y el handoff. El [probe QEMU](ENTRY_LAB.md#timer-virtual-con-gicv3-en-qemu)
 comprueba entrega, reconocimiento y fin de interrupción con dos expiraciones
 del timer virtual en cada recorrido EL. Véase la [estimación actual](PROGRESS_ESTIMATE.md).
+
+La [consola nativa con salida a RAM](XNU_RAM_CONSOLE.md) añade el ring de XNU,
+la promoción temprana de PE_putc y el transporte propio. El enlace de 194
+objetos deja 346 referencias pendientes y cero duplicadas. La comprobación
+del ring en VM activa, la lectura física del log y el handoff quedan abiertos.

@@ -200,6 +200,16 @@ EXTRA_SYMBOLS.update({
     'osfmk/vm/vm_shared_region_pager.c': ['_shared_region_pager_init', '_shared_region_pager_ops'],
     'osfmk/vm/atlantic_rsr_version.c': ['_rsr_bump_version']})
 EXPERIMENTAL_UNITS.update({
+    'osfmk/console/serial_console.c': '_console_init',
+    'osfmk/console/serial_general.c': '_console_printbuf_state_init'})
+EXTRA_SYMBOLS.update({
+    'osfmk/console/serial_console.c': ['_console_write_char', '_console_suspend', '_console_resume',
+        '_console_read_char', '_console_try_read_char', '_disableConsoleOutput'],
+    'osfmk/console/serial_general.c': ['_console_printbuf_putc', '_console_printbuf_clear',
+        '_console_is_serial', '_serialmode'],
+    'osfmk/kern/atlantic_early_log.c': ['_PE_init_printf', '_atlantic_console_memory_putc',
+        '_disable_serial_output', '_PE_kputc', '_PE_putc', '_atlantic_xnu_log_snapshot']})
+EXPERIMENTAL_UNITS.update({
     'pexpert/gen/bootargs.c': '_PE_parse_boot_argn',
     'pexpert/arm/pe_bootargs.c': '_PE_boot_args',
     'pexpert/gen/device_tree.c': '_SecureDTInit',
@@ -304,8 +314,7 @@ EXTRA_SYMBOLS.update({
     'libkern/libclosure/libclosuredata.c': ['__NSConcreteMallocBlock', '__NSConcreteGlobalBlock',
         '__NSConcreteAutoBlock', '__NSConcreteFinalizingBlock', '__NSConcreteWeakBlockVariable']})
 EXTRA_SYMBOLS.update({
-    'osfmk/atlantic/early_log.c': ['_atl_early_log_capture', '_atl_early_log_snapshot'],
-    'osfmk/kern/atlantic_early_log.c': ['_PE_kputc', '_PE_putc', '_atlantic_xnu_log_snapshot']})
+    'osfmk/atlantic/early_log.c': ['_atl_early_log_capture', '_atl_early_log_snapshot']})
 EXTRA_SYMBOLS.update({
     'osfmk/arm/counter.c': ['__Z11counter_incPPy', '__Z11counter_decPPy',
         '__Z31counter_add_preemption_disabledPPyy', '__Z31counter_inc_preemption_disabledPPy',
@@ -717,7 +726,7 @@ def main():
     target += ['-I'+str(source/p) for p in ['osfmk','bsd','pexpert','libkern','iokit','osfmk/libsa','libsa','EXTERNAL_HEADERS','.']]
     target += ['-isystem', clang_resource+'/include', *defines]
     if provider:
-        target += ['-DCONFIG_ATLANTIC_C_LAYOUT=1']
+        target += ['-DCONFIG_ATLANTIC_C_LAYOUT=1', '-DCONFIG_ATLANTIC_RAM_CONSOLE=1']
         if provider.get('cpp_layout'):
             target += ['-DCONFIG_ATLANTIC_CPP_LAYOUT=1']
         layout_fixture = str(ROOT/'tests/xnu_port/kalloc_layout.c')

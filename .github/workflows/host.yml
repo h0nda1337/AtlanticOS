@@ -103,3 +103,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/qemu-timer-irq-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-shared-region-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/image-materialize-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/xnu-ram-console-20261113/manifest.json

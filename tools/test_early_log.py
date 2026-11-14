@@ -182,7 +182,11 @@ def main():
         core, adapter = map(read_object, objects)
         assert not run('native-core-imports', ['llvm-nm', '--undefined-only', str(objects[0])]).strip()
         imports = run('native-adapter-imports', ['llvm-nm', '--undefined-only', str(objects[1])]).split()
-        assert set(imports) == {'___doprnt', '_atl_early_log_append', '_atl_early_log_capture', '_atl_early_log_snapshot', '_bzero'}
+        expected_imports = {'___doprnt', '_atl_early_log_append', '_atl_early_log_capture',
+                            '_atl_early_log_snapshot', '_bzero'}
+        if base['layout_provider']:
+            expected_imports |= {'_console_write_char', '_panic'}
+        assert set(imports) == expected_imports
         assert all(strong_external_import(objects[1], name) for name in imports)
         check('no-atomic-runtime-or-hardware-imports-and-only-real-strong-dependencies')
         assert all('_'+name in core[2] for name in ['atl_early_log_capture', 'atl_early_log_append', 'atl_early_log_snapshot'])

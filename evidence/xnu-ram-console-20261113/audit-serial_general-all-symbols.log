@@ -1,0 +1,8 @@
+0000000000000000 T _console_is_serial
+0000000000000110 T _console_printbuf_clear
+0000000000000060 T _console_printbuf_putc
+0000000000000010 T _console_printbuf_state_init
+                 U _console_write
+0000000000000144 S _serialmode
+0000000000000000 t ltmp0
+0000000000000144 s ltmp1

@@ -30,6 +30,27 @@ typedef void (*atlantic_putc_t)(char);
 SECURITY_READ_ONLY_LATE(atlantic_putc_t) PE_kputc = memory_putc;
 SECURITY_READ_ONLY_LATE(atlantic_putc_t) PE_putc = memory_putc;
 
+#if CONFIG_ATLANTIC_RAM_CONSOLE
+/* Disable the physical serial side channel in consdebug_putc. */
+SECURITY_READ_ONLY_LATE(bool) disable_serial_output = true;
+
+void
+atlantic_console_memory_putc(char character, bool poll)
+{
+    (void)poll; /* RAM append has no hardware wait or sleeping mode. */
+    memory_putc(character);
+}
+
+void
+PE_init_printf(boolean_t vm_initialized)
+{
+    if (vm_initialized || PE_putc != memory_putc) {
+        panic("AtlanticOS RAM console received an invalid printf phase");
+    }
+    PE_putc = console_write_char;
+}
+#endif
+
 __attribute__((noinline)) void
 kprintf(const char *format, ...)
 {

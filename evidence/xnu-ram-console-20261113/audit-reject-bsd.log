@@ -1,0 +1,392 @@
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/pexpert/pexpert/atlantic_log.h"
+# 1 "<built-in>" 1
+# 1 "<built-in>" 3
+# 441 "<built-in>" 3
+# 1 "<command line>" 1
+# 1 "<built-in>" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 1
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/hibernation.h" 1
+# 2 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/crypto.h" 1
+# 3 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/kdebug.h" 1
+# 4 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mach_assert.h" 1
+# 5 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mach_kdp.h" 1
+# 6 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_serial_kdp.h" 1
+# 7 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mach_ldebug.h" 1
+# 8 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mach_vm_debug.h" 1
+# 9 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mig_debug.h" 1
+# 10 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/importance_inheritance.h" 1
+# 11 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/importance_debug.h" 1
+# 12 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_ecc_logging.h" 1
+# 13 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_dtrace.h" 1
+# 14 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/no_kextd.h" 1
+# 15 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_quiesce_counter.h" 1
+# 16 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_cpu_counters.h" 1
+# 17 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_user_notification.h" 1
+# 18 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_kdp_interactive_debugging.h" 1
+# 19 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/debug.h" 1
+# 20 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_kdp_coredump_encryption.h" 1
+# 21 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_arcade.h" 1
+# 22 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_audit.h" 1
+# 23 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_exclaves.h" 1
+# 24 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_clutch.h" 1
+# 25 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_sysdiagnose.h" 1
+# 26 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/mach_bsd.h" 1
+# 27 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/copyout_shim.h" 1
+# 28 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_iotrace.h" 1
+# 29 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_xnupost.h" 1
+# 30 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_telemetry.h" 1
+# 31 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_atm.h" 1
+# 32 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_voucher_deprecated.h" 1
+# 33 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_io_compression_stats.h" 1
+# 34 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_phantom_cache.h" 1
+# 35 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_deferred_reclaim.h" 1
+# 36 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/iokit.h" 1
+# 37 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/kperf.h" 1
+# 38 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/fb.h" 1
+# 39 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/hi_res_clock.h" 1
+# 40 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_sptm.h" 1
+# 41 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_pv_ticket.h" 1
+# 42 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/profile.h" 1
+# 43 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_arm_pfz.h" 1
+# 44 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/ln.h" 1
+# 45 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/eisa.h" 1
+# 46 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/himem.h" 1
+# 47 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/ec.h" 1
+# 48 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/alternate_debugger.h" 1
+# 49 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 1 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/config_mach_bridge_recv_time.h" 1
+# 50 "<ROOT>/work/xnu-lab-builds/37af08556c108c63/config/meta_features.h" 2
+# 2 "<built-in>" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/pexpert/pexpert/atlantic_log.h" 2
+
+
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/osfmk/atlantic/early_log.h" 1
+
+
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stddef.h" 1
+# 53 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stddef.h"
+typedef __typeof__(((int*)((void*)0)) - ((int*)((void*)0))) ptrdiff_t;
+
+
+
+typedef __typeof__(sizeof(int)) size_t;
+
+
+
+
+typedef int wchar_t;
+# 5 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/osfmk/atlantic/early_log.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h" 1
+# 23 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h"
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/machine/types.h" 1
+# 37 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/machine/types.h"
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 1
+# 49 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h"
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/_types.h" 1
+# 38 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/_types.h"
+typedef __signed char __int8_t;
+
+
+
+typedef unsigned char __uint8_t;
+typedef short __int16_t;
+typedef unsigned short __uint16_t;
+typedef int __int32_t;
+typedef unsigned int __uint32_t;
+typedef long long __int64_t;
+typedef unsigned long long __uint64_t;
+
+typedef long __darwin_intptr_t;
+typedef unsigned int __darwin_natural_t;
+# 71 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/_types.h"
+typedef int __darwin_ct_rune_t;
+
+
+
+
+
+typedef union {
+ char __mbstate8[128];
+ long long _mbstateL;
+} __mbstate_t;
+
+typedef __mbstate_t __darwin_mbstate_t;
+
+
+
+
+typedef long int __darwin_ptrdiff_t;
+# 97 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/_types.h"
+typedef long unsigned int __darwin_size_t;
+
+
+
+
+
+
+
+typedef __builtin_va_list __darwin_va_list;
+
+
+
+
+
+
+
+typedef int __darwin_wchar_t;
+
+
+
+
+typedef __darwin_wchar_t __darwin_rune_t;
+
+
+typedef int __darwin_wint_t;
+
+
+
+
+typedef unsigned long __darwin_clock_t;
+typedef __uint32_t __darwin_socklen_t;
+typedef long __darwin_ssize_t;
+typedef long __darwin_time_t;
+# 50 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/cdefs.h" 1
+# 1145 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/cdefs.h"
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/ptrcheck.h" 1
+# 1146 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/cdefs.h" 2
+# 51 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+
+
+
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int8_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int8_t.h"
+typedef signed char int8_t;
+# 56 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int16_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int16_t.h"
+typedef short int16_t;
+# 57 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int32_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int32_t.h"
+typedef int int32_t;
+# 58 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int64_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_int64_t.h"
+typedef long long int64_t;
+# 59 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int8_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int8_t.h"
+typedef unsigned char u_int8_t;
+# 61 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int16_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int16_t.h"
+typedef unsigned short u_int16_t;
+# 62 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int32_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int32_t.h"
+typedef unsigned int u_int32_t;
+# 63 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int64_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_u_int64_t.h"
+typedef unsigned long long u_int64_t;
+# 64 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+
+
+typedef int64_t register_t;
+
+
+
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_intptr_t.h" 1
+# 30 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_intptr_t.h"
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/machine/_types.h" 1
+# 31 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_intptr_t.h" 2
+
+typedef __darwin_intptr_t intptr_t;
+# 72 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_uintptr_t.h" 1
+# 36 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/sys/_types/_uintptr_t.h"
+typedef unsigned long uintptr_t;
+# 73 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h" 2
+
+
+
+
+typedef u_int64_t user_addr_t;
+typedef u_int64_t user_size_t;
+typedef int64_t user_ssize_t;
+typedef int64_t user_long_t;
+typedef u_int64_t user_ulong_t;
+typedef int64_t user_time_t;
+typedef int64_t user_off_t;
+# 96 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h"
+typedef user_addr_t user_addr_ut;
+typedef user_size_t user_size_ut;
+# 127 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h"
+typedef __uint64_t user64_addr_t;
+typedef __uint64_t user64_size_t;
+typedef __int64_t user64_ssize_t;
+typedef __int64_t user64_long_t;
+typedef __uint64_t user64_ulong_t;
+typedef __int64_t user64_time_t;
+typedef __int64_t user64_off_t;
+
+typedef __uint32_t user32_addr_t;
+typedef __uint32_t user32_size_t;
+typedef __int32_t user32_ssize_t;
+typedef __int32_t user32_long_t;
+typedef __uint32_t user32_ulong_t;
+typedef __int32_t user32_time_t;
+# 151 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h"
+typedef __int64_t user32_off_t;
+# 162 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/arm/types.h"
+typedef u_int64_t syscall_arg_t;
+# 38 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/bsd/machine/types.h" 2
+# 24 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h" 2
+# 38 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h"
+typedef u_int8_t uint8_t;
+typedef u_int16_t uint16_t;
+typedef u_int32_t uint32_t;
+typedef u_int64_t uint64_t;
+
+
+
+typedef int8_t int_least8_t;
+typedef int16_t int_least16_t;
+typedef int32_t int_least32_t;
+typedef int64_t int_least64_t;
+typedef uint8_t uint_least8_t;
+typedef uint16_t uint_least16_t;
+typedef uint32_t uint_least32_t;
+typedef uint64_t uint_least64_t;
+
+
+
+typedef int8_t int_fast8_t;
+typedef int16_t int_fast16_t;
+typedef int32_t int_fast32_t;
+typedef int64_t int_fast64_t;
+typedef uint8_t uint_fast8_t;
+typedef uint16_t uint_fast16_t;
+typedef uint32_t uint_fast32_t;
+typedef uint64_t uint_fast64_t;
+# 73 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h"
+typedef long int intmax_t;
+# 82 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdint.h"
+typedef long unsigned int uintmax_t;
+# 6 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/osfmk/atlantic/early_log.h" 2
+
+
+
+
+
+enum AtlanticEarlyLogStatus {
+    ATL_LOG_OK = 0, ATL_LOG_INVALID = -1, ATL_LOG_BUSY = -2,
+    ATL_LOG_BUFFER_SMALL = -3
+};
+
+
+
+
+
+
+struct AtlanticEarlyLog {
+    uint32_t gate, contention_seen, head, size;
+    uint64_t records, accepted_bytes, overwritten_bytes, truncated_bytes;
+    unsigned char data[16384u];
+};
+
+struct AtlanticEarlyLogSnapshot {
+    uint32_t abi_version, struct_bytes, data_bytes, contention_seen;
+    uint64_t records, accepted_bytes, overwritten_bytes, truncated_bytes;
+};
+
+
+
+struct AtlanticEarlyLogRecord {
+    size_t bytes;
+    uint64_t truncated_bytes;
+    unsigned char data[1024u];
+};
+void atl_early_log_capture(int character, void *record);
+# 48 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/osfmk/atlantic/early_log.h"
+enum AtlanticEarlyLogStatus atl_early_log_append(struct AtlanticEarlyLog *log,
+    const void *source, size_t bytes, uint64_t truncated_bytes);
+# 58 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/osfmk/atlantic/early_log.h"
+enum AtlanticEarlyLogStatus atl_early_log_snapshot(struct AtlanticEarlyLog *log,
+    void *destination, size_t capacity, struct AtlanticEarlyLogSnapshot *metadata);
+# 5 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/pexpert/pexpert/atlantic_log.h" 2
+
+
+# 1 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdbool.h" 1
+# 31 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdbool.h"
+# 1 "<ROOT>/work/llvm-toolchain/native-active/clang-layout-cpp-v1-complete/build/lib/clang/19/include/stdbool.h" 1 3
+# 32 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/EXTERNAL_HEADERS/stdbool.h" 2
+# 8 "<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/pexpert/pexpert/atlantic_log.h" 2
+
+
+
+void atlantic_console_memory_putc(char character, _Bool poll);
+
+
+
+
+
+enum AtlanticEarlyLogStatus atlantic_xnu_log_snapshot(void *destination,
+    size_t capacity, struct AtlanticEarlyLogSnapshot *metadata);
+<ROOT>/work/xnu-lab-sources/b3284f535d9f191a/pexpert/pexpert/atlantic_log.h:9:2: error: RAM console requires the explicit firmware-only XNU profile
+    9 | #error RAM console requires the explicit firmware-only XNU profile
+      |  ^
+1 error generated.

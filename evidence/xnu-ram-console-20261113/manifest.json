@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "label": "BUILT_ARM64",
+  "scope": "NATIVE_XNU_COLD_BOOT_RAM_CONSOLE_QUEUE_AND_STATIC_LINK_DIAGNOSTIC",
+  "port_id": "b3284f535d9f191aeb20be64907a62b710aa901e928028ebfa6f75b155fa5008",
+  "artifacts": [
+    {
+      "path": "audit-reject-bsd.log",
+      "sha256": "2fd640587d6d9eb9e00b3b29fbdbf9283bae7b7d0e9182075776d030e4167fe3"
+    },
+    {
+      "path": "audit-reject-iokit.log",
+      "sha256": "2fd640587d6d9eb9e00b3b29fbdbf9283bae7b7d0e9182075776d030e4167fe3"
+    },
+    {
+      "path": "audit-reject-non-firmware.log",
+      "sha256": "2fd640587d6d9eb9e00b3b29fbdbf9283bae7b7d0e9182075776d030e4167fe3"
+    },
+    {
+      "path": "audit-serial_console-all-symbols.log",
+      "sha256": "93c0e8176d1b66924db6392d1751c1f60e3cae23be80a255278ba5e4bd5d01e5"
+    },
+    {
+      "path": "audit-serial_general-all-symbols.log",
+      "sha256": "e329919756247665429fc023e65ac54e5a384861f53068c933cb511114092d8b"
+    },
+    {
+      "path": "audit-startup-all-symbols.log",
+      "sha256": "fa05ca3df169e8c1707fb12cf9948ec2ad37b1f69d9e251e3438a46507f495dd"
+    },
+    {
+      "path": "audit.json",
+      "sha256": "a18961177d7abc7d6a7fe192c188ca4f34bff775f8c9c78dbc1f270274f4e349"
+    },
+    {
+      "path": "exp-build.json",
+      "sha256": "d8d31e0684136b11a62b57d5c25f8c52b6135dea51e968efd61ae707470a8f6d"
+    },
+    {
+      "path": "exp-early-log.json",
+      "sha256": "40601504764bf24f8a7cd4d4fe5dfa877f58ded69930846c319f75d54ae20c94"
+    },
+    {
+      "path": "exp-early-log.log",
+      "sha256": "6641eb0bcae1eae9f8a650e1baf47379e046414b276b4135e6781df94358c1cd"
+    },
+    {
+      "path": "exp-link.json",
+      "sha256": "5a1f61edae64152b1972222401274cc58c27c9ade346578b4801113920dc8f4b"
+    },
+    {
+      "path": "exp-link.log",
+      "sha256": "7b25f66819df8a693d9a727a7b8f3b16de433e20df15e3bb00e7b679f882ba9e"
+    },
+    {
+      "path": "exp-rpc-abi.json",
+      "sha256": "c404bcf2fdbfe70fbff76789490dd72ffce244664e5a466a58ac11f14f171e7d"
+    },
+    {
+      "path": "exp-rpc-abi.log",
+      "sha256": "fb4700a13af3394394f000e31c4b76cd46c77b949ab91b684a0d5890c6c13c71"
+    },
+    {
+      "path": "exp-rpc.json",
+      "sha256": "2f082ab82d0043ad4e3a8434e4a5f10a626d53473a9ad3c21481558bc3dbb58f"
+    },
+    {
+      "path": "exp-shared.json",
+      "sha256": "97d8b4c932b19bf234e0622cd383440247a6e52f232921c6e3fdb3f55ca7df6c"
+    },
+    {
+      "path": "exp-shared.log",
+      "sha256": "1077e28e26c763e02b8c4939e81a54008e9c2b62fb78c7f14933651a4c84f6f5"
+    },
+    {
+      "path": "exp-startup.json",
+      "sha256": "06f5b618dbd1296295d4f3cd205d152a67c8e75c43cc6a254914b58935526db4"
+    },
+    {
+      "path": "exp-startup.log",
+      "sha256": "f22f949916c0d855903b9a437d4cce3ed81527bda3f2fc2683bb10f71eeba1d3"
+    },
+    {
+      "path": "native-console-check.json",
+      "sha256": "8717e2f1126d98f8cb4984067bdcaf2598ee282b699301c71424dd0d7ca1dcde"
+    },
+    {
+      "path": "patch-provenance.json",
+      "sha256": "1078fa0dd397a5e6a0d6e2f88221d92229f69ab83327b45431e10779f417640d"
+    },
+    {
+      "path": "std-build.json",
+      "sha256": "0162e07cbb02c592866e4247c1b4bd79aa3872e7dae5b52557f95432825850cd"
+    },
+    {
+      "path": "std-early-log.json",
+      "sha256": "ef15c683dd17e86fd7b19e86db0435b6ea7097f974a8c48d1f0ed69898c4c068"
+    },
+    {
+      "path": "std-early-log.log",
+      "sha256": "a08099acc64947f3fbd2222bb8ba7a7e78fe447f2dd4ec8c722b567bbf27df44"
+    },
+    {
+      "path": "std-link.json",
+      "sha256": "088ca8c036a7ed4c181d871266b10ed66806827f4ec4925461d20909b694bb9b"
+    },
+    {
+      "path": "std-link.log",
+      "sha256": "c06edec6e554213612625a6be8b373e9264ae50df9f4deb1d7c0934f205a0695"
+    },
+    {
+      "path": "std-rpc-abi.json",
+      "sha256": "6e8e71dc7500c10d81fbab29ff628210a8359864be7e7b8f886c70fc77370b33"
+    },
+    {
+      "path": "std-rpc-abi.log",
+      "sha256": "78d3df6e3117fb8e1d29c0d1bc2ca21851e20718ace41502a6405b0292c7bfc9"
+    },
+    {
+      "path": "std-rpc.json",
+      "sha256": "5ba3858bc09551b4b596d92042a80205ecb3c4fac3084d02133804ac80392d45"
+    },
+    {
+      "path": "std-startup.json",
+      "sha256": "03fcc099a72bd7b69d2d251ea32e63313273be38ec178b35a5bfe59877afcfb3"
+    },
+    {
+      "path": "std-startup.log",
+      "sha256": "f22f949916c0d855903b9a437d4cce3ed81527bda3f2fc2683bb10f71eeba1d3"
+    }
+  ]
+}
