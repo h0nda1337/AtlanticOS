@@ -92,9 +92,11 @@ probar la carga real y conservar ese contexto para los callbacks PE.
 La [preparación original de boot_args](BOOT_PREPARATION.md) ya emite un candidato
 wire compatible con los tipos nativos, versión/revisión 2 y vídeo cero. Contrasta
 el alcance por bloques del perfil compilado y coloca el contexto propuesto
-después de la imagen. Se prueba en host y QEMU; todavía no coloca/copía el payload
-ni construye/ancla el contexto retenido real. El BSP debe demostrar ownership,
-granulación soportada, traducciones y cobertura de asignaciones nativas tempranas.
+después de la imagen. La colocación del Mach-O de prueba se ejecuta en el
+laboratorio QEMU. El localizador numérico deriva desde el boot_args nativo
+copiado el trailer de 256 bytes justo antes del árbol. El BSP todavía debe
+construir e instalar ese trailer y comprobar ownership, traducciones y cobertura
+de asignaciones nativas tempranas.
 
 ## ABI BSP en ejecución
 

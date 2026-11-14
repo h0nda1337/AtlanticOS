@@ -117,3 +117,21 @@ Fuentes oficiales:
 [boot.h ARM64](https://github.com/apple-oss-distributions/xnu/blob/xnu-12377.1.9/pexpert/pexpert/arm64/boot.h),
 [start.s](https://github.com/apple-oss-distributions/xnu/blob/xnu-12377.1.9/osfmk/arm64/start.s)
 y [arm_vm_init.c](https://github.com/apple-oss-distributions/xnu/blob/xnu-12377.1.9/osfmk/arm64/arm_vm_init.c).
+
+## Localización desde la copia nativa
+
+En el perfil actual, el árbol empieza en topOfKernelData − 32 KiB y el
+boot_args de entrada en topOfKernelData − 16 KiB. Los últimos 256 bytes antes
+del árbol se reservan para el trailer de contexto. Este anclaje usa las
+direcciones nativas ya disponibles. En el arranque real, arm_init rebasa el
+puntero físico y copia los 1 152 bytes a const_boot_args antes de
+PE_init_platform(FALSE, args). El productor y el consumidor deberán acceder
+al contexto derivado desde el mismo contrato.
+
+atl_xnu_boot_locate valida la forma ATL1, la geometría inicial por bloques,
+la alineación y la KVA del árbol. Devuelve PA/VA numéricas y conserva el
+resultado intacto ante un error. Pasan cuatro entradas válidas y 34 rechazos
+con ASan/UBSan, usando la referencia extraída del inicializador nativo ARM64.
+Todavía se requiere construir el trailer, comprobar el final efectivo de la
+imagen, traducir las direcciones de cada span y verificar su lifetime.
+[Manifiesto](../evidence/native-split-and-context-locator-20261113/manifest.json).

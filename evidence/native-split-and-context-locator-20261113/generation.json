@@ -1,0 +1,68 @@
+{
+  "fixture_sha256": "06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55",
+  "linker_sha256": "0366272978de83b5da6c47d37f458b9e0feaa58f9ac5dd14e831a23420f06133",
+  "linker_version": "AtlanticOS-static-arm64-v2 LLD 19.1.7",
+  "linker_proof_sha256": "5dfd83df8cd779447b234556f457f8715b312268a3d91dc29e08f0982bebd0da",
+  "source_sha256": {
+    "tests/lld_static/entry.s": "319940297694d92d79518da91a8296040c70faceced7a4a19f44195b3e8a73a4",
+    "tests/lld_static/data.s": "c3d2153463b6789ade371a7c4c21a745babbe383f521a412192a7395495e37ed"
+  },
+  "compile_commands": [
+    [
+      "clang-19",
+      "--target=arm64-apple-macos11.0",
+      "-c",
+      "tests/lld_static/entry.s",
+      "-o",
+      "entry.o"
+    ],
+    [
+      "clang-19",
+      "--target=arm64-apple-macos11.0",
+      "-c",
+      "tests/lld_static/data.s",
+      "-o",
+      "data.o"
+    ]
+  ],
+  "link_command": [
+    "ld64.lld",
+    "--atlantic-static-arm64=0xfffffff007004000",
+    "-arch",
+    "arm64",
+    "-platform_version",
+    "macos",
+    "11.0",
+    "11.0",
+    "-e",
+    "__start",
+    "-fatal_warnings",
+    "-undefined",
+    "error",
+    "--error-limit=0",
+    "-no_uuid",
+    "-rename_section",
+    "__TEXT",
+    "__text",
+    "__TEXT_EXEC",
+    "__text",
+    "-segprot",
+    "__TEXT",
+    "r--",
+    "r--",
+    "-segprot",
+    "__TEXT_EXEC",
+    "r-x",
+    "r-x",
+    "-segprot",
+    "__DATA_CONST",
+    "r--",
+    "r--",
+    "-o",
+    "native-split.macho",
+    "entry.o",
+    "data.o"
+  ],
+  "reproduced_exact_fixture": true,
+  "fixture_or_kernel_executed": false
+}

@@ -22,6 +22,7 @@ def main():
     ap.add_argument('--output', type=Path, required=True)
     ap.add_argument('--sanitize', action='store_true')
     ap.add_argument('--lld-fixtures', type=Path, help='Existing genuine Atlantic LLD v2 test directory')
+    ap.add_argument('--split-fixture', type=Path, help='Checked-in native split-text Mach-O fixture')
     ap.add_argument('--xnu-build', type=Path, help='Successful native build for official header ABI checks')
     args = ap.parse_args()
     out = args.output.resolve()
@@ -49,6 +50,12 @@ def main():
         assert len(fixtures) == 15
         fixture_proof = {'report_sha256': sha(folder/'report.json'),
                          'linker_sha256': proof['linker_sha256'], 'source_inputs': proof['inputs']}
+    split_expected = None
+    if args.split_fixture:
+        if sha(args.split_fixture) != '06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55':
+            ap.error('Split-text fixture differs from the retained link output')
+        split_expected = {'entry': 0xfffffff007014000, 'base': 0xfffffff007004000,
+                          'span': 0x18000, 'segments': 5, 'sections': 5, 'symbols': 11}
     out.mkdir(parents=True)
     commands = []
 
@@ -67,10 +74,17 @@ def main():
     exe = out/'host-tests'
     run('host-build', [cc, *flags, str(ROOT/'atlantic-core/macho.c'),
                        str(ROOT/'tests/c/test_macho.c'), '-o', str(exe)])
-    stdout = run('host-tests', [str(exe), *map(str, fixtures)])
+    fixture_arguments = [*map(str, fixtures)]
+    if args.split_fixture:
+        fixture_arguments.append(str(args.split_fixture))
+    stdout = run('host-tests', [str(exe), *fixture_arguments])
     stats = json.loads(next(s[5:] for s in stdout.splitlines() if s.startswith('PASS ')))
     assert stats['truncations'] == 33024 and stats['mutations'] == 12000 and stats['rejections'] >= 48
     images = [json.loads(s[6:]) for s in stdout.splitlines() if s.startswith('IMAGE ')]
+    split_audit = None
+    if split_expected:
+        assert images.pop() == split_expected
+        split_audit = {'sha256': sha(args.split_fixture), 'plan': split_expected}
     audits = []
     for image, record, path in zip(images, expected, fixtures, strict=True):
         segs = record['segments']
@@ -114,13 +128,14 @@ def main():
               'scope': 'ORIGINAL_STATIC_MACHO_PLAN_ONLY_NO_LOADING_OR_XNU_OR_DEVICE_EXECUTION',
               'inputs': {p: sha(ROOT/p) for p in INPUTS}, 'commands': commands,
               'sanitizers': args.sanitize, 'host_contracts': stats, 'lld_fixture_audits': audits,
-              'lld_fixture_proof': fixture_proof,
+              'lld_fixture_proof': fixture_proof, 'split_text_fixture': split_audit,
               'native_header_abi': native, 'arm64_object_sha256': sha(obj),
               'compiler_version': subprocess.check_output([cc, '--version'], text=True).splitlines()[0],
               'kernel_linked': False, 'xnu_executed': False, 'phone_accessed': False,
               'image_loaded': False, 'signature_checked': False, 'physical_memory_measured': False}
     (out/'report.json').write_text(json.dumps(report, indent=2)+'\n', encoding='utf-8', newline='\n')
-    print(json.dumps({'host_passed': True, **stats, 'lld_images': len(audits), 'native_abi': native is not None}))
+    print(json.dumps({'host_passed': True, **stats, 'lld_images': len(audits),
+                      'native_split_text_fixture_passed': split_audit is not None, 'native_abi': native is not None}))
 
 
 if __name__ == '__main__':

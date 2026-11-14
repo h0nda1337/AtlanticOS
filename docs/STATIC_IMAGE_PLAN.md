@@ -28,8 +28,10 @@ flowchart LR
 - Direcciones canónicas de 48 bits bajas o altas; base distinta de cero.
   Segmentos y offsets de archivo alineados a 16 KiB. El redondeo de cada
   mapping no puede desbordar ni solapar páginas del siguiente segmento.
-- Primer segmento __TEXT RX con la cabecera completa; último __LINKEDIT R con
-  tablas acotadas. Nombres únicos; permisos R, RW o RX, iguales a maxprot.
+- Primer segmento __TEXT con la cabecera completa; último __LINKEDIT R con
+  tablas acotadas. El perfil con cabecera R exige el punto de entrada en
+  __TEXT_EXEC RX. Los fixtures del perfil estático anterior conservan __TEXT RX.
+  Nombres únicos; permisos R, RW o RX, iguales a maxprot.
   Se admite SG_READ_ONLY únicamente sobre un segmento ya R. W+X falla.
 - Secciones ordenadas, sin solapamientos ni relocaciones pendientes. Se aceptan
   datos regulares, zero-fill, literales y punteros no lazy ya enlazados. No se
@@ -122,3 +124,19 @@ Formato contrastado con las fuentes oficiales fijadas:
 y [estado ARM64](https://github.com/apple-oss-distributions/xnu/blob/xnu-12377.1.9/osfmk/mach/arm/_structs.h).
 La implementación y harness son originales MIT; no se copia un cargador Apple,
 BootShim o del port UEFI G20.
+
+## Cabecera de solo lectura y código separado
+
+XNU instala __TEXT como RNX y __TEXT_EXEC como ROX al construir la tabla
+definitiva que usa arm_vm_init. El modo estático de LLD v2 permite las opciones
+de renombrado y protección del segmento. Un fixture reproducible tiene __TEXT R
+en 0xfffffff007004000, __TEXT_EXEC RX con la entrada en 0xfffffff007014000,
+y datos y linkedit en segmentos propios. El parser exige que una imagen con
+cabecera R tenga su entrada respaldada por instrucciones en __TEXT_EXEC.
+Las pruebas detectan una entrada en la cabecera, un segmento con nombre
+incorrecto y la pérdida de permiso de ejecución.
+
+El fixture cubre el formato, los permisos y el punto de entrada. El perfil
+nativo deberá además cotejar el orden y las secciones de startup, __BOOTDATA,
+__KLDDATA y otras consumidas por VM y kalloc.
+[Evidencia y receta](../evidence/native-split-and-context-locator-20261113/manifest.json).

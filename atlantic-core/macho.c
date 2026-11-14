@@ -48,7 +48,7 @@ int atl_macho_plan(const void *file, size_t bytes, struct AtlanticMachoPlan *out
     uint32_t count, end, at, i, j, sym=0, dysym=0, thread=0, build=0, uuid=0;
     uint32_t symoff, nsyms, stroff, strsize, indirect, nindirect;
     uint64_t entry=0;
-    int entry_section=0;
+    int entry_section=0, split_text=0;
     uintptr_t address=(uintptr_t)file, output=(uintptr_t)out;
     if (!p || !out || bytes<32 || bytes>ATL_MACHO_MAX_BYTES ||
         bytes>UINTPTR_MAX-address || sizeof(*out)>UINTPTR_MAX-output ||
@@ -99,8 +99,9 @@ int atl_macho_plan(const void *file, size_t bytes, struct AtlanticMachoPlan *out
             if (s->mapping_bytes>UINT64_MAX-s->virtual_address ||
                 !canonical(s->virtual_address+s->mapping_bytes-1)) return ATL_MACHO_LAYOUT;
             if (!plan.segment_count) {
-                if (!named(p+at+8,"__TEXT") || s->file_offset || s->file_bytes<end || s->protection!=5)
-                    return ATL_MACHO_LAYOUT;
+                if (!named(p+at+8,"__TEXT") || s->file_offset || s->file_bytes<end ||
+                    (s->protection!=1 && s->protection!=5)) return ATL_MACHO_LAYOUT;
+                split_text=s->protection==1;
                 plan.virtual_base=s->virtual_address;
                 previous_end=s->virtual_address+end;
             } else {
@@ -115,6 +116,8 @@ int atl_macho_plan(const void *file, size_t bytes, struct AtlanticMachoPlan *out
             for (j=0; j<plan.segment_count; ++j)
                 if (same16(p+at+8,(const uint8_t *)plan.segments[j].name)) return ATL_MACHO_LAYOUT;
             if (named(p+at+8,"__LINKEDIT") && (nsects || s->protection!=1)) return ATL_MACHO_LAYOUT;
+            if (split_text && named(p+at+8,"__TEXT_EXEC") && s->protection!=5)
+                return ATL_MACHO_LAYOUT;
             for (j=0; j<nsects; ++j) {
                 const uint8_t *q=p+at+72+80*j;
                 uint64_t va=le64(q+32), n=le64(q+40);
@@ -228,7 +231,8 @@ int atl_macho_plan(const void *file, size_t bytes, struct AtlanticMachoPlan *out
                 uint64_t va=le64(q+32), n=le64(q+40);
                 if ((le32(q+64)&255)==6 && !inside(le32(q+68),n/8,0,nindirect))
                     return ATL_MACHO_SYMBOL;
-                if (prot==5 && (le32(q+64)&0x80000400u) && inside(entry,4,va,n)) entry_section=1;
+                if (prot==5 && (!split_text || named(p+at+8,"__TEXT_EXEC")) &&
+                    (le32(q+64)&0x80000400u) && inside(entry,4,va,n)) entry_section=1;
             }
         }
         at+=size;

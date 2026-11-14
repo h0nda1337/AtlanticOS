@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "ORIGINAL_STATIC_MACHO_PLAN_ONLY_NO_LOADING_OR_XNU_OR_DEVICE_EXECUTION",
+  "inputs": {
+    "include/atlantic/macho.h": "6b9c78d2908b06accaec84f3eef8aa2d5daa6b091ea9e7911445029744d64ed3",
+    "atlantic-core/macho.c": "0ef318a01a5944398b343ec82f5d046dbc8a942473021f5f7c6db29279975076",
+    "tests/c/test_macho.c": "131fd05e328f9cb7808799e24f04d187417cd54ac82335608cf6ee26ae758c61",
+    "tests/xnu_port/macho_format_abi.c": "e0f909dc8b2d2971a49f5dbeaf37c4bcedee0afca5022285ccdceee87d126808",
+    "tools/test_macho.py": "1ced4587ada7e640e278bb7b1ea2c4a3f2d9872d3c69e1544766f9f8b1658d8f"
+  },
+  "commands": [
+    [
+      "/usr/bin/clang",
+      "-std=c11",
+      "-O1",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer",
+      "<ROOT>/atlantic-core/macho.c",
+      "<ROOT>/tests/c/test_macho.c",
+      "-o",
+      "<ROOT>/work/macho-split-final-20261113/host-tests"
+    ],
+    [
+      "<ROOT>/work/macho-split-final-20261113/host-tests",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/low.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/high.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/archive.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/archive-weak.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-a.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-ba.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/archive-weak-then-strong.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/strong-then-weak.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-strong-weak.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/high-weak.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-ab.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-then-strong.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-then-strong-archive.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-private-ab.macho",
+      "<ROOT>/work/lld-static-weak-clean-tests-v2/weak-private-ba.macho",
+      "work/native-text-split-20261113/native-split.macho"
+    ],
+    [
+      "/usr/bin/clang",
+      "--target=aarch64-none-elf",
+      "-std=c11",
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-c",
+      "<ROOT>/atlantic-core/macho.c",
+      "-o",
+      "<ROOT>/work/macho-split-final-20261113/macho-arm64.o"
+    ],
+    [
+      "llvm-nm",
+      "--undefined-only",
+      "<ROOT>/work/macho-split-final-20261113/macho-arm64.o"
+    ]
+  ],
+  "sanitizers": true,
+  "host_contracts": {
+    "cases": 45104,
+    "truncations": 33024,
+    "mutations": 12000,
+    "rejections": 56,
+    "files": 16
+  },
+  "lld_fixture_audits": [
+    {
+      "file": "low.macho",
+      "sha256": "d861a1d1d0f50147aebeca76ebc9b482d7c7c578f9d3ae9ad52dfcceff002c59",
+      "plan": {
+        "entry": 1073743000,
+        "base": 1073741824,
+        "span": 81920,
+        "segments": 4,
+        "sections": 5,
+        "symbols": 11
+      }
+    },
+    {
+      "file": "high.macho",
+      "sha256": "06b3bb2ca32f77cc38873726923b4dc9587c3afe0f82472d2ea9abf95c979f13",
+      "plan": {
+        "entry": 18446744005107532952,
+        "base": 18446744005107531776,
+        "span": 81920,
+        "segments": 4,
+        "sections": 5,
+        "symbols": 11
+      }
+    },
+    {
+      "file": "archive.macho",
+      "sha256": "f63cb73b9bc813b26d0b4510dea343e94c347c92da569480c9aab8db4babaf3c",
+      "plan": {
+        "entry": 1073743000,
+        "base": 1073741824,
+        "span": 81920,
+        "segments": 4,
+        "sections": 5,
+        "symbols": 11
+      }
+    },
+    {
+      "file": "archive-weak.macho",
+      "sha256": "640f4a28a04526e6ddffb044d7657072fba5a5b78e9ed3e13ef700e7a345d822",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-a.macho",
+      "sha256": "640f4a28a04526e6ddffb044d7657072fba5a5b78e9ed3e13ef700e7a345d822",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-ba.macho",
+      "sha256": "c109c047cbfc9b2d0f87247876735cc5cd88aeeca4073e660b64f7c8564a228a",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "archive-weak-then-strong.macho",
+      "sha256": "3f39bf209cab3c32e1fc4186a35707224a15410399e97a0d2e07c245c4a86d2f",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "strong-then-weak.macho",
+      "sha256": "3f39bf209cab3c32e1fc4186a35707224a15410399e97a0d2e07c245c4a86d2f",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-strong-weak.macho",
+      "sha256": "3f39bf209cab3c32e1fc4186a35707224a15410399e97a0d2e07c245c4a86d2f",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "high-weak.macho",
+      "sha256": "84e34d78ecd418c284e8bbf9f515470360e9f06d1a867ce198aec3d015ada3cd",
+      "plan": {
+        "entry": 18446744005107532792,
+        "base": 18446744005107531776,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-ab.macho",
+      "sha256": "640f4a28a04526e6ddffb044d7657072fba5a5b78e9ed3e13ef700e7a345d822",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-then-strong.macho",
+      "sha256": "3f39bf209cab3c32e1fc4186a35707224a15410399e97a0d2e07c245c4a86d2f",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-then-strong-archive.macho",
+      "sha256": "640f4a28a04526e6ddffb044d7657072fba5a5b78e9ed3e13ef700e7a345d822",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-private-ab.macho",
+      "sha256": "0fa3ca6e81923dc6daff3da88b426253b51b9b029dbf4b024b9960ae63fa2475",
+      "plan": {
+        "entry": 1073742840,
+        "base": 1073741824,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    },
+    {
+      "file": "weak-private-ba.macho",
+      "sha256": "6a585ddc6afe20c6599c929be3895412fba6da2e726ec258165d1c025de7f741",
+      "plan": {
+        "entry": 18446744005107532792,
+        "base": 18446744005107531776,
+        "span": 65536,
+        "segments": 4,
+        "sections": 3,
+        "symbols": 8
+      }
+    }
+  ],
+  "lld_fixture_proof": {
+    "report_sha256": "5dfd83df8cd779447b234556f457f8715b312268a3d91dc29e08f0982bebd0da",
+    "linker_sha256": "0366272978de83b5da6c47d37f458b9e0feaa58f9ac5dd14e831a23420f06133",
+    "source_inputs": {
+      "tools/test_atlantic_lld.py": "62ecefcb67930d85576b7053d95a56d0c033f37f2a5c020720fa731e5c20d8a6",
+      "tests/lld_static/entry.s": "319940297694d92d79518da91a8296040c70faceced7a4a19f44195b3e8a73a4",
+      "tests/lld_static/data.s": "c3d2153463b6789ade371a7c4c21a745babbe383f521a412192a7395495e37ed",
+      "tests/lld_static/weak-entry.s": "98b9d21f5e4388721333540f38efb1892b119be96fb6bffb9942cea471ba81b7",
+      "tests/lld_static/weak-definition.S": "fd1ca9b4776618fabb219f752b70b423c8d5777191ead31e9336710e8fe4f6bd",
+      "linker-port/0001-add-bounded-static-arm64-link-mode.patch": "0b7ff37bab7c8bcc27267990b47b7068896f552dc9e07f28649dfec6d749222f",
+      "linker-port/patches.lock.json": "26617f3e078c7e7554dbc7e6b78e4162cc34d302a4845c2b404f6a5d015e5cba"
+    }
+  },
+  "split_text_fixture": {
+    "sha256": "06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55",
+    "plan": {
+      "entry": 18446744005107597312,
+      "base": 18446744005107531776,
+      "span": 98304,
+      "segments": 5,
+      "sections": 5,
+      "symbols": 11
+    }
+  },
+  "native_header_abi": null,
+  "arm64_object_sha256": "78c5825b2eeecbd8d8eb37d70c13d6f6f8612ee030aa18fa828010ba1c54c31b",
+  "compiler_version": "Debian clang version 19.1.7 (3+b1)",
+  "kernel_linked": false,
+  "xnu_executed": false,
+  "phone_accessed": false,
+  "image_loaded": false,
+  "signature_checked": false,
+  "physical_memory_measured": false
+}

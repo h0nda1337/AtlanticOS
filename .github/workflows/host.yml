@@ -28,7 +28,9 @@ jobs:
       - name: Test bounded original RAM diagnostics with pthread contention and sanitizers
         run: python3 tools/test_early_log.py --sanitize --output work/early-log-tests
       - name: Validate original static Mach-O plans without loading or executing images
-        run: python3 tools/test_macho.py --sanitize --output work/macho-plan-tests
+        run: python3 tools/test_macho.py --sanitize --split-fixture evidence/native-split-and-context-locator-20261113/native-split.macho --output work/macho-plan-tests
+      - name: Derive retained context and tree addresses from a native boot_args fixture
+        run: python3 tools/test_boot_locator.py --sanitize --output work/boot-locator-tests
       - name: Prepare original candidate boot_args without loading XNU or claiming memory ownership
         run: python3 tools/test_boot_prepare.py --sanitize --output work/boot-prepare-tests
       - name: Build original ARM64 entry preflight (no XNU)
@@ -104,3 +106,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-shared-region-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/image-materialize-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-ram-console-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/native-split-and-context-locator-20261113/manifest.json

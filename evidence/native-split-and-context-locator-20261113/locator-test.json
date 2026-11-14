@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "NATIVE_BOOT_RECORD_NUMERIC_ADDRESS_DERIVATION",
+  "inputs": {
+    "atlantic-core/boot_locator.c": "12fdd9469e6f9dc8c62441f0c70cf8549f799baa043d73ce8bdb26b364babe31",
+    "tests/c/test_boot_locator.c": "4c8bb9618fdb2462c90f1b6d60ccf9dbf10c090340b3ef60fbb6b093324d4ab4",
+    "tools/test_boot_locator.py": "b30d9badf5cd567995a42af05acc02ce3caf82f52899bc81eb713970d43df99d",
+    "tools/test_xnu_brk_scope.py": "1a6e6f113f75696727166f46d3a65024cd4d6484928b926b49c087c209ee678a",
+    "include/atlantic/boot_locator.h": "718d58eb4394e29b7be398e4d02af4f6bdbd0da74c4db08451fe77c2a7e06551",
+    "include/atlantic/boot_prepare.h": "beffc303558bdbed0d4a63fab4defde01cb96c491a82e3db9221180d2fc6b27e",
+    "include/atlantic/boot_tree.h": "b7e09b6ff1b8e85606b5239115222e32e784e0d6bb67933f82e20dd745312a5e",
+    "include/atlantic/macho.h": "6b9c78d2908b06accaec84f3eef8aa2d5daa6b091ea9e7911445029744d64ed3",
+    "include/atlantic/fdt.h": "dcfb68be452c03828559d671459e2890606ee4d37cc5d3afb395848f3361a6d3",
+    "evidence/boot-prepare-20261025/std/candidate-boot-args.bin": "8971c60b7399ceaf65a735ffa4b59af9c0e921b3fd632690da538b5f2e2dcbcd",
+    "evidence/boot-prepare-20261025/std/native-boot-abi.o": "b4d591182c78b795b4cff190699c26be7a2e0820e1292d1582d7549827533f78",
+    "evidence/boot-prepare-20261025/std/report.json": "d106648e74323568fd7d607730db0a00927f881e6f11a9392f2054d62743cb5c"
+  },
+  "commands": [
+    [
+      "/usr/bin/clang",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-omit-frame-pointer",
+      "<ROOT>/atlantic-core/boot_locator.c",
+      "<ROOT>/tests/c/test_boot_locator.c",
+      "-o",
+      "<ROOT>/work/boot-locator-20261113-alignment-asan/host-tests"
+    ],
+    [
+      "<ROOT>/work/boot-locator-20261113-alignment-asan/host-tests",
+      "<ROOT>/evidence/boot-prepare-20261025/std/candidate-boot-args.bin"
+    ],
+    [
+      "/usr/bin/clang",
+      "--target=aarch64-none-elf",
+      "-mstrict-align",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-c",
+      "<ROOT>/atlantic-core/boot_locator.c",
+      "-o",
+      "<ROOT>/work/boot-locator-20261113-alignment-asan/boot-locator-arm64.o"
+    ],
+    [
+      "/usr/bin/llvm-nm",
+      "--undefined-only",
+      "<ROOT>/work/boot-locator-20261113-alignment-asan/boot-locator-arm64.o"
+    ],
+    [
+      "/usr/bin/llvm-nm",
+      "--defined-only",
+      "--extern-only",
+      "<ROOT>/work/boot-locator-20261113-alignment-asan/boot-locator-arm64.o"
+    ]
+  ],
+  "sanitizers": true,
+  "host_contracts": {
+    "accepted": 4,
+    "rejected": 34
+  },
+  "arm64_object_sha256": "905d379a981247a557e2feb8a56c7e74c51bf0fa0bcbc9d8ec6ee94f8c827699",
+  "arm64_imports": [],
+  "derived_addresses_dereferenced": false,
+  "live_translations_verified": false,
+  "xnu_executed": false,
+  "phone_accessed": false
+}

@@ -168,6 +168,49 @@ static void contracts(void) {
     fixture(UINT64_C(0xfffffff007004000)); assert(!check(image,BYTES));
     reject64(32+24,UINT64_C(0xffffffffffffc000),ATL_MACHO_LAYOUT);
 }
+static void split_text_contract(void) {
+    const uint64_t base=UINT64_C(0xfffffff007004000);
+    const uint32_t text_command=32, exec_command=32+72;
+    uint8_t *split=calloc(1,BYTES+ATL_MACHO_PAGE_BYTES);
+    struct AtlanticMachoPlan plan;
+    assert(split);
+    fixture(base+ATL_MACHO_PAGE_BYTES);
+    memcpy(split,image,32);
+    memcpy(split+exec_command,image+32,thread_at+288-32);
+    memcpy(split+ATL_MACHO_PAGE_BYTES,image,BYTES);
+    /* Read-only header, separate RX code, and the original shifted data. */
+    w32(split+16,8);
+    w32(split+20,thread_at+288-32+72);
+    segment(split+text_command,"__TEXT",base,0x4000,0,0x4000,1,0);
+    memset(split+exec_command+8,0,16);
+    memcpy(split+exec_command+8,"__TEXT_EXEC",11);
+    memset(split+exec_command+72+16,0,16);
+    memcpy(split+exec_command+72+16,"__TEXT_EXEC",11);
+    w64(split+exec_command+40,0x4000);
+    w32(split+exec_command+72+48,0x5000);
+    uint32_t data_command=exec_command+152;
+    w64(split+data_command+40,0x8000);
+    w32(split+data_command+72+48,0x8000);
+    w64(split+data_command+232+40,0xc000);
+    w32(split+sym_at+72+8,0xc000);
+    w32(split+sym_at+72+16,0xc040);
+    w64(split+0xc000+48+8,base);
+    assert(!check(split,BYTES+ATL_MACHO_PAGE_BYTES));
+    assert(!atl_macho_plan(split,BYTES+ATL_MACHO_PAGE_BYTES,&plan));
+    assert(plan.virtual_base==base && plan.entry==base+0x5000);
+    assert(plan.segments[0].protection==1 && plan.segments[1].protection==5);
+    w64(split+thread_at+72+272,base);
+    assert(check(split,BYTES+ATL_MACHO_PAGE_BYTES)==ATL_MACHO_ENTRY); ++rejections;
+    w64(split+thread_at+72+272,base+0x5000);
+    split[exec_command+8+10]='X';
+    split[exec_command+72+16+10]='X';
+    assert(check(split,BYTES+ATL_MACHO_PAGE_BYTES)==ATL_MACHO_ENTRY); ++rejections;
+    split[exec_command+8+10]='C';
+    split[exec_command+72+16+10]='C';
+    w32(split+exec_command+56,1); w32(split+exec_command+60,1);
+    assert(check(split,BYTES+ATL_MACHO_PAGE_BYTES)==ATL_MACHO_LAYOUT); ++rejections;
+    free(split);
+}
 static void file_contract(const char *path) {
     FILE *f=fopen(path,"rb"); long n; uint8_t *data; struct AtlanticMachoPlan plan;
     assert(f && !fseek(f,0,SEEK_END)); n=ftell(f); assert(n>0 && n<=ATL_MACHO_MAX_BYTES);
@@ -183,6 +226,7 @@ static void file_contract(const char *path) {
 }
 int main(int argc, char **argv) {
     contracts();
+    split_text_contract();
     for (int i=1;i<argc;++i) file_contract(argv[i]);
     printf("PASS {\"cases\":%u,\"truncations\":%u,\"mutations\":%u,\"rejections\":%u,\"files\":%d}\n",
            cases,truncations,mutations,rejections,argc-1);

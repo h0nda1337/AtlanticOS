@@ -1,0 +1,35 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "ORIGINAL_STATIC_SPLIT_TEXT_FIXTURE_AND_NATIVE_BOOT_ARGS_NUMERIC_LOCATOR",
+  "artifacts": [
+    {
+      "path": "generation.json",
+      "sha256": "e2aadcc58c09d027bd5fa96703140af3dd5ee2e8516c516fd8a897bf2cfc863f"
+    },
+    {
+      "path": "locator-test.json",
+      "sha256": "95bc36aaaad2ec2b4c75feecaed4aef3432028d81185590b80276a171a5e0387"
+    },
+    {
+      "path": "locator-test.log",
+      "sha256": "5c74fa3763a8241c9031c41a1e2bceb0cbb06302705f236b97b0e853415dc0c3"
+    },
+    {
+      "path": "macho-headers.log",
+      "sha256": "d63f2fa65802a6662395ae7e38169811554dd3c5e51f4a3520230bc52bd0bf3d"
+    },
+    {
+      "path": "macho-test.json",
+      "sha256": "4ec59b2f98f837b511edcf1e32d76ab5421e1da7ccc46b8713ee1e1e65e71c27"
+    },
+    {
+      "path": "macho-test.log",
+      "sha256": "b697f5bd5de95529db858fe0f2654f00b15089920bf8fea3bf9c957223fd08f8"
+    },
+    {
+      "path": "native-split.macho",
+      "sha256": "06baef127289c71235c007622933a0ccc1b95b3c284c70997d61783ced8b9d55"
+    }
+  ]
+}
