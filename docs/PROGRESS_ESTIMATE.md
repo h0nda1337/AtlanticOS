@@ -14,7 +14,7 @@ los cinco puntos de crédito adicional. [Registro de la revisión anterior](../e
 |---|---:|---:|---|
 | Infraestructura inicial | 10 | 10 → 10 | Clang reproducible desde fuentes, MIG oficial y CI. C y C++ tienen pruebas propias en el compilador |
 | Integración nativa y enlace | 25 | 10 → 13 | Metadata C++ del allocator verificada y runtime Blocks nativo de XNU, catálogo ARM, regiones compartidas con commpage y metadata nativa de versión. 166 unidades base y 26 RPC en enlace estricto, con 365 símbolos pendientes y cero duplicados. Sigue pendiente el Mach-O |
-| Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Faltan la colocación, el contexto retenido, la propiedad de RAM y las traducciones conectadas a XNU |
+| Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Se verificó la colocación del fixture Mach-O. Faltan contexto retenido, propiedad de RAM y traducciones para XNU |
 | Bootstrap Mach operativo | 15 | 0 → 0 | Pendiente ejecutar XNU con VM/allocator y un contexto Mach instrumentado |
 | BSP e instrumentación física G20 | 20 | 0 → 0 | Los dos overlays del mirror coinciden en GIC, timer, CPU y PSCI. Falta ejecutar e instrumentar el BSP original en el T700 |
 | Carga temporal y recuperación independiente | 10 | 3 → 3 | Identidad y bootloader desbloqueado observados. La carga temporal y la recuperación independiente tras un fallo del payload siguen pendientes. El U-Boot RETBR estudiado deriva `boot` a la partición. Falta acreditar el comportamiento del amxmx de la unidad |
@@ -33,6 +33,7 @@ placas conservan su alcance posterior.
 
 [Evidencia de compilación y enlace](../evidence/xnu-shared-region-20261113/manifest.json) ·
 [Timer e IRQ en QEMU](../evidence/qemu-timer-irq-20261113/manifest.json) ·
+[Colocación del fixture](../evidence/image-materialize-20261113/manifest.json) ·
 [Mirror RETBR y pruebas físicas pendientes](STOCK_FIRMWARE_ANALYSIS.md).
 
 El próximo hito sustantivo es un **ejecutable estático XNU real enlazado**, con
@@ -53,7 +54,7 @@ significaría el 75 % del esfuerzo.
 | Puerta | Evidencia necesaria para superarla | Estado en la revisión |
 |---|---|---|
 | P1: imagen XNU estática | Enlace estricto completo, proveedores reales, cero imports pendientes y validación del Mach-O exacto | PENDIENTE: enlace exit 1, sin imagen |
-| P2: XNU operativo en laboratorio | Ejecutar la imagen con VM/allocator y contexto válidos; un hilo Mach y timer o transición de contexto instrumentados | PENDIENTE: QEMU ejecuta entry, productor y probe de timer originales. XNU sigue sin imagen |
+| P2: XNU operativo en laboratorio | Ejecutar la imagen con VM/allocator y contexto válidos; un hilo Mach y timer o transición de contexto instrumentados | PENDIENTE: QEMU ejecuta entry, productor, materializador y probe de timer originales. XNU sigue sin imagen |
 | P3: vía física G20 | Recuperación independiente por botones, carga temporal comprobada e instrumentación de entry/BSP propios, sin escritura de particiones | PENDIENTE: se observó Recovery OEM; no se probó el retorno independiente tras un payload ni la vía temporal |
 | P4: primer XNU físico | Captura física de la imagen exacta alcanzando bootstrap y servicio Mach sustantivo con BSP original; retorno stock | PENDIENTE: ninguna ejecución AtlanticOS en G20 |
 | P5: XNU → EDK2 | Desde ese XNU operativo: PREPARE/QUIESCE/COMMIT, DMA/memoria controlados y entrada EDK2 física identificable | PENDIENTE: sin handoff |

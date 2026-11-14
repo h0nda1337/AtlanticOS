@@ -107,10 +107,11 @@ Cada prueba host exige carpeta nueva. Para los otros recorridos construir y
 emular normal y el1-trap por separado. CI host ejecuta las seis rutas QEMU y
 el contrato portable; las lanes XNU contrastan el inicializador y geometría.
 
-[Evidencia](../evidence/boot-prepare-20261025/manifest.json). Falta colocar,
-copiar/zero-fill y autenticar la imagen, construir/anclar el contexto retenido,
-probar traducciones y asignaciones tempranas, implementar IRQ/BSP y ejecutar
-kernel y handoff EDK2. El enlace sigue en 179 objetos / 476 indefinidos, sin imagen.
+[Evidencia original](../evidence/boot-prepare-20261025/manifest.json).
+El [materializador](ENTRY_LAB.md#colocación-y-lectura-de-un-mach-o-de-prueba-en-qemu)
+ya copia y pone a cero los segmentos de prueba en RAM declarada. Autenticación,
+contexto retenido, traducciones y asignaciones tempranas, BSP físico y ejecución
+del kernel y handoff EDK2 siguen pendientes.
 
 Fuentes oficiales:
 [boot.h ARM64](https://github.com/apple-oss-distributions/xnu/blob/xnu-12377.1.9/pexpert/pexpert/arm64/boot.h),

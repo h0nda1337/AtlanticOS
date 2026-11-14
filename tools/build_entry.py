@@ -21,13 +21,15 @@ SOURCES=['atlantic-entry/entry.S','atlantic-entry/preflight.c','atlantic-entry/l
          'platforms/qemu-virt/boot_probe.c','tests/entry/boot_image.S',
          'evidence/static-image-plan-20261025/lld-fixtures/high.macho']
 TIMER_IRQ_SOURCES = ['platforms/qemu-virt/timer_irq_probe.c', 'platforms/qemu-virt/timer_irq_vectors.S']
+MATERIALIZE_SOURCES = ['atlantic-core/image_materialize.c', 'include/atlantic/image_materialize.h',
+                       'platforms/qemu-virt/materialize_probe.c']
 
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--board',choices=['qemu-virt'],default='qemu-virt')
     parser.add_argument('--output',type=Path,default=ROOT/'work/entry-qemu')
-    parser.add_argument('--probe',choices=['normal','el1-trap','boot-args','timer-irq'],default='normal')
+    parser.add_argument('--probe',choices=['normal','el1-trap','boot-args','timer-irq','materialize'],default='normal')
     args=parser.parse_args()
     cc,ld,objcopy=(shutil.which(x) for x in ['clang','ld.lld','llvm-objcopy'])
     if not all((cc,ld,objcopy)):
@@ -37,6 +39,8 @@ def main():
         raise SystemExit('Build output must remain under work/')
     out.mkdir(parents=True,exist_ok=True)
     sources = SOURCES + (TIMER_IRQ_SOURCES if args.probe == 'timer-irq' else [])
+    if args.probe == 'materialize':
+        sources += MATERIALIZE_SOURCES
     hashes={p:hashlib.sha256((ROOT/p).read_bytes()).hexdigest() for p in sources}
     build_id=hashlib.sha256(json.dumps({'sources':hashes,'probe':args.probe},sort_keys=True,separators=(',',':')).encode()).hexdigest()
     flags=['--target=aarch64-none-elf','-mcpu=cortex-a57','-mgeneral-regs-only','-mstrict-align',
@@ -45,7 +49,8 @@ def main():
            '-Wall','-Wextra','-Werror','-Iinclude',f'-DATL_BUILD_ID="{build_id}"',
            '-ffile-prefix-map='+str(ROOT)+'=.', '-DATL_TEST_EL1_TRAP='+str(int(args.probe=='el1-trap')),
            '-DATL_TEST_BOOT_ARGS='+str(int(args.probe=='boot-args')),
-           '-DATL_TEST_TIMER_IRQ='+str(int(args.probe=='timer-irq'))]
+           '-DATL_TEST_TIMER_IRQ='+str(int(args.probe=='timer-irq')),
+           '-DATL_TEST_MATERIALIZE='+str(int(args.probe=='materialize'))]
     commands=[]
     logs=[]
     def run(command):
@@ -61,6 +66,9 @@ def main():
     if args.probe=='boot-args':
         compile_sources+=['atlantic-core/macho.c','atlantic-core/boot_prepare.c',
                           'platforms/qemu-virt/boot_probe.c','tests/entry/boot_image.S']
+    if args.probe=='materialize':
+        compile_sources+=['atlantic-core/macho.c','atlantic-core/boot_prepare.c','atlantic-core/image_materialize.c',
+                          'platforms/qemu-virt/materialize_probe.c','tests/entry/boot_image.S']
     if args.probe=='timer-irq':
         compile_sources += TIMER_IRQ_SOURCES
     for source in compile_sources:

@@ -96,3 +96,32 @@ cada disparo. Los registros y las direcciones MMIO corresponden a QEMU. El
 BSP físico requiere confirmar la interfaz y el grupo del G20 según T06.
 El paso por `sleh_irq`, `rtclock_intr` y el callback Mach queda para el
 kernel enlazado. [Capturas de ambos recorridos](../evidence/qemu-timer-irq-20261113/manifest.json).
+
+## Colocación y lectura de un Mach-O de prueba en QEMU
+
+`atl_xnu_image_materialize` revalida el archivo retenido y el plan de memoria.
+El llamador debe tener acceso exclusivo y estable a la arena completa y conservar
+inmutables los bytes de entrada. Se comprueban solapamientos de punteros y, por
+separado, los rangos físicos declarados para archivo y destino. El materializador
+no deduce esas direcciones desde el puntero. Valida todos los límites antes
+de copiar y pone a cero las colas de cada segmento, hasta su tamaño de mapping.
+
+La prueba usa un único vCPU y EL1h con MMU y caches deshabilitadas. El laboratorio
+declara una ventana de 32 MiB en 0x42000000. Verifica byte por byte 49 456 bytes
+de archivo, 32 464 bytes de BSS y relleno, y que el prefijo, las páginas de
+contexto/árbol/boot_args y un canario al final de la arena permanecen intactos.
+La ventana de 64 MiB que incluye el DTB de QEMU se rechaza antes de escribir.
+Ambos recorridos comprueban las mismas condiciones. En host, ASan/UBSan verifica
+ocho colocaciones, cinco con huecos, y 45 rechazos transaccionales.
+
+```sh
+python3 tools/test_image_materialize.py --sanitize --output work/image-materialize-host
+python3 tools/build_entry.py --probe materialize --output work/entry-qemu-materialize
+python3 tools/emulate_entry.py --build work/entry-qemu-materialize
+```
+
+El fixture se genera a partir del ensamblador de pruebas y su entrada no se
+invoca. Falta construir el contexto retenido y demostrar las traducciones,
+permisos y barreras requeridos por XNU. Los tamaños de arena y segmentos son
+geometría del ensayo y no miden memoria residente de AtlanticOS.
+[Manifiesto de las pruebas](../evidence/image-materialize-20261113/manifest.json).

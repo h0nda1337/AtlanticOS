@@ -57,6 +57,7 @@ def main():
         data_ok=bool(tree and int(tree[1],16)==504 and 'PASS:BOOT_DATA_DECLARATIONS_XNU_TREE_ONLY' in log)
         candidate=None
         timer_irq=None
+        materialized=False
         if meta.get('probe')=='timer-irq':
             expected_irq = {'GIC_VERSION':[3], 'EOI_MODE':[0], 'SHOT':[1,2],
                 'INTID':[27,27], 'ACK_TOTAL':[1,2], 'EOI_TOTAL':[1,2],
@@ -68,6 +69,13 @@ def main():
             if (timer_irq != expected_irq or log.count('PASS:NO_MASKED_REDELIVERY')!=2 or
                 log.count('PASS:QEMU_GICV3_VIRTUAL_TIMER_GROUP1')!=1):
                 raise SystemExit(f'EL{el} timer IRQ evidence differs from the two expected deliveries')
+        if meta.get('probe')=='materialize':
+            markers = ('PASS:MATERIALIZE_RESERVED_WINDOW_UNTOUCHED',
+                       'PASS:MATERIALIZE_SEGMENT_READBACK', 'PASS:MATERIALIZE_UNWRITTEN_RAM',
+                       'FIXTURE_ENTRY_NOT_EXECUTED')
+            materialized = all(log.count(marker)==1 for marker in markers)
+            if not materialized:
+                raise SystemExit(f'EL{el} materialization readback evidence missing')
         if meta.get('probe')=='boot-args':
             wire=re.search(r'^CANDIDATE_BOOT_ARGS_HEX=([0-9a-f]{2304})$',log,re.M)
             expected=bytearray(1152)
@@ -92,6 +100,7 @@ def main():
                         'boot_data_checked':True,'native_tree_bytes':int(tree[1],16),
                         'candidate_boot_args_sha256':candidate,
                         'virtual_timer_interrupts':timer_irq,
+                        'materialized_fixture_readback':materialized,
                         'log_sha256':hashlib.sha256((folder/f'qemu-el{el}.log').read_bytes()).hexdigest(),
                         'command':[Path(command[0]).name,*[s.replace(str(ROOT),'<ROOT>') for s in command[1:]]]})
     report={'schema_version':1,'label':'EMULATED','scope':'ORIGINAL_ARM64_ENTRY_ONLY_NOT_XNU_NOT_G20',

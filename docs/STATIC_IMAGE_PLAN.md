@@ -76,16 +76,19 @@ las tablas activas ni propiedad del destino. El futuro productor deberá:
 4. Construir boot_args y contexto retenido, implementar callbacks PE con pruebas
    reales de ownership/IRQ y entrar mediante la ABI propia instrumentada.
 
-Todo ese productor sigue pendiente. Los lectores nativos de
+El paso de copia se implementó y verificó con un fixture en
+[preflight QEMU](ENTRY_LAB.md#colocación-y-lectura-de-un-mach-o-de-prueba-en-qemu).
+Autenticación, tablas y entrada nativa están pendientes. Los lectores nativos de
 [XNU_STRING_IMAGE_SUPPORT](XNU_STRING_IMAGE_SUPPORT.md) requieren una cabecera
 real, validada, propia y mapeada; este nuevo parser cubre solamente la validación
 de formato previa. No define un _mh_execute_header ficticio ni añade stubs al
 enlace pendiente de 153 unidades base + 26 RPC / 476 indefinidos.
 
 La [preparación posterior de boot_args](BOOT_PREPARATION.md) ya resuelve su
-serialización candidata y la comprobación de alcance nativo. La carga real,
-contexto retenido, ownership y traducciones del productor completo siguen
-pendientes; el parser de esta página conserva su función de validación previa.
+serialización candidata y la comprobación de alcance nativo. El parser sigue
+validando el formato y el materializador usa ese plan para copiar los segmentos
+de comprobación. El BSP todavía debe acreditar el contexto y las traducciones
+que se usarán en el arranque nativo.
 
 ## Evidencia y reproducción
 

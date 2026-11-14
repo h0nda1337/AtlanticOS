@@ -47,6 +47,11 @@ jobs:
         run: |
           python3 tools/build_entry.py --probe boot-args --output work/entry-qemu-boot-args
           python3 tools/emulate_entry.py --build work/entry-qemu-boot-args
+      - name: Check static fixture materialization on host and QEMU
+        run: |
+          python3 tools/test_image_materialize.py --sanitize --output work/image-materialize-host
+          python3 tools/build_entry.py --probe materialize --output work/entry-qemu-materialize
+          python3 tools/emulate_entry.py --build work/entry-qemu-materialize
       - name: Validate checked-in evidence hashes
         run: |
           python3 tools/evidence-validator/validate_evidence.py evidence/host/manifest.json
@@ -97,3 +102,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-arm-features-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/qemu-timer-irq-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-shared-region-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/image-materialize-20261113/manifest.json

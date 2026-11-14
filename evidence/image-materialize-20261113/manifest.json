@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "label": "EMULATED",
+  "scope": "ORIGINAL_STATIC_MACHO_FIXTURE_SEGMENT_PLACEMENT_AND_READBACK_NO_KERNEL_EXECUTION",
+  "artifacts": [
+    {
+      "path": "arm64-imports.log",
+      "sha256": "4dc5bf7202a64832d7ac6416974b22d51672d758716ade6be90e729641c06afb"
+    },
+    {
+      "path": "boot-args-regression.json",
+      "sha256": "f4e31906798e213b6ea1b89f0958fec36cf877f68d1571d1a9cbdedfe3580952"
+    },
+    {
+      "path": "build.json",
+      "sha256": "0cf3dc9844b7c2db1b122b367ba49c2f71ae3c67b8481aaa08fecb548994bfb0"
+    },
+    {
+      "path": "el1-trap-regression.json",
+      "sha256": "9e828a27b11f79bbff707f8f6aad9fa18a57e2c9234209aa31d268646c3a4105"
+    },
+    {
+      "path": "emulation.json",
+      "sha256": "371183e6fcc5a20a5225b817f1e187d26a5b042b27a52422c601302fa4c32d98"
+    },
+    {
+      "path": "entry.map",
+      "sha256": "78d8838866266adb4a3a5bcf70655e490ff47ec927753c3bbbfa2591b26c27dc"
+    },
+    {
+      "path": "host-report.json",
+      "sha256": "bd06a101fa9d44d87b52872ab6808d912bbb1778afbb1cb8007a22140fb863c2"
+    },
+    {
+      "path": "host-tests.log",
+      "sha256": "2916e975f76cbcf6666d500dfe42ab69e7d503f016ea706c7f680315db641144"
+    },
+    {
+      "path": "normal-regression.json",
+      "sha256": "b604b1482b768f05a178d9817c0d7a9beaf97caf359a1d33834d88efa6bd8d6a"
+    },
+    {
+      "path": "qemu-el1.log",
+      "sha256": "925dceac704998a54e0edd94ad85a9f9daef2496f3dce086679cea54543683bd"
+    },
+    {
+      "path": "qemu-el2.log",
+      "sha256": "cf69254fc1dea3ed6a3ec518e94968216b8f81a695337a634786ff76fb8eda51"
+    },
+    {
+      "path": "timer-irq-regression.json",
+      "sha256": "1d674e7d8e05108e903932e5e69154e04349aa8819c33f078184ea8d7d027608"
+    }
+  ]
+}

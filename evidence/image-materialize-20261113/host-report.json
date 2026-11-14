@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "STATIC_FIXTURE_BYTES_IN_DECLARED_HOST_RAM",
+  "inputs": {
+    "atlantic-core/boot_prepare.c": "282132fe1dcdd141ae48e3c2bb21d9b927768aea0cf0a8c3f2ab889a8e1e243f",
+    "atlantic-core/image_materialize.c": "2bbdbbb6de78a749bb576a27576ef031ef5b15c5a548be3ad93dfbb66b426bda",
+    "atlantic-core/macho.c": "4121a066fb9127070b70af7095d04ca7c10a73c0e3327ea88a086a69cded391c",
+    "include/atlantic/boot_prepare.h": "beffc303558bdbed0d4a63fab4defde01cb96c491a82e3db9221180d2fc6b27e",
+    "include/atlantic/boot_tree.h": "b7e09b6ff1b8e85606b5239115222e32e784e0d6bb67933f82e20dd745312a5e",
+    "include/atlantic/image_materialize.h": "6aa4038bda965068477d4adfb1a4901d8b6c618750f4a4c70debab544dfe6070",
+    "include/atlantic/macho.h": "6b9c78d2908b06accaec84f3eef8aa2d5daa6b091ea9e7911445029744d64ed3",
+    "tests/c/test_image_materialize.c": "c7027cd49a0bf75c58ce1318818b339dc16e1da7dafd5dfeb7d96607a35bebfa",
+    "tools/test_image_materialize.py": "46df16a113956afb45ccdf47778e1cfad89a2b788ff36472b9f0d136f6db8b6d"
+  },
+  "fixture_report_sha256": "5dfd83df8cd779447b234556f457f8715b312268a3d91dc29e08f0982bebd0da",
+  "fixture_sha256": {
+    "high.macho": "06b3bb2ca32f77cc38873726923b4dc9587c3afe0f82472d2ea9abf95c979f13",
+    "low.macho": "d861a1d1d0f50147aebeca76ebc9b482d7c7c578f9d3ae9ad52dfcceff002c59"
+  },
+  "commands": [
+    [
+      "/usr/bin/clang",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-O1",
+      "-g",
+      "-fsanitize=address,undefined",
+      "-fno-sanitize-recover=all",
+      "-fno-omit-frame-pointer",
+      "<ROOT>/atlantic-core/macho.c",
+      "<ROOT>/atlantic-core/boot_prepare.c",
+      "<ROOT>/atlantic-core/image_materialize.c",
+      "<ROOT>/tests/c/test_image_materialize.c",
+      "-o",
+      "<ROOT>/work/image-materialize-asan-20261113/host-tests"
+    ],
+    [
+      "<ROOT>/work/image-materialize-asan-20261113/host-tests",
+      "<ROOT>/evidence/static-image-plan-20261025/lld-fixtures/high.macho",
+      "<ROOT>/evidence/static-image-plan-20261025/lld-fixtures/low.macho"
+    ],
+    [
+      "/usr/bin/clang",
+      "--target=aarch64-none-elf",
+      "-mstrict-align",
+      "-std=c11",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-I<ROOT>/include",
+      "-O2",
+      "-ffreestanding",
+      "-fno-builtin",
+      "-fno-stack-protector",
+      "-c",
+      "<ROOT>/atlantic-core/image_materialize.c",
+      "-o",
+      "<ROOT>/work/image-materialize-asan-20261113/image-materialize-arm64.o"
+    ],
+    [
+      "/usr/bin/llvm-readelf",
+      "--file-header",
+      "<ROOT>/work/image-materialize-asan-20261113/image-materialize-arm64.o"
+    ],
+    [
+      "/usr/bin/llvm-nm",
+      "--undefined-only",
+      "<ROOT>/work/image-materialize-asan-20261113/image-materialize-arm64.o"
+    ],
+    [
+      "/usr/bin/llvm-nm",
+      "--defined-only",
+      "--extern-only",
+      "<ROOT>/work/image-materialize-asan-20261113/image-materialize-arm64.o"
+    ]
+  ],
+  "sanitizers": [
+    "address",
+    "undefined"
+  ],
+  "host_contracts": {
+    "successful": 8,
+    "transactional_failures": 45,
+    "hole_fixtures": 5
+  },
+  "arm64_object_sha256": "f68c975ab991870710935dd990c1ee273da43909c4503f2e1ef236605a2b186b",
+  "arm64_imports": [
+    "atl_macho_plan",
+    "atl_xnu_boot_prepare"
+  ],
+  "boot_args_written_to_arena": false,
+  "physical_mapping_verified": false,
+  "image_authenticated": false,
+  "mmu_enabled": false,
+  "xnu_executed": false,
+  "phone_accessed": false
+}
