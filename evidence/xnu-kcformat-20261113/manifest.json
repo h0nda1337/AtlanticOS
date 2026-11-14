@@ -1,0 +1,48 @@
+{
+  "schema_version": 1,
+  "label": "BUILT_ARM64",
+  "scope": "NATIVE_XNU_KERNEL_COLLECTION_STATE_AND_STRICT_LINK_DIAGNOSTIC",
+  "port_id": "db10a5512f7affd2bcb745c4e9ca527404b32737bb7a8f07f4d895a79851406d",
+  "artifacts": [
+    {
+      "path": "audit.json",
+      "sha256": "e624a0dd4a52402f104072df0eabcd2d1069329c8378d78b7729a26418a2ad0c"
+    },
+    {
+      "path": "exp-build.json",
+      "sha256": "1f8fed2cee2e67db1fe0902155177140a32c028611e10d2a876af0c3a6c4617c"
+    },
+    {
+      "path": "exp-link.json",
+      "sha256": "0cf65f06a1e74b749d309b9ba01f6590be5a1250b5a1210df10ce058bab82f72"
+    },
+    {
+      "path": "exp-link.log",
+      "sha256": "a00896e2d2ab651ed1eb79f7c54951bc74b0bf1df788bb1589a09b1b34a95691"
+    },
+    {
+      "path": "exp-rpc.json",
+      "sha256": "9f893a6b84ddb3c308a1e568f40892b574095c7c6f6e0826b4a8bdfcb5146a81"
+    },
+    {
+      "path": "native-kc-audit.json",
+      "sha256": "3109ac4cda40e4521bc77137b498a70c5a14f218bf02822d286cd1091f6d98df"
+    },
+    {
+      "path": "std-build.json",
+      "sha256": "18d2ea90b900b8bfb19722dc0a6b128f2ca77ee0ca747f555f93f3eb1b2d834b"
+    },
+    {
+      "path": "std-link.json",
+      "sha256": "00fd66b141f2b4b6b89eb87c1544378f54e0cc9f00160929f5af771d90857f41"
+    },
+    {
+      "path": "std-link.log",
+      "sha256": "790dfc00aa34121b7da7f789c5e027e39374b90c512672359415d49434007ae9"
+    },
+    {
+      "path": "std-rpc.json",
+      "sha256": "06b797ad148ea1d25648db5a6be7d7ebcda71d904f73924dafe48e1d91d89a4a"
+    }
+  ]
+}

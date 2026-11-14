@@ -115,3 +115,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/native-split-and-context-locator-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/boot-aux-and-native-tree-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/qemu-retained-translation-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/xnu-kcformat-20261113/manifest.json

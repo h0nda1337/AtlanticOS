@@ -293,10 +293,15 @@ EXPERIMENTAL_UNITS.update({
     'osfmk/atlantic/string.c': '_atl_string_compare',
     'osfmk/kern/atlantic_string.c': '_strcmp',
     'libkern/kernel_mach_header.c': '_getlastkerneladdr',
+    'pexpert/gen/kcformat.c': '_PE_get_primary_kc_format',
     'bsd/libkern/strsep.c': '_strsep'})
 EXTRA_SYMBOLS.update({
     'osfmk/atlantic/string.c': ['_atl_memory_compare', '_atl_string_copy', '_atl_string_append'],
     'osfmk/kern/atlantic_string.c': ['_memcmp', '_strlcpy', '_strlcat'],
+    'pexpert/gen/kcformat.c': ['_PE_get_kc_base_pointers', '_PE_set_kc_header_and_base', '_PE_set_kc_header',
+        '_PE_get_kc_header', '_PE_get_kc_slide', '_PE_reset_kc_header', '_PE_get_kc_baseaddress',
+        '_PE_get_kc_format', '_collection_base_pointers', '_collection_mach_headers',
+        '_collection_slide', '_kc_highest_nonlinkedit_vmaddr'],
     'libkern/kernel_mach_header.c': ['_getlastaddr', '_getcommandfromheader', '_getuuidfromheader',
         '_getsectdatafromheader', '_getsegdatafromheader', '_getsectbynamefromseg', '_getsectbynamefromheader',
         '_firstsegfromheader', '_nextsegfromheader']})

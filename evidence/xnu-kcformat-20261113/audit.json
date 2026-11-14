@@ -1,0 +1,19 @@
+{
+  "port_id": "db10a5512f7affd2bcb745c4e9ca527404b32737bb7a8f07f4d895a79851406d",
+  "experimental_units": 169,
+  "standard_units": 13,
+  "strict_link_objects": 195,
+  "previous_undefined": 346,
+  "undefined": 341,
+  "duplicates": 0,
+  "new_undefined": [],
+  "resolved": [
+    "_PE_get_kc_base_pointers",
+    "_PE_get_kc_header",
+    "_PE_get_primary_kc_format",
+    "_PE_set_kc_header",
+    "_PE_set_kc_header_and_base"
+  ],
+  "kernel_linked": false,
+  "xnu_executed": false
+}

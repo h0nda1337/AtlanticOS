@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
-  "port_id": "b3284f535d9f191aeb20be64907a62b710aa901e928028ebfa6f75b155fa5008",
+  "port_id": "db10a5512f7affd2bcb745c4e9ca527404b32737bb7a8f07f4d895a79851406d",
   "patches": {
     "0001-add-atlantic-arm64-laboratory-profile.patch": "68f342277d68cbd35f532a0fcfe35f99742569f960a7f37fa155c774055e1d5c",
     "0002-define-atlantic-laboratory-boot-line-abi.patch": "5c62558a6221b17377966b5b4c678004cd813fd37cacdf6849cc9dd011f6ea84",
@@ -37,7 +37,8 @@
     "0032-select-separately-proved-cpp-layout-metadata.patch": "9433f9de329bec6f2d7b549bc946d2fcf7788757b1218b9feb37d5b2caafd128",
     "0033-retain-arm-feature-storage-without-bsd-sysctls.patch": "8f84542eb436d0475394518835218e8d458eeb655e063e0d4f3edca341a02b19",
     "0034-retain-native-shared-region-upl-and-rsr-state.patch": "d1e9178f441c20155f7022e8596191e2c337a47a603f8a483aebe21ed7d3b9a5",
-    "0035-select-output-only-ram-native-console.patch": "0336735937bacf706d94fedd477221291a9bddb859b916a4a3a20868a9cf30af"
+    "0035-select-output-only-ram-native-console.patch": "0336735937bacf706d94fedd477221291a9bddb859b916a4a3a20868a9cf30af",
+    "0036-scope-native-kc-vnode-state-to-available-bsd.patch": "6c9e537c0177c99ca5a5c5bd6763b91076b970d7b0b9fce21d8847743c1eb277"
   },
   "canonical_lf_files": [
     {
@@ -344,6 +345,11 @@
       "path": "osfmk/arm/arm_init.c",
       "preimage_sha256": "a000dc4ca2d508f1498e1bb267e66e48a56817d098d48ac9c9c96095f0fc5f03",
       "postimage_sha256": "c4bdd0cac1e09773a4315e6d42a6bbfdf2165077f1db7cc480af77ef809c0072"
+    },
+    {
+      "path": "pexpert/gen/kcformat.c",
+      "preimage_sha256": "0ec8eb53ffb12574e6e58900a7dd27e236ee5acbbdb86cc0b8991542affde728",
+      "postimage_sha256": "64ca01e9dc6073f4cb525324d408780d09b424a240eff38842996023452ef245"
     }
   ],
   "scope": "LABORATORY_ONLY_NOT_G20_PORT_OR_KERNEL_BOOT"

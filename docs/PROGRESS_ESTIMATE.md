@@ -13,7 +13,7 @@ los cinco puntos de crédito adicional. [Registro de la revisión anterior](../e
 | Bloque hasta el primer XNU físico | Peso | Crédito anterior → actual | Evidencia para el crédito |
 |---|---:|---:|---|
 | Infraestructura inicial | 10 | 10 → 10 | Clang reproducible desde fuentes, MIG oficial y CI. C y C++ tienen pruebas propias en el compilador |
-| Integración nativa y enlace | 25 | 10 → 13 | Metadata C++ del allocator verificada y runtime Blocks nativo de XNU, catálogo ARM, regiones compartidas con commpage, metadata nativa de versión y consola nativa con salida a RAM. 168 unidades base y 26 RPC en enlace estricto, con 346 símbolos pendientes y cero duplicados. Sigue pendiente el Mach-O |
+| Integración nativa y enlace | 25 | 10 → 13 | Metadata C++ del allocator verificada y runtime Blocks nativo de XNU, catálogo ARM, regiones compartidas con commpage, metadata nativa de versión y consola nativa con salida a RAM. 169 unidades base y 26 RPC en enlace estricto, con 341 símbolos pendientes y cero duplicados. Sigue pendiente el Mach-O |
 | Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Colocación de un Mach-O y conservación del contexto ATLC tras cambiar ambas raíces en QEMU. Faltan ownership y tablas del BSP para XNU |
 | Bootstrap Mach operativo | 15 | 0 → 0 | Pendiente ejecutar XNU con VM/allocator y un contexto Mach instrumentado |
 | BSP e instrumentación física G20 | 20 | 0 → 0 | Los dos overlays del mirror coinciden en GIC, timer, CPU y PSCI. Falta ejecutar e instrumentar el BSP original en el T700 |
@@ -23,7 +23,7 @@ los cinco puntos de crédito adicional. [Registro de la revisión anterior](../e
 Los tres puntos de integración reflejan la incorporación de subsistemas
 nativos y la eliminación de un requisito de compilación de C++. Los dos puntos
 de entry reflejan el ciclo de IRQ observado. Desde la revisión anterior, el
-enlace pasó de 436 a 346 nombres pendientes. La cifra de símbolos sirve como
+enlace pasó de 436 a 341 nombres pendientes. La cifra de símbolos sirve como
 diagnóstico y el crédito se asigna al trabajo técnico de la tabla.
 
 Para llegar desde XNU hasta EDK2 se conserva el modelo provisional de 80 %
@@ -31,7 +31,7 @@ para el primer arranque y 20 % para quiesce, handoff y verificación, todavía
 pendientes. Sale 0,8 × 35 = 28 %. AtlanticBIOS completo, VNC, Wi-Fi y otras
 placas conservan su alcance posterior.
 
-[Evidencia de compilación y enlace](../evidence/xnu-ram-console-20261113/manifest.json) ·
+[Evidencia de compilación y enlace](../evidence/xnu-kcformat-20261113/manifest.json) ·
 [Timer e IRQ en QEMU](../evidence/qemu-timer-irq-20261113/manifest.json) ·
 [Colocación del fixture](../evidence/image-materialize-20261113/manifest.json) ·
 [Contexto retenido y traducciones en QEMU](../evidence/qemu-retained-translation-20261113/manifest.json) ·

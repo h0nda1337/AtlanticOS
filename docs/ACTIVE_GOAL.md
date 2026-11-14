@@ -234,3 +234,9 @@ La [consola nativa con salida a RAM](XNU_RAM_CONSOLE.md) añade el ring de XNU,
 la promoción temprana de PE_putc y el transporte propio. El enlace de 194
 objetos deja 346 referencias pendientes y cero duplicadas. La comprobación
 del ring en VM activa, la lectura física del log y el handoff quedan abiertos.
+
+El [estado nativo de kernel collections](XNU_KC_FORMAT.md) suma el proveedor
+kcformat.c. El enlace de 195 objetos deja 341 símbolos pendientes y cero
+duplicados. La clasificación de XNU conserva la semántica de sus formatos.
+Quedan por verificar la geometría de segmentos y el perfil independiente
+cuando arranque la imagen real.

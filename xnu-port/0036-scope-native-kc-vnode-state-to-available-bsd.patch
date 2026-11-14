@@ -1,0 +1,49 @@
+AtlanticOS: exclude kernel collection vnode ownership from BSD-free firmware.
+
+diff --git a/pexpert/gen/kcformat.c b/pexpert/gen/kcformat.c
+--- a/pexpert/gen/kcformat.c
++++ b/pexpert/gen/kcformat.c
+@@ -34,7 +34,9 @@
+ #include <libkern/kernel_mach_header.h>
+ 
+ vm_offset_t kc_highest_nonlinkedit_vmaddr = 0;
++#if !CONFIG_ATLANTIC_FIRMWARE || defined(MACH_BSD)
+ int vnode_put(void *vp);
++#endif
+ 
+ // FIXME: should come from mach-o/fixup_chains.h
+ // Index in basePointers array used by chained rebase in dyld_kernel_fixups.h
+@@ -49,13 +51,17 @@
+ void *collection_base_pointers[KCNumKinds] = {};
+ kernel_mach_header_t * collection_mach_headers[KCNumKinds] = {};
+ uintptr_t collection_slide[KCNumKinds] = {};
++#if !CONFIG_ATLANTIC_FIRMWARE || defined(MACH_BSD)
+ void * collection_vp[KCNumKinds] = {};
++#endif
+ #else
+ 
+ SECURITY_READ_ONLY_LATE(void *) collection_base_pointers[KCNumKinds];
+ SECURITY_READ_ONLY_LATE(kernel_mach_header_t *) collection_mach_headers[KCNumKinds];
+ SECURITY_READ_ONLY_LATE(uintptr_t) collection_slide[KCNumKinds];
++#if !CONFIG_ATLANTIC_FIRMWARE || defined(MACH_BSD)
+ SECURITY_READ_ONLY_LATE(void *) collection_vp[KCNumKinds];
++#endif
+ #endif //(__x86_64__) || defined(__i386__)
+ 
+ static inline __attribute__((__always_inline__)) kc_index_t
+@@ -134,6 +140,7 @@
+ 	return collection_mach_headers[kc_kind2index(type)];
+ }
+ 
++#if !CONFIG_ATLANTIC_FIRMWARE || defined(MACH_BSD)
+ void
+ PE_set_kc_vp(kc_kind_t type, void *vp)
+ {
+@@ -160,6 +167,7 @@
+ 		}
+ 	}
+ }
++#endif
+ 
+ const void * const *
+ PE_get_kc_base_pointers(void)
