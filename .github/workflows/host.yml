@@ -39,6 +39,10 @@ jobs:
         run: |
           python3 tools/build_entry.py --probe el1-trap --output work/entry-qemu-trap
           python3 tools/emulate_entry.py --build work/entry-qemu-trap
+      - name: Deliver and complete two virtual timer IRQs through QEMU GICv3
+        run: |
+          python3 tools/build_entry.py --probe timer-irq --output work/entry-qemu-timer
+          python3 tools/emulate_entry.py --build work/entry-qemu-timer
       - name: Execute candidate boot_args producer and reject reserved RAM under QEMU (no XNU)
         run: |
           python3 tools/build_entry.py --probe boot-args --output work/entry-qemu-boot-args
@@ -91,3 +95,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-blocks-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/g20-timer-overlay-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-arm-features-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/qemu-timer-irq-20261113/manifest.json

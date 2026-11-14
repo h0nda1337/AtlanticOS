@@ -31,7 +31,10 @@ def main():
         raise SystemExit('QEMU AArch64 not found')
     records=[]
     for el,virtualization in [(1,'off'),(2,'on')]:
-        command=[qemu,'-machine','virt,virtualization='+virtualization,'-cpu','cortex-a57',
+        machine='virt,virtualization='+virtualization
+        if meta.get('probe')=='timer-irq':
+            machine += ',secure=off,gic-version=3'
+        command=[qemu,'-machine',machine,'-cpu','cortex-a57',
                  '-m','128M','-smp','1','-nographic','-monitor','none','-serial','stdio',
                  '-nic','none','-no-reboot','-semihosting-config','enable=on,target=native',
                  '-kernel',str(binary)]
@@ -53,6 +56,18 @@ def main():
         tree=re.search(r'XNU_TREE_BYTES=0x([0-9A-F]+)',log)
         data_ok=bool(tree and int(tree[1],16)==504 and 'PASS:BOOT_DATA_DECLARATIONS_XNU_TREE_ONLY' in log)
         candidate=None
+        timer_irq=None
+        if meta.get('probe')=='timer-irq':
+            expected_irq = {'GIC_VERSION':[3], 'EOI_MODE':[0], 'SHOT':[1,2],
+                'INTID':[27,27], 'ACK_TOTAL':[1,2], 'EOI_TOTAL':[1,2],
+                'TIMER_CTL_IRQ':[5,5], 'TIMER_CTL_DISARMED':[3,3],
+                'TIMER_CTL_MASKED_EXPIRED':[7,7], 'GIC_ACTIVE_BEFORE':[1<<27,1<<27],
+                'GIC_ACTIVE_AFTER':[0,0], 'GIC_PENDING_AFTER':[0,0]}
+            timer_irq = {key:[int(value,16) for value in re.findall(r'^'+key+r'=0x([0-9a-fA-F]+)$',log,re.M)]
+                         for key in expected_irq}
+            if (timer_irq != expected_irq or log.count('PASS:NO_MASKED_REDELIVERY')!=2 or
+                log.count('PASS:QEMU_GICV3_VIRTUAL_TIMER_GROUP1')!=1):
+                raise SystemExit(f'EL{el} timer IRQ evidence differs from the two expected deliveries')
         if meta.get('probe')=='boot-args':
             wire=re.search(r'^CANDIDATE_BOOT_ARGS_HEX=([0-9a-f]{2304})$',log,re.M)
             expected=bytearray(1152)
@@ -76,6 +91,7 @@ def main():
                         'expected_exit_code':expected_exit,'exit_code':r.returncode,'probe':meta.get('probe'),
                         'boot_data_checked':True,'native_tree_bytes':int(tree[1],16),
                         'candidate_boot_args_sha256':candidate,
+                        'virtual_timer_interrupts':timer_irq,
                         'log_sha256':hashlib.sha256((folder/f'qemu-el{el}.log').read_bytes()).hexdigest(),
                         'command':[Path(command[0]).name,*[s.replace(str(ROOT),'<ROOT>') for s in command[1:]]]})
     report={'schema_version':1,'label':'EMULATED','scope':'ORIGINAL_ARM64_ENTRY_ONLY_NOT_XNU_NOT_G20',

@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "label": "EMULATED",
+  "scope": "QEMU_VIRT_GICV3_GROUP1_TIMER_ONE_SHOT_IRQ_ACK_AND_COMPLETION",
+  "artifacts": [
+    {
+      "path": "boot-args-regression.json",
+      "sha256": "db7e630455d5cc93744188a1d15f3745b4a2c1729f41e9fb8a8f5313ced4c28f"
+    },
+    {
+      "path": "build.json",
+      "sha256": "a1854860d5ae2ccc7e5dc3f07c697afa67be04e566471d5ae565177afceeb733"
+    },
+    {
+      "path": "el1-trap-regression.json",
+      "sha256": "14088b9b02c3230f2abd2b78465e194f9d16e318c51192cc79a4610693141223"
+    },
+    {
+      "path": "emulation.json",
+      "sha256": "ed71e0c3f4868af4f088fc81c1573be33ecaebc6e64a74fce9f6b5ccdc9c8a08"
+    },
+    {
+      "path": "entry.map",
+      "sha256": "0ee565556e393c45f1b88c338d92109895763e7b04ec753cb19d06b0bcca1365"
+    },
+    {
+      "path": "normal-regression.json",
+      "sha256": "14245ca8fc91047e3138bc4c16c2436f2dd42e99858e9b6e60ad620243e9f978"
+    },
+    {
+      "path": "qemu-el1.log",
+      "sha256": "82d293ae446a728c38106dae120ce4dac5d7365698d2c700b7faca928f54d3eb"
+    },
+    {
+      "path": "qemu-el2.log",
+      "sha256": "1f684c9a1157268205af929ce4d139663f87fecc14daa7eb923bfaa54079af9b"
+    }
+  ]
+}

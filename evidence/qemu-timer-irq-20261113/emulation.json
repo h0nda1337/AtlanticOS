@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "label": "EMULATED",
+  "scope": "ORIGINAL_ARM64_ENTRY_ONLY_NOT_XNU_NOT_G20",
+  "qemu_version": "QEMU emulator version 10.0.13 (Debian 1:10.0.13+ds-0+deb13u1)",
+  "image_sha256": "58961cfaab7940c0481f32bec67eac9ade06f4ad584d024e077bf07a498bddba",
+  "build_id": "e7b5d431f78ee7c5719e73e9e70b771d24a24b3f04b00440ca8485d7f0d5629c",
+  "runs": [
+    {
+      "expected_el": 1,
+      "observed_el": 1,
+      "execution_el": 1,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "probe": "timer-irq",
+      "boot_data_checked": true,
+      "native_tree_bytes": 504,
+      "candidate_boot_args_sha256": null,
+      "virtual_timer_interrupts": {
+        "GIC_VERSION": [
+          3
+        ],
+        "EOI_MODE": [
+          0
+        ],
+        "SHOT": [
+          1,
+          2
+        ],
+        "INTID": [
+          27,
+          27
+        ],
+        "ACK_TOTAL": [
+          1,
+          2
+        ],
+        "EOI_TOTAL": [
+          1,
+          2
+        ],
+        "TIMER_CTL_IRQ": [
+          5,
+          5
+        ],
+        "TIMER_CTL_DISARMED": [
+          3,
+          3
+        ],
+        "TIMER_CTL_MASKED_EXPIRED": [
+          7,
+          7
+        ],
+        "GIC_ACTIVE_BEFORE": [
+          134217728,
+          134217728
+        ],
+        "GIC_ACTIVE_AFTER": [
+          0,
+          0
+        ],
+        "GIC_PENDING_AFTER": [
+          0,
+          0
+        ]
+      },
+      "log_sha256": "82d293ae446a728c38106dae120ce4dac5d7365698d2c700b7faca928f54d3eb",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt,virtualization=off,secure=off,gic-version=3",
+        "-cpu",
+        "cortex-a57",
+        "-m",
+        "128M",
+        "-smp",
+        "1",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "<ROOT>/work/entry-gicv3-timer-final-20261113/entry.bin"
+      ]
+    },
+    {
+      "expected_el": 2,
+      "observed_el": 2,
+      "execution_el": 1,
+      "expected_exit_code": 0,
+      "exit_code": 0,
+      "probe": "timer-irq",
+      "boot_data_checked": true,
+      "native_tree_bytes": 504,
+      "candidate_boot_args_sha256": null,
+      "virtual_timer_interrupts": {
+        "GIC_VERSION": [
+          3
+        ],
+        "EOI_MODE": [
+          0
+        ],
+        "SHOT": [
+          1,
+          2
+        ],
+        "INTID": [
+          27,
+          27
+        ],
+        "ACK_TOTAL": [
+          1,
+          2
+        ],
+        "EOI_TOTAL": [
+          1,
+          2
+        ],
+        "TIMER_CTL_IRQ": [
+          5,
+          5
+        ],
+        "TIMER_CTL_DISARMED": [
+          3,
+          3
+        ],
+        "TIMER_CTL_MASKED_EXPIRED": [
+          7,
+          7
+        ],
+        "GIC_ACTIVE_BEFORE": [
+          134217728,
+          134217728
+        ],
+        "GIC_ACTIVE_AFTER": [
+          0,
+          0
+        ],
+        "GIC_PENDING_AFTER": [
+          0,
+          0
+        ]
+      },
+      "log_sha256": "1f684c9a1157268205af929ce4d139663f87fecc14daa7eb923bfaa54079af9b",
+      "command": [
+        "qemu-system-aarch64",
+        "-machine",
+        "virt,virtualization=on,secure=off,gic-version=3",
+        "-cpu",
+        "cortex-a57",
+        "-m",
+        "128M",
+        "-smp",
+        "1",
+        "-nographic",
+        "-monitor",
+        "none",
+        "-serial",
+        "stdio",
+        "-nic",
+        "none",
+        "-no-reboot",
+        "-semihosting-config",
+        "enable=on,target=native",
+        "-kernel",
+        "<ROOT>/work/entry-gicv3-timer-final-20261113/entry.bin"
+      ]
+    }
+  ],
+  "xnu_executed": false,
+  "phone_accessed": false,
+  "network_enabled": false,
+  "disks_attached": false
+}

@@ -77,3 +77,22 @@ Las ejecuciones ARM64 con DTB QEMU son EMULATED de este componente únicamente.
 
 Referencia del contenedor: [protocolo Image AArch64](https://www.kernel.org/doc/html/latest/arch/arm64/booting.html).
 No es una implementación Linux ni reutiliza su kernel, entry o drivers.
+## Timer virtual con GICv3 en QEMU
+
+El modo `timer-irq` instala un vector IRQ para EL1h y configura el GICv3 de
+`virt` con una CPU y seguridad deshabilitada. Dos plazos del timer virtual
+entregan INTID 27 por grupo 1 en cada ruta de entrada. El handler registra el
+estado activo, enmascara y reprograma el timer para desactivar la fuente, y
+completa la interrupción con `ICC_EOIR1_EL1` en modo EOI 0. El plazo de control
+vence con el timer enmascarado, con `ISTATUS=1` y sin una nueva entrega.
+
+```sh
+python3 tools/build_entry.py --probe timer-irq --output work/entry-qemu-timer
+python3 tools/emulate_entry.py --build work/entry-qemu-timer
+```
+
+La prueba registra dos ACK, dos EOI y cero interrupciones pendientes tras
+cada disparo. Los registros y las direcciones MMIO corresponden a QEMU. El
+BSP físico requiere confirmar la interfaz y el grupo del G20 según T06.
+El paso por `sleh_irq`, `rtclock_intr` y el callback Mach queda para el
+kernel enlazado. [Capturas de ambos recorridos](../evidence/qemu-timer-irq-20261113/manifest.json).

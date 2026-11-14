@@ -119,6 +119,10 @@ void atl_entry_main(const struct AtlanticEntryCapture *c) {
     __asm__ volatile("brk #0xa71");
     line("FAIL:BRK_RETURNED\n"); finish(1);
 #endif
+#if ATL_TEST_TIMER_IRQ
+    extern int atl_irq_probe(const struct AtlanticEntryCapture *);
+    if (atl_irq_probe(c)) finish(1);
+#endif
     line("PASS:ENTRY_CAPTURE_DTB_TIMER\nNO_XNU_BOOT_CLAIM\n");
     finish(0);
 }

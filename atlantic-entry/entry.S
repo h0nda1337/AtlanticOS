@@ -94,6 +94,9 @@ atl_entry_vectors:
     b atl_entry_trap
     .balign 128
 .endr
+#if ATL_TEST_TIMER_IRQ
+.global atl_entry_trap
+#endif
 atl_entry_trap:
     msr DAIFSet, #15
     mrs x3, CurrentEL
