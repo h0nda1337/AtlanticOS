@@ -1,0 +1,41 @@
+{
+  "schema_version": 1,
+  "scope": "STATIC_DISPATCH_AND_STOCK_STORAGE_BOOT_PATH_OF_RETBR_MIRROR",
+  "input": {
+    "file": "u-boot-sign.bin",
+    "origin": "XT2128-1 RTAS31.68-66-3 RETBR PAC mirror",
+    "bytes": 905380,
+    "sha256": "48c7f8d0169b9ba23ea16db1bc3a9878e7c7a1a153ae7f8b471684d177dcb07e"
+  },
+  "method": {
+    "architecture": "AArch64",
+    "disassembler": "GNU aarch64-linux-gnu-objdump -D -b binary -m aarch64 --adjust-vma=0x9efffe00",
+    "file_offset_model": "The 0x200-byte DHTB header precedes code. The image literal at file 0x208 gives a candidate linked origin of 0x9f000000 for code at file 0x200. Subtract 0x9efffe00 from the printed addresses to recover file offsets.",
+    "direct_branch_scan": "Enumerated 4-byte-aligned AArch64 B and BL immediate encodings after file 0x200 to EOF and resolved the signed imm26 times four from each PC.",
+    "registration_target_file_offset": "0x24284",
+    "direct_calls_file_offsets": ["0x2568c", "0x256a0", "0x256dc", "0x256f0", "0x25700", "0x25714", "0x25728", "0x25738", "0x2574c", "0x25760", "0x25774", "0x25788", "0x2579c", "0x257b0", "0x257c4", "0x257d8", "0x257ec", "0x25800"],
+    "indirect_or_dynamic_registrations_exhaustively_analyzed": false
+  },
+  "findings": {
+    "boot_name_file_offset": "0x97fec",
+    "boot_registration_call_file_offset": "0x25700",
+    "continue_name_file_offset": "0x9afff",
+    "continue_registration_call_file_offset": "0x25738",
+    "shared_callback_file_offset": "0x2484c",
+    "dispatch_list_scan_file_offset": "0x25a90",
+    "dispatch_callback_call_file_offset": "0x25a2c",
+    "callback_behavior": "Replaces command arguments, calls response and cleanup routines, and tail-branches to the fixed normal boot path at file 0x202b4.",
+    "stock_boot_provenance": "Fixed boot string passed to the load path at file 0x20268 via the wrapper at 0x20110. The loader at 0x1f7a4 resolves boot partition metadata and invokes a read at 0x1f878. Code references load_kernel_image at 0x861d8 and the kernel read error diagnostic at 0x992c9.",
+    "ram_only_route_established": false
+  },
+  "limits": {
+    "device_carrier": "amxmx",
+    "mirror_carrier": "RETBR",
+    "exact_bootloader_equivalence_established": false,
+    "oem_signatures_validated": false,
+    "phone_accessed_for_this_inspection": false,
+    "boot_or_download_commands_sent": false,
+    "physical_ram_boot_verified": false
+  },
+  "aosp_command_reference": "https://android.googlesource.com/platform/system/core/+/refs/heads/main/fastboot/README.md#command-reference"
+}

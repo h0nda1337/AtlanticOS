@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "STATIC_DISPATCH_AND_STOCK_STORAGE_BOOT_PATH_OF_RETBR_MIRROR",
+  "artifacts": [
+    {
+      "path": "inspection.json",
+      "sha256": "3a95dc67a3c92729125138b63905a52523a714c1f5f9cc098f70bcd2b49ef28d"
+    }
+  ]
+}

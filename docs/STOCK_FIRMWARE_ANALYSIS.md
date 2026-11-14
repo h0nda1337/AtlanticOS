@@ -109,13 +109,33 @@ con advertencias registradas (incluidas referencias todavía sin resolver en
 overlays). Ninguna de esas pruebas equivale a aplicar correctamente un overlay
 o a comprobar que describe el hardware de esta unidad.
 
-La inspección estática de cadenas de U-Boot encontró `download:`, `flash:`,
-`erase:`, `continue` y reinicios en una región contigua de nombres; no encontró
-allí `boot`. Eso **no demuestra por sí solo** que fastboot boot sea imposible:
-faltan referencias cruzadas y tabla de dispatch. No se envió download, boot,
-flash, OEM ni erase para probarlo. Una cadena interna que menciona userspace
-fastboot tampoco prueba fastbootd funcional; se conserva la indicación del
-usuario de no utilizar ese modo.
+## Ruta de `boot` en el U-Boot RETBR
+
+La revisión del 2026-11-13 identifica el registro de `boot` fuera de la región
+de cadenas que se examinó inicialmente. La muestra `u-boot-sign.bin` tiene
+905 380 bytes y SHA-256
+`48c7f8d0169b9ba23ea16db1bc3a9878e7c7a1a153ae7f8b471684d177dcb07e`.
+El desensamblado usa AArch64 y una VMA inferida de la cabecera. Todos los
+offsets de la tabla se refieren al archivo completo.
+
+| Evidencia | Offset | Observación |
+|---|---:|---|
+| Nombre y registro de `boot` | `0x97fec`, `0x25700` | Pasa el nombre y el callback `0x2484c` a la función de registro `0x24284`. |
+| Registro de `continue` | `0x25738` | Pasa el mismo callback `0x2484c`. |
+| Búsqueda e invocación | `0x25a90`, `0x25a2c` | El dispatcher recorre la lista poblada por esa función de registro y entrega al callback la cola del comando, el puntero y la longitud de descarga. |
+| Callback compartido | `0x2484c` | Reemplaza los argumentos de entrada y termina en la ruta fija `0x202b4`, que solicita cargar la partición `boot`. |
+| Carga desde almacenamiento | `0x1f7a4`, `0x1f878` | Resuelve la partición y llama a la rutina de lectura. Los diagnósticos de esta función identifican la carga y lectura del kernel. |
+
+En AOSP, `boot` ejecuta el `boot.img` descargado a RAM y `continue` continúa
+el arranque normal. En la muestra RETBR ambos nombres llegan a la carga
+desde la partición. El registro de `boot` o una respuesta `OKAY` por sí sola
+sería insuficiente para acreditar ejecución temporal en esta familia.
+[Referencia de comandos Fastboot de AOSP](https://android.googlesource.com/platform/system/core/+/refs/heads/main/fastboot/README.md#command-reference).
+
+La observación corresponde al binario del mirror. El teléfono indica `amxmx`
+y falta identificar su U-Boot exacto. Sigue abierta la disponibilidad de una
+vía OEM a RAM para esa unidad. El registro del desensamblado y sus límites
+quedan en [la evidencia](../evidence/g20-stock-dispatch-20261113/manifest.json).
 
 ## Reproducción
 
@@ -156,13 +176,19 @@ Los tests sintéticos viajan en Git; los binarios OEM no son necesarios para CI.
 2. Resolver selección de overlay y árbol final. Comparar model/compatible,
    revisión, memoria, panel y reservas del árbol aplicado. Un match 1H10 aislado
    no justifica escribir registros ni elegir un framebuffer fijo.
-3. Establecer por análisis de U-Boot una entrada temporal en RAM. Si requiere
-   escritura de particiones queda fuera de la autorización actual. La ausencia
-   de comando o una respuesta vacía no se reemplaza por flasheo experimental.
-4. Antes de un primer payload, comprobar salida física independiente con botones
-   y Android recuperable. El retorno por fastboot reboot ya observado no demuestra
-   que Power rescate un payload bloqueado. Después, capturar registros reales de
-   entry, build ID y memoria; QEMU y datos estáticos no satisfacen esa puerta.
+3. Identificar el U-Boot `amxmx` exacto mediante un paquete OEM o una lectura
+   autorizada, y verificar si la vía OEM utiliza el búfer de descarga para
+   ejecutar una imagen sin escribir particiones. Si el binario coincide con el
+   SHA-256 RETBR, el nombre `boot` ya tiene una ruta de almacenamiento
+   identificada y no basta como candidato a ejecución temporal.
+4. Antes de una prueba de RAM, comprobar salida física independiente con botones
+   y Android recuperable. El retorno por fastboot reboot ya observado deja
+   pendiente el rescate de un payload bloqueado con Power. Después, capturar
+   registros reales de entry, build ID y memoria de un payload con marcador
+   único, sólo tras identificar una vía temporal y su comportamiento de
+   lectura. Verificar que aparece el marcador y que Android sigue arrancando
+   por su ruta independiente. Un `OKAY` o el arranque de Android sin marcador
+   es un resultado inconcluso para ejecución en RAM.
 
 XNU y el handoff EDK2 continúan sin ejecución física. Este análisis reduce
 incertidumbres de formato y aporta datos al BSP independiente; no concede
