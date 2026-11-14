@@ -1,36 +1,39 @@
-# Estimación de avance — 2026-11-02
+# Estimación de avance — 2026-11-13
 
-Estimación de ingeniería: **aproximadamente 30 % hacia el primer arranque físico
-instrumentado de XNU en el G20**, intervalo orientativo **20–40 %**. Para la meta
-completa **XNU físico → EDK2**, aproximadamente **25 %**, intervalo **15–35 %**.
-Son juicios sobre trabajo y riesgo; no porcentajes medidos, probabilidades de
-éxito ni una predicción de fecha. La incertidumbre del BSP es considerable.
+Estimación de ingeniería: **35 % hacia el primer arranque físico instrumentado
+de XNU en el G20**, con rango **25–45 %**. Para **XNU físico → EDK2**, **~28 %
+(cerca del 30 %)**, con rango **20–35 %**. Los rangos expresan la incertidumbre
+sobre el trabajo restante, en especial la carga temporal y el BSP físico.
 
-El 20 % repetido anteriormente no tenía un desglose actualizado. Esta revisión
-cambia el método de estimación; no representa diez puntos de trabajo terminados
-hoy. La ejecución física y el handoff permanecen sin demostrar. La base técnica
-de esta revisión es el commit **1073f78e9fa3b9ca1f36177eb51050e44c10483d**;
-las observaciones se conservan en el [registro de revisión](../evidence/progress-review-20261102/review.json).
+La revisión del 2026-11-02 daba **~30 %** y **~25 %**, respectivamente. Partía
+del commit 1073f78e9fa3b9ca1f36177eb51050e44c10483d y de 436 símbolos pendientes
+en enlace estricto. La tabla conserva los pesos de esa revisión y explica
+los cinco puntos de crédito adicional. [Registro de la revisión anterior](../evidence/progress-review-20261102/review.json).
 
-Los pesos y créditos siguientes son provisionales. La última columna contiene
-hechos verificables. Un crédito parcial no equivale a una puerta superada.
-
-| Bloque hasta primer XNU físico | Peso | Crédito estimado | Estado comprobado |
+| Bloque hasta el primer XNU físico | Peso | Crédito anterior → actual | Evidencia para el crédito |
 |---|---:|---:|---|
-| Infraestructura inicial: fuentes, toolchain C, MIG y pruebas | 10 | 10 | Clang reconstruido desde fuentes y CI limpia de 157 unidades; 70 headers MIG y 42 probes RPC. Este crédito cubre la infraestructura inicial, no todos los requisitos futuros del compilador |
-| Integración nativa y enlace | 25 | 10 | 162 unidades experimentales y 26 RPC seleccionados. El enlace de 188 objetos deja 379 símbolos sin proveedor. Sigue pendiente la imagen ejecutable |
-| Entry, datos, carga y MMU | 20 | 7 | Entry original y productor candidato ejecutados en QEMU; ABI boot_args cotejado. Faltan colocar imagen, contexto retenido, propiedad de RAM y traducciones conectadas a XNU |
-| Bootstrap Mach operativo | 15 | 0 | Sin ejecución XNU: VM/allocators, primer hilo, transición de contexto y timer pendientes |
-| BSP e instrumentación física G20 | 20 | 0 | Sin payload AtlanticOS ejecutado ni IRQ, timer o logging físico propios comprobados |
-| Carga temporal y recuperación independiente | 10 | 3 | Identidad/desbloqueo observados; Recovery y bootloader parcialmente comprobados. Vía temporal y recuperación mediante botones tras fallo de payload pendientes |
-| **Total estimado** | **100** | **30** | **Primer XNU físico todavía no logrado** |
+| Infraestructura inicial | 10 | 10 → 10 | Clang reproducible desde fuentes, MIG oficial y CI. C y C++ tienen pruebas propias en el compilador |
+| Integración nativa y enlace | 25 | 10 → 13 | Metadata C++ del allocator verificada y runtime Blocks nativo de XNU, catálogo ARM, regiones compartidas con commpage y metadata nativa de versión. 166 unidades base y 26 RPC en enlace estricto, con 365 símbolos pendientes y cero duplicados. Sigue pendiente el Mach-O |
+| Entry, datos, carga y MMU | 20 | 7 → 9 | Entry propio, productor de boot_args y dos entregas del timer virtual con ACK/EOI por GICv3 para cada recorrido QEMU. Faltan la colocación, el contexto retenido, la propiedad de RAM y las traducciones conectadas a XNU |
+| Bootstrap Mach operativo | 15 | 0 → 0 | Pendiente ejecutar XNU con VM/allocator y un contexto Mach instrumentado |
+| BSP e instrumentación física G20 | 20 | 0 → 0 | Los dos overlays del mirror coinciden en GIC, timer, CPU y PSCI. Falta ejecutar e instrumentar el BSP original en el T700 |
+| Carga temporal y recuperación independiente | 10 | 3 → 3 | Identidad y bootloader desbloqueado observados. La carga temporal y la recuperación independiente tras un fallo del payload siguen pendientes. El U-Boot RETBR estudiado deriva `boot` a la partición. Falta acreditar el comportamiento del amxmx de la unidad |
+| **Total estimado** | **100** | **30 → 35** | **Primera ejecución física pendiente** |
 
-Para XNU → EDK2 se asigna provisionalmente el 80 % del esfuerzo al primer
-arranque y el 20 % a quiesce/handoff y su verificación posterior. Ese último
-bloque sigue en cero: 0,8 × 30 = 24, redondeado a aproximadamente 25 %. Es otra
-suposición de planificación, sujeta a revisión cuando conozcamos el hardware.
-AtlanticBIOS completo, VNC, Wi-Fi y otras placas conservan su alcance posterior;
-no forman parte de estas dos estimaciones.
+Los tres puntos de integración reflejan la incorporación de subsistemas
+nativos y la eliminación de un requisito de compilación de C++. Los dos puntos
+de entry reflejan el ciclo de IRQ observado. Desde la revisión anterior, el
+enlace pasó de 436 a 365 nombres pendientes. La cifra de símbolos sirve como
+diagnóstico y el crédito se asigna al trabajo técnico de la tabla.
+
+Para llegar desde XNU hasta EDK2 se conserva el modelo provisional de 80 %
+para el primer arranque y 20 % para quiesce, handoff y verificación, todavía
+pendientes. Sale 0,8 × 35 = 28 %. AtlanticBIOS completo, VNC, Wi-Fi y otras
+placas conservan su alcance posterior.
+
+[Evidencia de compilación y enlace](../evidence/xnu-shared-region-20261113/manifest.json) ·
+[Timer e IRQ en QEMU](../evidence/qemu-timer-irq-20261113/manifest.json) ·
+[Mirror RETBR y pruebas físicas pendientes](STOCK_FIRMWARE_ANALYSIS.md).
 
 El próximo hito sustantivo es un **ejecutable estático XNU real enlazado**, con
 proveedores explícitos y sin imports ignorados o funciones ficticias. Después:
@@ -50,7 +53,7 @@ significaría el 75 % del esfuerzo.
 | Puerta | Evidencia necesaria para superarla | Estado en la revisión |
 |---|---|---|
 | P1: imagen XNU estática | Enlace estricto completo, proveedores reales, cero imports pendientes y validación del Mach-O exacto | PENDIENTE: enlace exit 1, sin imagen |
-| P2: XNU operativo en laboratorio | Ejecutar la imagen con VM/allocator y contexto válidos; un hilo Mach y timer o transición de contexto instrumentados | PENDIENTE: QEMU ejecuta únicamente el entry/productor originales, XNU_NOT_LINKED |
+| P2: XNU operativo en laboratorio | Ejecutar la imagen con VM/allocator y contexto válidos; un hilo Mach y timer o transición de contexto instrumentados | PENDIENTE: QEMU ejecuta entry, productor y probe de timer originales. XNU sigue sin imagen |
 | P3: vía física G20 | Recuperación independiente por botones, carga temporal comprobada e instrumentación de entry/BSP propios, sin escritura de particiones | PENDIENTE: se observó Recovery OEM; no se probó el retorno independiente tras un payload ni la vía temporal |
 | P4: primer XNU físico | Captura física de la imagen exacta alcanzando bootstrap y servicio Mach sustantivo con BSP original; retorno stock | PENDIENTE: ninguna ejecución AtlanticOS en G20 |
 | P5: XNU → EDK2 | Desde ese XNU operativo: PREPARE/QUIESCE/COMMIT, DMA/memoria controlados y entrada EDK2 física identificable | PENDIENTE: sin handoff |
@@ -64,33 +67,6 @@ hito que sigue abierto y del avance concreto desde el informe anterior.
 
 Base de la revisión: [meta](ACTIVE_GOAL.md), [estado](PHASE_STATUS.md),
 [pruebas del G20](DEVICE_TEST_PLAN.md), [entry](ENTRY_LAB.md),
-[plan de imagen](STATIC_IMAGE_PLAN.md), [boot_args](BOOT_PREPARATION.md) y
-[colas, esperas VM y enlace actual](XNU_QUEUE_VM_PROVIDERS.md).
-La [CI limpia de 155 unidades](https://github.com/h0nda1337/AtlanticOS/actions/runs/41374630610)
-terminó success en 1f2fa529cb1c567f3f405f532017d77ad24f8bfa; la
-[auditoría conservada](../evidence/xnu-ci155-20261102/README.md) documenta coincidencia
-de fuentes/ABI y los límites: LLD upstream sin el modo estático original local,
-errores de opciones, sin imagen, sin reproducción binaria completa y sin XNU
-ejecutado. No se ha accedido al teléfono para esta revisión.
-
-Actualización de la revisión: el [logging RAM original](XNU_EARLY_RAM_LOG.md)
-llevó el build local a 157 unidades. Las colas C++, contadores y esperas VM lo
-llevan a 159; el enlace pasa de 463 a 436 nombres pendientes, sin imports nuevos.
-El kernel sigue sin imagen ni ejecución; estos avances mantienen el crédito
-provisional del bloque, sin declarar cerrada P1.
-
-CI del commit 1073f78 consultada el 2026-11-02: [host](https://github.com/h0nda1337/AtlanticOS/actions/runs/41495850965)
-y [carril XNU estándar](https://github.com/h0nda1337/AtlanticOS/actions/runs/41495851003)
-terminaron success. La reconstrucción experimental limpia de 159 unidades
-también terminó success en 1073f78, según la revisión del 2026-11-13.
-[Reconstrucción experimental](https://github.com/h0nda1337/AtlanticOS/actions/runs/41496031846).
-
-El probe de esa revisión identificó que `libkern/libclosure/runtime.cpp`
-necesita descriptores kalloc de records C++ y queda fuera del contrato C v2.
-
-La revisión del 2026-11-13 cerró ese requisito con la API C++ v1 y el runtime
-original. El enlace resuelve cuatro nombres adicionales y aún carece de imagen.
-En el G20 queda pendiente comprobar la vía de carga temporal. El U-Boot del
-mirror RETBR dirige `boot` a la partición y falta identificar el binario amxmx.
-Estos resultados mantienen abiertos los hitos y el crédito estimado.
-[Runtime Blocks](XNU_BLOCKS_RUNTIME.md) · [Análisis del mirror](STOCK_FIRMWARE_ANALYSIS.md).
+[plan de imagen](STATIC_IMAGE_PLAN.md), [boot_args](BOOT_PREPARATION.md),
+[runtime Blocks](XNU_BLOCKS_RUNTIME.md) y
+[regiones compartidas y commpage](XNU_SHARED_REGION_BOOTSTRAP.md).

@@ -42,6 +42,10 @@ jobs:
         run: python3 tools/test_xnu_blocks.py --build work/xnu-lab-builds/*/report.json --output work/blocks-tests
       - name: Audit native ARM feature storage and the SME target configuration
         run: python3 tools/test_xnu_arm_features.py --build work/xnu-lab-builds/*/report.json --output work/arm-feature-tests
+      - name: Audit native shared-region providers and UPL accessors
+        run: python3 tools/test_xnu_shared_region.py --build work/xnu-lab-builds/*/report.json --output work/shared-region-tests
+      - name: Audit generated native kernel version metadata
+        run: python3 tools/test_xnu_native_version.py --build work/xnu-lab-builds/*/report.json --output work/native-version-tests
       - name: Test original string contracts and audit genuine XNU support ABI
         run: python3 tools/test_string_support.py --sanitize --xnu-build work/xnu-lab-builds/*/report.json --output work/string-support-tests
       - name: Test original RAM diagnostics and audit actual native formatter and nonblocking gate objects
@@ -136,6 +140,9 @@ jobs:
             work/blocks-tests/report.json
             work/arm-feature-tests/report.json
             work/arm-feature-tests/*.log
+            work/shared-region-tests/report.json
+            work/shared-region-tests/*.log
+            work/native-version-tests/report.json
             work/coalition-bank-tests/*.log
             work/string-support-tests/report.json
             work/string-support-tests/*.log

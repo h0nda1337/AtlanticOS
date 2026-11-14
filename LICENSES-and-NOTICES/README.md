@@ -39,6 +39,12 @@ contienen copyright de Apple y el marcador `@APPLE_LLVM_LICENSE_HEADER@`.
 La evidencia incluye hashes y diagnósticos de esos objetos y fixtures propios.
 [Procedencia y reproducción de Blocks](../docs/XNU_BLOCKS_RUNTIME.md).
 
+Las dos unidades de regiones compartidas y la plantilla de versión proceden del
+checkout fijado de XNU. El patch 0034 conserva los avisos del archivo BSD exec
+en la unidad que contiene los accessors RSR nativos. También mantiene los avisos
+y cuerpos de los dos accessors UPL en `vm_pageout.c`.
+[Selección y procedencia](../docs/XNU_SHARED_REGION_BOOTSTRAP.md).
+
 XNU oficial fijado en dependencies.lock.json: fuente externa intacta, checkout
 ignorado, no incorporado en el paquete fuente AtlanticOS. Se conserva su
 APPLE_LICENSE íntegra junto a este archivo; los avisos por archivo siguen en

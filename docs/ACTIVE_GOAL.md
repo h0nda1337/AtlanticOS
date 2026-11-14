@@ -221,3 +221,11 @@ Las 161 unidades experimentales y 26 RPC seleccionados dejan 432 símbolos
 indefinidos en el enlace estricto, cuatro menos que el perfil anterior. El
 ensayo de imagen, el bootstrap Mach y el handoff físico continúan pendientes.
 [Pruebas y reproducción](XNU_BLOCKS_RUNTIME.md).
+
+El [enlace estricto de 192 objetos](../evidence/xnu-shared-region-20261113/manifest.json)
+incluye 166 unidades experimentales y selecciona 26 RPC. Los mapeos nativos de
+commpage, las regiones compartidas y la metadata de versión reducen los nombres
+pendientes de 379 a 365, sin dependencias nuevas. Quedan pendientes la imagen,
+el arranque físico y el handoff. El [probe QEMU](ENTRY_LAB.md#timer-virtual-con-gicv3-en-qemu)
+comprueba entrega, reconocimiento y fin de interrupción con dos expiraciones
+del timer virtual en cada recorrido EL. Véase la [estimación actual](PROGRESS_ESTIMATE.md).

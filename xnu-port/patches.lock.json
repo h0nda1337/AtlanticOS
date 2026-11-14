@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
-  "port_id": "6b935eda7e5d4f89f3ad70b60956be046d8a8df0f8850aa67545278fdb9e55ec",
+  "port_id": "fd1823dacb981a6375773de84177022ea7c66e0a24229a9bdc422690b9e7e9d0",
   "patches": {
     "0001-add-atlantic-arm64-laboratory-profile.patch": "68f342277d68cbd35f532a0fcfe35f99742569f960a7f37fa155c774055e1d5c",
     "0002-define-atlantic-laboratory-boot-line-abi.patch": "5c62558a6221b17377966b5b4c678004cd813fd37cacdf6849cc9dd011f6ea84",
@@ -35,7 +35,8 @@
     "0030-add-original-early-ram-log-transport.patch": "99e42eaa0ecb19c290a16c1bc84c1669d00a535a22dfbc6d25ef0d3580f21f5b",
     "0031-retain-native-vm-wait-and-page-worker-synchronization.patch": "c59637a09576cbdb41d404f853052ad4ad395afd26ba5f74c257536d2055de97",
     "0032-select-separately-proved-cpp-layout-metadata.patch": "9433f9de329bec6f2d7b549bc946d2fcf7788757b1218b9feb37d5b2caafd128",
-    "0033-retain-arm-feature-storage-without-bsd-sysctls.patch": "8f84542eb436d0475394518835218e8d458eeb655e063e0d4f3edca341a02b19"
+    "0033-retain-arm-feature-storage-without-bsd-sysctls.patch": "8f84542eb436d0475394518835218e8d458eeb655e063e0d4f3edca341a02b19",
+    "0034-retain-native-shared-region-upl-and-rsr-state.patch": "d1e9178f441c20155f7022e8596191e2c337a47a603f8a483aebe21ed7d3b9a5"
   },
   "canonical_lf_files": [
     {
@@ -312,6 +313,16 @@
       "path": "osfmk/arm/commpage/commpage.c",
       "preimage_sha256": "37f9980f3e207bb3e738e43223c98e24a7c65fa51c108a997d2bd0f3faf683e7",
       "postimage_sha256": "19900bf4e0518637aa061d36143b7479abf3943543a2b9176615f748bbfece5a"
+    },
+    {
+      "path": "osfmk/vm/vm_pageout.c",
+      "preimage_sha256": "1813c4ef67459a6d2e89513cd2bec6e2b6b500f9f677919c7cc929077d272922",
+      "postimage_sha256": "5abaeb4c373939ed5d0d9277910f6892d9cd478a65742861472a16bd247366b8"
+    },
+    {
+      "path": "osfmk/vm/atlantic_rsr_version.c",
+      "preimage_sha256": null,
+      "postimage_sha256": "fa0008921dccfc7d0d15ca17d2c62e2f4fa9d347b358766d3cc8a778df6d40f3"
     }
   ],
   "scope": "LABORATORY_ONLY_NOT_G20_PORT_OR_KERNEL_BOOT"

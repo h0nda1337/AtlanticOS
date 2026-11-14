@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 import shutil
 import subprocess
+from build_xnu_lab import VERSION_NATIVE_INPUTS, VERSION_ORIGIN, VERSION_SOURCE, VERSION_STAMP
 from xnu_selection import generated_cfiles
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -62,14 +63,43 @@ def main():
         if digest(ROOT/rel) != expected:
             ap.error('Changed build input: '+rel)
     source = ROOT/'work/xnu-lab-sources'/lock['port_id'][:16]
+    build_dir = args.build.parent.resolve()
+    version_source = build.get('version_source')
+    version_object_count = 0
+    if version_source is not None:
+        version_c = (build_dir/VERSION_SOURCE).resolve()
+        version_h = (build_dir/'include/libkern/version.h').resolve()
+        version_input = (build_dir/'xnuVersion').resolve()
+        upstream_inputs = version_source.get('upstream_inputs', {})
+        if (not build.get('layout_provider') or version_source.get('path') != VERSION_SOURCE or
+            version_source.get('stamp') != VERSION_STAMP or
+            not all(p.is_relative_to(build_dir) and p.is_file() for p in (version_c, version_h, version_input)) or
+            digest(version_c) != version_source.get('sha256') or
+            digest(version_h) != build['version_header_sha256'] or
+            version_input.read_bytes() != (VERSION_STAMP['xnuVersion']+'\n').encode() or
+            set(upstream_inputs) != set(VERSION_NATIVE_INPUTS) or
+            any(not (source/rel).is_file() or digest(source/rel) != upstream_inputs[rel] for rel in VERSION_NATIVE_INPUTS)):
+            ap.error('Changed or missing native version generator, template, stamp inputs or output')
     objects = []
     for item in build['objects']:
-        obj = (args.build.parent/item['object']).resolve()
-        if (not obj.is_relative_to(args.build.parent.resolve()) or
-            digest(obj) != item['object_sha256'] or
-            digest(source/item['source']) != item['source_sha256']):
+        obj = (build_dir/item['object']).resolve()
+        origin = item.get('source_origin')
+        if origin == VERSION_ORIGIN:
+            if (version_source is None or item['source'] != VERSION_SOURCE or item['object'] != 'version.o' or
+                item['source_sha256'] != version_source['sha256']):
+                ap.error('Missing or mismatched generated XNU version object provenance')
+            unit_source = version_c
+            version_object_count += 1
+        else:
+            if origin is not None or item['source'] == VERSION_SOURCE:
+                ap.error('Unexpected source origin: '+item['source'])
+            unit_source = source/item['source']
+        if (not obj.is_relative_to(build_dir) or digest(obj) != item['object_sha256'] or
+            digest(unit_source) != item['source_sha256']):
             ap.error('Changed or escaping XNU source/object: '+item['source'])
         objects.append(str(obj))
+    if version_source is not None and version_object_count != 1:
+        ap.error('Native version metadata requires exactly one generated object')
     rpc_record = None
     if args.rpc:
         rpc = json.loads(args.rpc.read_text())

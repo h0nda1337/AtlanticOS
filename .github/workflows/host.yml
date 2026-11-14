@@ -96,3 +96,4 @@ jobs:
           python3 tools/evidence-validator/validate_evidence.py evidence/g20-timer-overlay-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/xnu-arm-features-20261113/manifest.json
           python3 tools/evidence-validator/validate_evidence.py evidence/qemu-timer-irq-20261113/manifest.json
+          python3 tools/evidence-validator/validate_evidence.py evidence/xnu-shared-region-20261113/manifest.json

@@ -100,7 +100,7 @@ def main():
         assert outputs[0]==outputs[1], 'Native macros outside provider changed'
         outcomes.append({'name':name,'passed':True,'upstream_byte_identical':True})
     unchanged={}
-    for rel in ['osfmk/vm/vm_pageout.c','osfmk/vm/vm_pageout_xnu.h','osfmk/mach/memory_object_types.h']:
+    for rel in ['osfmk/vm/vm_pageout_xnu.h','osfmk/mach/memory_object_types.h']:
         canonical=(ROOT/'xnu-upstream'/rel).read_text().encode()
         assert hashlib.sha256(canonical).hexdigest()==digest(source/rel), 'UPL code or representation changed'
         unchanged[rel]=digest(source/rel)

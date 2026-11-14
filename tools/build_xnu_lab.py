@@ -19,6 +19,16 @@ from xnu_assym import parse_assym, render_assym
 
 ROOT = Path(__file__).resolve().parents[1]
 PROFILE = ROOT/'xnu-port/config/MASTER.arm64.atlanticlab.AtlanticOS'
+VERSION_SOURCE = 'generated/version.c'
+VERSION_ORIGIN = 'xnu_newvers_generated'
+VERSION_NATIVE_INPUTS = ('config/version.c.template', 'config/newvers.pl',
+                         'libkern/libkern/version.h.template')
+# The pinned source's standard build derives this separately from its source
+# tag. Use our explicit laboratory RC_DARWIN_KERNEL_VERSION equivalent.
+VERSION_STAMP = {'xnuVersion':'25.0.0', 'builder':'AtlanticOS',
+                 'environment':{'CURRENT_KERNEL_CONFIG_LC':'atlantic-lab',
+                     'KERNEL_BUILD_DATE':'SOURCE_DATE_EPOCH=0',
+                     'KERNEL_BUILD_OBJROOT':'AtlanticOS-laboratory'}}
 PLATFORM_SOURCES = {'xnu-port/platform/atlantic.h': 'pexpert/pexpert/atlantic.h',
                     'xnu-port/platform/pe_platform.c': 'pexpert/atlantic/pe_platform.c',
                     'xnu-port/platform/cache_asm.s': 'osfmk/arm64/atlantic_cache_asm.s',
@@ -46,7 +56,7 @@ UNITS = {'osfmk/kern/startup.c': '_kernel_bootstrap',
 SYMBOL_TYPES = {'osfmk/ipc/ipc_init.c': 't', 'osfmk/kern/sched_dualq.c': 't',
                 'osfmk/ipc/ipc_importance.c': 't', 'osfmk/ipc/ipc_voucher.c': 't',
                 'osfmk/vm/vm_sanitize_error_compat.c': 'S', 'osfmk/arm/data.s': 'D',
-                'libkern/libclosure/libclosuredata.c': 'S'}
+                'libkern/libclosure/libclosuredata.c': 'S', VERSION_SOURCE: 'S'}
 STARTUP_SYMBOL_PREFIXES = {
     'osfmk/ipc/ipc_init.c': '___startup_MACH_IPC_entry_ipc_init_',
     'osfmk/ipc/ipc_importance.c': '___startup_MACH_IPC_entry_ipc_importance_init_',
@@ -180,7 +190,15 @@ EXPERIMENTAL_UNITS.update({
     'osfmk/arm/arm_timer.c': '_timer_intr',
     'osfmk/arm/data.s': '_RTClockData',
     'osfmk/arm/commpage/commpage.c': '_commpage_set_timestamp',
-    'osfmk/arm64/sme.c': '_arm_sme_version'})
+    'osfmk/arm64/sme.c': '_arm_sme_version',
+    'osfmk/vm/vm_shared_region.c': '_vm_commpage_init',
+    'osfmk/vm/vm_shared_region_pager.c': '_shared_region_pager_setup',
+    'osfmk/vm/atlantic_rsr_version.c': '_rsr_get_version'})
+EXTRA_SYMBOLS.update({
+    'osfmk/vm/vm_shared_region.c': ['_vm_commpage_text_init', '_vm_commpage_enter',
+        '_commpage_text64_location', '_vm_shared_region_get', '_vm_shared_region_set'],
+    'osfmk/vm/vm_shared_region_pager.c': ['_shared_region_pager_init', '_shared_region_pager_ops'],
+    'osfmk/vm/atlantic_rsr_version.c': ['_rsr_bump_version']})
 EXPERIMENTAL_UNITS.update({
     'pexpert/gen/bootargs.c': '_PE_parse_boot_argn',
     'pexpert/arm/pe_bootargs.c': '_PE_boot_args',
@@ -363,7 +381,7 @@ EXTRA_SYMBOLS.update({
     'osfmk/arm64/strnlen.s': ['_strlen'],
     'osfmk/vm/vm32_user.c': ['_vm32_vm_read', '_vm32_vm_write'],
     'osfmk/arm64/static_if.c': ['_ml_static_if_flush_icache'],
-    'osfmk/vm/vm_pageout.c': ['_upl_deallocate', '_upl_get_internal_page_list',
+    'osfmk/vm/vm_pageout.c': ['_upl_page_present', '_upl_phys_page', '_upl_deallocate', '_upl_get_internal_page_list',
                             '_vm_object_upl_request', '_vm_object_iopl_request'],
     'osfmk/arm64/sleh.c': ['_sleh_synchronous_sp1', '_sleh_irq', '_sleh_fiq', '_sleh_serror',
                          '_panic_with_thread_kernel_state', '_thread_exception_return'],
@@ -542,6 +560,13 @@ def main():
     for name, sha in mig_report['source_sha256'].items():
         if digest(ROOT/name) != sha:
             ap.error('MIG host adaptation changed; rebuild it first')
+    version_inputs = {}
+    if provider:
+        for rel in VERSION_NATIVE_INPUTS:
+            native = scm(source, 'show', 'HEAD:'+rel)
+            if (source/rel).read_bytes() != native:
+                ap.error('Generated version input differs from pinned XNU: '+rel)
+            version_inputs[rel] = hashlib.sha256(native).hexdigest()
     build_inputs = {'tools/build_xnu_lab.py': digest(__file__),
                     'tools/xnu_assym.py': digest(ROOT/'tools/xnu_assym.py'),
                     'xnu-port/patches.lock.json': digest(ROOT/'xnu-port/patches.lock.json'),
@@ -554,7 +579,8 @@ def main():
         build_inputs['tests/xnu_port/kalloc_layout.c'] = digest(ROOT/'tests/xnu_port/kalloc_layout.c')
     build_inputs.update({rel: digest(ROOT/rel) for rel in PLATFORM_SOURCES})
     build_id = hashlib.sha256(json.dumps({'port_id': port_id, 'inputs': build_inputs,
-        'layout_provider': provider, 'probe_remaining': args.probe_remaining}, sort_keys=True).encode()).hexdigest()
+        'layout_provider': provider, 'probe_remaining': args.probe_remaining,
+        'version_native_inputs': version_inputs}, sort_keys=True).encode()).hexdigest()
     out = ROOT/'work/xnu-lab-builds'/build_id[:16]
     out.mkdir(parents=True, exist_ok=True)
     commands, steps = [], []
@@ -658,13 +684,28 @@ def main():
     generated_roles[device_header] = 'kernel-server'
     if len(generated) != len(set(generated)):
         raise RuntimeError('Duplicate generated header destinations')
-    # Use upstream's real version template/generator with explicit build metadata.
+    # Stamp the native header and object source from the same version input.
     version = inc/'libkern/version.h';version.parent.mkdir(exist_ok=True)
     shutil.copyfile(source/'libkern/libkern/version.h.template', version)
-    (out/'xnuVersion').write_text('25.0.0\n', encoding='utf-8', newline='\n')
-    venv = dict(os.environ, SRCROOT=str(source), OBJROOT=str(out), TARGET=str(out), CURRENT_KERNEL_CONFIG_LC='atlantic-lab',
-                KERNEL_BUILD_DATE='SOURCE_DATE_EPOCH=0', KERNEL_BUILD_OBJROOT='AtlanticOS-laboratory')
-    run(['perl', str(source/'config/newvers.pl'), str(version)], cwd=out, env=venv, name='version-generate')
+    (out/'xnuVersion').write_text(VERSION_STAMP['xnuVersion']+'\n', encoding='utf-8', newline='\n')
+    version_c = out/VERSION_SOURCE
+    version_files = [str(version)]
+    if provider:
+        version_c.parent.mkdir(exist_ok=True)
+        template = (source/'config/version.c.template').read_text(encoding='utf-8')
+        if template.count('###KERNEL_BUILDER###') != 3:
+            raise RuntimeError('Unexpected native version builder fields')
+        # newvers uses whoami without a builder override. Fill precisely those
+        # fields so all C definitions and the generator stay native.
+        template = template.replace('###KERNEL_BUILDER###', VERSION_STAMP['builder'])
+        version_c.write_text(template, encoding='utf-8', newline='\n')
+        version_files.append(str(version_c))
+    venv = dict(PATH=os.environ.get('PATH', os.defpath), LC_ALL='C',
+                SRCROOT=str(source), OBJROOT=str(out), TARGET=str(out),
+                **VERSION_STAMP['environment'])
+    run(['perl', str(source/'config/newvers.pl'), *version_files], cwd=out, env=venv, name='version-generate')
+    if any('###KERNEL_' in Path(p).read_text(encoding='utf-8') for p in version_files):
+        raise RuntimeError('Unstamped native version metadata')
     clang_resource = subprocess.check_output([target_compiler,'-print-resource-dir'], text=True).strip()
     target = [target_compiler, '--target=arm64-apple-macos11.0', '-mcpu=cortex-a57', '-std=gnu11', '-ffreestanding', '-nostdinc',
               '-fno-builtin', '-fno-stack-protector', '-mkernel', '-fblocks', '-O1', '-g', '-Darm64', '-DARM64', '-D__ARM64__',
@@ -729,6 +770,7 @@ def main():
     selected_units = dict(UNITS)
     if provider:
         selected_units.update(EXPERIMENTAL_UNITS)
+        selected_units[VERSION_SOURCE] = '_version'
         if provider.get('cpp_layout'):
             selected_units.update(CPP_LAYOUT_UNITS)
     units = list(selected_units) + ([p for p in PROBES if p not in selected_units] if args.probe_remaining else [])
@@ -763,7 +805,8 @@ def main():
         if rel.endswith('.s'):
             # Match upstream SFLAGS_GEN, including the non-Clang ASSEMBLER guard.
             per_file += ['-DASSEMBLER', '-D__ASSEMBLER__', '-x', 'assembler-with-cpp']
-        cmd = [*unit_target, *per_file, '-c', str(source/rel), '-o', str(obj)]
+        unit_source = version_c if rel == VERSION_SOURCE else source/rel
+        cmd = [*unit_target, *per_file, '-c', str(unit_source), '-o', str(obj)]
         r = subprocess.run(cmd, cwd=ROOT, text=True, capture_output=True, timeout=60)
         commands.append([str(s).replace(str(ROOT),'<ROOT>') for s in cmd])
         log = out/(obj.stem+'.log');log.write_text(r.stdout+r.stderr, encoding='utf-8', newline='\n')
@@ -797,10 +840,16 @@ def main():
             raise RuntimeError('Bootstrap no longer references substantive Mach initialization')
         if rel.endswith('/startup.c') and any('trust_cache' in s or 'code_signing_init' in s for s in undefined):
             raise RuntimeError('Unexpected Apple userland trust-cache dependency in firmware bootstrap')
-        objects.append({'source':rel,'source_sha256':digest(source/rel),'object':obj.name,'object_sha256':digest(obj),
-                        'object_file_bytes':len(raw),'required_symbol':selected_units.get(rel),'required_symbol_type':binding,
-                        'required_symbols':required_symbols,
-                        'defined_external_symbols':exported,'undefined_symbols':undefined})
+        record = {'source':rel,'source_sha256':digest(unit_source),'object':obj.name,'object_sha256':digest(obj),
+                  'object_file_bytes':len(raw),'required_symbol':selected_units.get(rel),'required_symbol_type':binding,
+                  'required_symbols':required_symbols,
+                  'defined_external_symbols':exported,'undefined_symbols':undefined}
+        if rel == VERSION_SOURCE:
+            required = {'_version', '_version_major', '_version_minor', '_osversion', '_osbuilder', '_osrelease'}
+            if not required <= set(exported) or undefined:
+                raise RuntimeError('Expected native XNU version definitions and no imports')
+            record['source_origin'] = VERSION_ORIGIN
+        objects.append(record)
     selected_definitions = {s for item in objects for s in item['defined_external_symbols']}
     missing_symbols = sorted({s for item in objects for s in item['undefined_symbols']} - selected_definitions)
     report = {'schema_version':1,'label':'BUILT_ARM64','scope':'REAL_XNU_CORE_OBJECTS_ONLY_NOT_LINKED_OR_EXECUTED',
@@ -824,7 +873,10 @@ def main():
               'generated_headers':[{'path':p.relative_to(out).as_posix(),'sha256':digest(p),
                                     'role':generated_roles[p]} for p in generated],
               'objects':objects,'failed_units':failures}
-    (out/'report.json').write_text(json.dumps(report,indent=2)+'\n',encoding='utf-8',newline='\n')
+    if provider:
+        report['version_source'] = {'path':VERSION_SOURCE, 'sha256':digest(version_c),
+                                    'upstream_inputs':version_inputs, 'stamp':VERSION_STAMP}
+    (out/'report.json').write_text(json.dumps(report,indent=2)+'\n', encoding='utf-8', newline='\n')
     print(json.dumps({'label':report['label'],'compiler':report['compiler'],'compiled_units':len(objects),'failed_units':len(failures),
                       'kernel_linked':False,'xnu_executed':False,'report':str(out/'report.json')}))
     return 1 if failures else 0

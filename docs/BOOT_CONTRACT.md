@@ -21,9 +21,9 @@ En cada nueva imagen medirlo de nuevo. No suponer que EL2 permanece disponible
 si un bootloader diferente entra en EL1. EL2→EL1, HCR, SPSR, timers y GIC deben
 tener transiciones explícitas, barreras y vectores válidos; no existe código
 G20 que las implemente todavía. El [laboratorio QEMU](ENTRY_LAB.md) ya comprueba
-EL2→EL1, stack, contador y excepciones con código original específico de ese
-BSP; faltan MMU, IRQ/GIC y bootstrap XNU integrado. Secure world y EL3 quedan
-bajo OEM.
+EL2→EL1, stack, contador, excepciones y dos entregas del timer virtual por
+GICv3 con su BSP original. Faltan la MMU, la integración de IRQ en XNU y el
+bootstrap nativo. Secure world y EL3 quedan bajo OEM.
 
 Validar FDT por magic, totalsize acotado, offsets/alineación y terminadores.
 Copiarlo a RAM propia antes de liberar memoria del loader. Extraer memory,

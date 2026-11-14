@@ -1,0 +1,30 @@
+{
+  "port_id": "fd1823dacb981a6375773de84177022ea7c66e0a24229a9bdc422690b9e7e9d0",
+  "experimental_units": 166,
+  "standard_units": 13,
+  "strict_link_objects": 192,
+  "previous_undefined": 379,
+  "undefined": 365,
+  "resolved": [
+    "_commpage_text64_location",
+    "_osversion",
+    "_shared_region_pager_ops",
+    "_shared_region_pager_reclaimed",
+    "_shared_region_trace_level",
+    "_version",
+    "_version_major",
+    "_version_minor",
+    "_vm_commpage_enter",
+    "_vm_commpage_init",
+    "_vm_commpage_text_init",
+    "_vm_shared_region_enter",
+    "_vm_shared_region_get",
+    "_vm_shared_region_set"
+  ],
+  "new_undefined": [],
+  "duplicates": 0,
+  "kernel_linked": false,
+  "xnu_executed": false,
+  "edk2_handoff_executed": false,
+  "phone_accessed": false
+}

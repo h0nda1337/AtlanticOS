@@ -5,12 +5,14 @@ de XNU. Primera placa: Motorola Moto G20 / Unisoc T700 (UMS512).
 
 **Estado 2026-11-13: auditoría Fase 0, prototipo host Fase 1 y port XNU
 incremental. Trece unidades reales de XNU compilan a objetos ARM64 con Clang
-estándar; 162 unidades de XNU y soporte original con el proveedor experimental explícito, incluidos
-VM residente/faults/objetos, hilos, tareas, locks, ledgers, SMR, IPC/importance y Blocks.
+estándar. El perfil experimental compila 166 unidades de XNU y soporte original, incluidos
+VM residente/faults/objetos, hilos, tareas, locks, ledgers, SMR, IPC/importance,
+Blocks y [regiones compartidas con commpage](docs/XNU_SHARED_REGION_BOOTSTRAP.md).
 Se compilan además 42 archivos RPC generados por MIG como probes, con 70 headers
 coherentes; el configurador oficial selecciona 26 para el enlace de este perfil.
 Tres interfaces no contienen métodos; esos objetos no acreditan servicios.
-Todavía no hay kernel enlazado, ejecución XNU ni drivers G20 funcionales. No hay firmware
+El enlace estricto de 192 objetos deja 365 símbolos indefinidos. Todavía no
+hay kernel enlazado, ejecución XNU ni drivers G20 funcionales. No hay firmware
 AtlanticOS ejecutado en teléfono, ni medición de su RAM residente.**
 
 Repositorio público: [h0nda1337/AtlanticOS](https://github.com/h0nda1337/AtlanticOS).
@@ -25,7 +27,8 @@ confirma identidad Android y desbloqueo por ADB, sin ejecutar firmware AtlanticO
 La [meta activa](docs/ACTIVE_GOAL.md) prioriza XNU real y handoff EDK2; AtlanticBIOS
 completo, VNC y Wi-Fi quedan para después. El [preflight ARM64](docs/ENTRY_LAB.md)
 se ejecuta en QEMU desde EL1/EL2 y continúa en EL1h, con BSP propio, stack,
-vectores y excepciones comprobados; sin XNU enlazado.
+vectores, excepciones y entrega del timer virtual por GICv3 comprobados. Véase la
+[estimación por hitos](docs/PROGRESS_ESTIMATE.md).
 
 El [análisis offline del firmware](docs/STOCK_FIRMWARE_ANALYSIS.md) identifica
 boot header v2, DTB y overlays de un paquete con fingerprint coincidente.

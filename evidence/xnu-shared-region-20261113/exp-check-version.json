@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "label": "HOST_TESTED",
+  "scope": "NATIVE_VERSION_GENERATION_AND_ARM64_OBJECT_ABI_ONLY",
+  "port_id": "fd1823dacb981a6375773de84177022ea7c66e0a24229a9bdc422690b9e7e9d0",
+  "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
+  "build_report_sha256": "0731319193e5c050135aedef9152331f92fa9f6fc54b894316e4557dcbce369e",
+  "tool_sha256": "656c93ca7f7ef5ab0df0e93316d072dfc80aa1f6c3ed95ddd591d2e66012aa5d",
+  "object_sha256": "d3e24142a786443913cb8a9801a4bc8e69c9d1a0c4a2d3ba3a873d7b83822c14",
+  "version_source": {
+    "path": "generated/version.c",
+    "sha256": "72f7ed8606d3cf3fb511c2136bb093b0ba63cbdf26a213c4fbcfc6b1df91eea6",
+    "upstream_inputs": {
+      "config/version.c.template": "9212b2a5096214cafa759c0572485b98dd1e021d419b29826a7ef7b5747e17df",
+      "config/newvers.pl": "507fd7a82e615a0b0d7e3e3e0f300670e863e3b6b36fffe58d551b9336f1d1f4",
+      "libkern/libkern/version.h.template": "4d4ff4e98b12d5a17d468d391fab5bd6f6bc2fb0277610dcde3c40032ad387ee"
+    },
+    "stamp": {
+      "xnuVersion": "25.0.0",
+      "builder": "AtlanticOS",
+      "environment": {
+        "CURRENT_KERNEL_CONFIG_LC": "atlantic-lab",
+        "KERNEL_BUILD_DATE": "SOURCE_DATE_EPOCH=0",
+        "KERNEL_BUILD_OBJROOT": "AtlanticOS-laboratory"
+      }
+    }
+  },
+  "version_header_sha256": "618e16d323bb5acdc08f094bbef3c40a15547b8985533ed113ebae350e162ee6",
+  "integers": {
+    "_version_major": 25,
+    "_version_minor": 0,
+    "_version_revision": 0,
+    "_version_stage": 128,
+    "_version_prerelease_level": 0
+  },
+  "strings": {
+    "_version": "Darwin Kernel Version 25.0.0: SOURCE_DATE_EPOCH=0; AtlanticOS:AtlanticOS-laboratory",
+    "___kernelVersionString": "@(#)VERSION: Darwin Kernel Version 25.0.0: SOURCE_DATE_EPOCH=0; AtlanticOS:AtlanticOS-laboratory",
+    "_osbuild_config": "atlantic-lab",
+    "_osbuilder": "AtlanticOS",
+    "_osrelease": "25.0.0",
+    "_ostype": "Darwin",
+    "_version_variant": "0"
+  },
+  "osversion_bytes": 256,
+  "undefined_symbols": [],
+  "kernel_linked": false,
+  "xnu_executed": false,
+  "phone_accessed": false,
+  "outcomes": [
+    {
+      "name": "pinned-native-generator-and-templates",
+      "passed": true
+    },
+    {
+      "name": "reproducible-version-source-and-header",
+      "passed": true
+    },
+    {
+      "name": "native-constant-integer-and-string-values",
+      "passed": true
+    },
+    {
+      "name": "writable-osversion-zero-fill",
+      "passed": true
+    },
+    {
+      "name": "strong-version-definitions-without-imports",
+      "passed": true
+    }
+  ]
+}
