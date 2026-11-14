@@ -1,0 +1,6 @@
+{"compiled_rpc_units": 42, "failed_rpc_units": 0, "generation_failures": 0, "empty_interfaces": 3, "kernel_linked": false, "report": "/mnt/g/AtlanticOS/work/xnu-rpc-builds/97af58366e45acf2/report.json"}
+{"passed": 2, "cases": 2, "descriptors": 21, "required_subsystems": 0, "kobject_table_checked": false}
+{"object_count": 39, "link_exit_code": 1, "unsupported_static_option_diagnostic_found": true, "output_exists": false, "kernel_linked": false}
+{"passed": 26, "new_native_units_selected": false, "xnu_executed": false}
+{"checks_passed": 24, "selected": false}
+{"passed": 8, "unselected_service_imports": 0, "xnu_executed": false}

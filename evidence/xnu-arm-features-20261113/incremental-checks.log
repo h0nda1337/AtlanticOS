@@ -1,0 +1,7 @@
+{"passed": 2, "cases": 2, "descriptors": 21, "required_subsystems": 14, "kobject_table_checked": true}
+{"object_count": 188, "link_exit_code": 1, "unsupported_static_option_diagnostic_found": false, "output_exists": false, "kernel_linked": false}
+{"passed": 15, "native_runtime_executed": false}
+{"passed": 6, "abi_constants_unchanged": 13}
+{"passed": 24, "new_native_units_selected": true, "xnu_executed": false}
+{"checks_passed": 21, "selected": true}
+{"passed": 8, "unselected_service_imports": 0, "xnu_executed": false}

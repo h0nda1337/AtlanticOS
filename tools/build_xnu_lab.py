@@ -179,7 +179,8 @@ EXPERIMENTAL_UNITS.update({
     'osfmk/kern/clock_oldops.c': '_clock_get_time',
     'osfmk/arm/arm_timer.c': '_timer_intr',
     'osfmk/arm/data.s': '_RTClockData',
-    'osfmk/arm/commpage/commpage.c': '_commpage_set_timestamp'})
+    'osfmk/arm/commpage/commpage.c': '_commpage_set_timestamp',
+    'osfmk/arm64/sme.c': '_arm_sme_version'})
 EXPERIMENTAL_UNITS.update({
     'pexpert/gen/bootargs.c': '_PE_parse_boot_argn',
     'pexpert/arm/pe_bootargs.c': '_PE_boot_args',

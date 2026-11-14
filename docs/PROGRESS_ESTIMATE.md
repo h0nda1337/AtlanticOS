@@ -18,7 +18,7 @@ hechos verificables. Un crédito parcial no equivale a una puerta superada.
 | Bloque hasta primer XNU físico | Peso | Crédito estimado | Estado comprobado |
 |---|---:|---:|---|
 | Infraestructura inicial: fuentes, toolchain C, MIG y pruebas | 10 | 10 | Clang reconstruido desde fuentes y CI limpia de 157 unidades; 70 headers MIG y 42 probes RPC. Este crédito cubre la infraestructura inicial, no todos los requisitos futuros del compilador |
-| Integración nativa y enlace | 25 | 10 | 161 unidades experimentales con Blocks nativo y 26 RPC seleccionados. El enlace de 187 objetos deja 432 símbolos sin proveedor. Sigue pendiente la imagen ejecutable |
+| Integración nativa y enlace | 25 | 10 | 162 unidades experimentales y 26 RPC seleccionados. El enlace de 188 objetos deja 379 símbolos sin proveedor. Sigue pendiente la imagen ejecutable |
 | Entry, datos, carga y MMU | 20 | 7 | Entry original y productor candidato ejecutados en QEMU; ABI boot_args cotejado. Faltan colocar imagen, contexto retenido, propiedad de RAM y traducciones conectadas a XNU |
 | Bootstrap Mach operativo | 15 | 0 | Sin ejecución XNU: VM/allocators, primer hilo, transición de contexto y timer pendientes |
 | BSP e instrumentación física G20 | 20 | 0 | Sin payload AtlanticOS ejecutado ni IRQ, timer o logging físico propios comprobados |

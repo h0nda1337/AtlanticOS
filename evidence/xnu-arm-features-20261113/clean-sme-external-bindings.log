@@ -1,0 +1,3 @@
+0000000000000000 (__TEXT,__text) external _arm_sme_version
+0000000000000010 (__DATA,__const) external [no dead strip] _sme_max_svl_b
+000000000000000c (__DATA,__const) external [no dead strip] _sme_version

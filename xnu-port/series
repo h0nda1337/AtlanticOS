@@ -30,3 +30,4 @@
 0030-add-original-early-ram-log-transport.patch
 0031-retain-native-vm-wait-and-page-worker-synchronization.patch
 0032-select-separately-proved-cpp-layout-metadata.patch
+0033-retain-arm-feature-storage-without-bsd-sysctls.patch

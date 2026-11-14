@@ -1,0 +1,34 @@
+AtlanticOS: retain native ARM capability storage in the firmware profile.
+Use the upstream feature catalog and late read-only type while preserving
+the native commpage probes and all nonfirmware declarations.
+
+diff --git a/osfmk/arm/commpage/commpage.c b/osfmk/arm/commpage/commpage.c
+--- a/osfmk/arm/commpage/commpage.c
++++ b/osfmk/arm/commpage/commpage.c
+@@ -87,6 +87,18 @@
+ extern user64_addr_t commpage_text64_location;
+ extern user32_addr_t commpage_text32_location;
+ 
++#if CONFIG_ATLANTIC_FIRMWARE
++/* The firmware profile retains the native feature probes without BSD sysctls. */
++#if MACH_BSD
++#error "Feature storage is already provided by the BSD sysctl source"
++#endif
++#define ARM_FEATURE_FLAG(x) \
++	SECURITY_READ_ONLY_LATE(int) gARM_ ## x = 0;
++#include <arm/arm_features.inc>
++#undef ARM_FEATURE_FLAG
++
++SECURITY_READ_ONLY_LATE(int) gUCNormalMem = 0;
++#else
+ /* For sysctl access from BSD side */
+ #define ARM_FEATURE_FLAG(x) \
+ 	extern int gARM_ ## x;
+@@ -94,6 +106,7 @@
+ #undef ARM_FEATURE_FLAG
+ 
+ extern int      gUCNormalMem;
++#endif /* CONFIG_ATLANTIC_FIRMWARE */
+ 
+ void
+ commpage_populate(void)
