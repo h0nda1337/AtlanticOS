@@ -62,6 +62,34 @@ de disponer de carga temporal y recuperación verificadas; no se ejecutan aquí:
 Ninguna de estas subpruebas, aun pasando, satisface T08: todavía haría falta
 ejecutar Mach/XNU real, ligado al upstream, patchset y binario exactos.
 
+## Subprueba T06: timer arquitectónico y GICv3
+
+La aplicación offline de los overlays 1H10 0 y 3 del mirror RETBR, por
+separado, conserva el padre de interrupciones del nodo raíz y los subárboles
+GICv3, timer, CPU y PSCI. El orden de las entradas de `/timer` es físico
+seguro, físico no seguro, virtual y físico de hipervisor. Los índices PPI
+de cada entrada son 13, 14, 11 y 10, que GIC expresa como INTID 29, 30, 27
+y 26. El tercer campo de las cuatro entradas es `0x04`, nivel alto. El árbol
+carece de `clock-frequency` en `/timer` y declara `arm,no-tick-in-suspend`.
+Los registros de hardware y el FDT efectivo del G20 `amxmx` siguen pendientes.
+[Comparación offline](../evidence/g20-timer-overlay-20261113/manifest.json).
+
+1. Tras T01/T04/T05, capturar hash del FDT efectivo y del payload, afinidad
+   MPIDR, EL y accesibilidad de la interfaz GIC. Identificar el redistribuidor
+   de esa afinidad, el grupo de la PPI y el modo de finalización de interrupciones.
+   Medir el avance de `CNTVCT_EL0` frente a una referencia externa y contrastar
+   el resultado con `CNTFRQ_EL0`.
+2. Ensayar un disparo único y acotado del timer virtual. Registrar el plazo,
+   el estado `CNTV_CTL_EL0.ISTATUS`, el vector y el INTID reconocido. El candidato
+   del árbol RETBR es el INTID 27. Registrar cómo el BSP desactiva la fuente y
+   completa la interrupción según el grupo y el modo observados. Verificar que
+   el enmascarado impide un nuevo disparo y repetir con otro plazo. Al terminar,
+   comprobar el retorno por la ruta independiente de Android.
+3. La ruta genérica de XNU usa `CNTV_TVAL_EL0` para programar el plazo y
+   `CNTVCT_EL0` para el tiempo. Un disparo de la PPI física 30 o una lectura
+   del contador deja pendiente la ruta virtual. T08 añade la traza XNU desde
+   el vector hasta `rtclock_intr`, `timer_intr` y el servicio Mach real.
+
 ## Subpruebas pendientes de T08: SLEH y reloj XNU
 
 Estado: PENDING_HARDWARE. Las pruebas de objetos de

@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "scope": "RETBR_BASE_AND_SEPARATE_1H10_OVERLAY_MERGES_FOR_GIC_AND_TIMER_DESCRIPTION",
+  "source": "XT2128-1 RTAS31.68-66-3 RETBR PAC mirror",
+  "tool_version": "Device Tree Compiler and fdtoverlay 1.7.2",
+  "commands": [
+    "fdtoverlay -v -i boot-dtb-0.dtb -o merged-0.dtb dtbo-0.dtb",
+    "fdtoverlay -v -i boot-dtb-0.dtb -o merged-3.dtb dtbo-3.dtb",
+    "dtc -q -q -q -s -I dtb -O dts boot-dtb-0.dtb -o base.dts",
+    "dtc -q -q -q -s -I dtb -O dts merged-0.dtb -o merged-0.dts",
+    "dtc -q -q -q -s -I dtb -O dts merged-3.dtb -o merged-3.dts",
+    "fdtget -p merged-0.dtb /timer",
+    "fdtget -p merged-3.dtb /timer"
+  ],
+  "input": {
+    "boot-dtb-0.dtb": "0f2d1d69744410c3fc6b852514522c6df17e25f6ba312d3f3c61a1e5b5536d75",
+    "dtbo-0.dtb": "771d213499c37ed82fc525c315f1c2db0ebbd36fbf5cfad3d67845de95ba6525",
+    "dtbo-3.dtb": "1a3d9c7f7f3b331f4b8429ba8ac2a08c49a6e875fb5f75af8041a447801a3171"
+  },
+  "merged_dtb_sha256": {
+    "merged-0.dtb": "d0fbf40054eb84b569f1bb4b6349af5dab3ac01762262455d225e8795c05dee5",
+    "merged-3.dtb": "6ba0251448febdd8420bed3f5ea198f17832dc69acc168cf5d0ef14c6750208f"
+  },
+  "comparison": {
+    "method": "Extract each complete root-level subtree from sorted dtc text, including the opening and closing lines, without a trailing LF. Compare UTF-8 bytes across the base and both individual merges.",
+    "root_interrupt_parent": [1],
+    "equal_subtree_sha256": {
+      "/interrupt-controller@12000000": "a06d8899aa7f895ca6b64fde1d8ccdea90d73efb2ecab2b4ff614aa6f2c6e603",
+      "/timer": "d948edad030f1041f860d6f65ddbcca9ff3c5068bcd593e74f380cbfdad658c8",
+      "/cpus": "69ad295c56a04d0ce577bd7a788034969ef0cd22ad63910d0c8ceb2da59fb26e",
+      "/psci": "e13ac42d1cd6b6dc958fbc0511846f909d381d4d5a4f4d4e8964d9e9c8d0f285"
+    }
+  },
+  "gic": {
+    "compatible": "arm,gic-v3",
+    "distributor": ["0x12000000", "0x20000"],
+    "redistributor_region": ["0x12040000", "0x100000"],
+    "redistributor_stride": "0x20000",
+    "redistributor_regions": 1,
+    "interrupt_cells": 3
+  },
+  "timer": {
+    "compatible": "arm,armv8-timer",
+    "no_tick_in_suspend": true,
+    "clock_frequency_property": null,
+    "input_cells_in_order": [[1, 13, 4], [1, 14, 4], [1, 11, 4], [1, 10, 4]],
+    "architectural_timer_order": ["secure_physical", "nonsecure_physical", "virtual", "hypervisor_physical"],
+    "decoded_interrupt_ids": [29, 30, 27, 26],
+    "decoded_trigger": "level_high"
+  },
+  "xnu": {
+    "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
+    "source": "osfmk/arm64/machine_routines.c",
+    "generic_counter": "CNTVCT_EL0",
+    "generic_decrementer": "CNTV_TVAL_EL0",
+    "generic_timer_control": "CNTV_CTL_EL0"
+  },
+  "amxmx_effective_tree_verified": false,
+  "active_interrupt_group_or_timer_frequency_verified": false,
+  "phone_accessed_for_this_inspection": false,
+  "physical_timer_interrupt_verified": false
+}
