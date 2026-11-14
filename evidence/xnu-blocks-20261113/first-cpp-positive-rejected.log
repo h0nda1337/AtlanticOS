@@ -1,0 +1,10 @@
+<ROOT>/tests/clang_layout/positive.cpp:103:1: error: AtlanticOS layout: requires a complete, fixed-size object type
+  103 | SIGNATURE(Array<PointerData>, "1212");
+      | ^
+<ROOT>/tests/clang_layout/positive.cpp:9:56: note: expanded from macro 'SIGNATURE'
+    9 | #define SIGNATURE(T, S) static_assert(__builtin_strcmp(SIG(T), S) == 0, #T " signature")
+      |                                                        ^
+<ROOT>/tests/clang_layout/positive.cpp:6:16: note: expanded from macro 'SIG'
+    6 | #define SIG(T) __atlantic_cpp_layout_signature(T)
+      |                ^
+1 error generated.

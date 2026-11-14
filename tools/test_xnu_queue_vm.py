@@ -15,7 +15,7 @@ from test_xnu_platform import strong_external_import
 
 ROOT = Path(__file__).resolve().parents[1]
 CPPFLAGS = ['-x', 'c++', '-std=gnu++2b', '-fsized-deallocation', '-fapple-kext',
-            '-DLIBKERN_KERNEL_PRIVATE=1', '-DOSALLOCDEBUG=1']
+            '-UMACH_KERNEL_PRIVATE', '-DLIBKERN_KERNEL_PRIVATE=1', '-DOSALLOCDEBUG=1']
 COUNTERS = ['__Z11counter_addPPyy', '__Z11counter_incPPy', '__Z11counter_decPPy',
     '__Z31counter_add_preemption_disabledPPyy', '__Z31counter_inc_preemption_disabledPPy',
     '__Z31counter_dec_preemption_disabledPPy']

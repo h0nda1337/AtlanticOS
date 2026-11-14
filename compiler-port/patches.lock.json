@@ -1,12 +1,12 @@
 {
   "upstream_commit": "cd708029e0b2869e80abe31ddb175f7c35361f90",
   "archive_sha256": "05e6d7fe6d188dd4d33b812ab5cce7654b886b7c9ce405aa1d942c866bbe959f",
-  "patch_sha256": "d804bbec559fd07128c0817c624810ad87d7ee1262802ec44285c1cb9263771d",
+  "patch_sha256": "e0b219f8c8c856cfca8fef4bae295855021a7f81048ff0320ac60ba213d3ac1e",
   "files": [
     {
       "path": "clang/include/clang/Basic/TokenKinds.def",
       "preimage_sha256": "fba339e8d4bfab62f190685bb58c27724a49290e2c9da4d4229956d1bd7da3c3",
-      "postimage_sha256": "d831c410fd9182c15d6771d380ff7ae14424cd2968e6c3b073df8512f839705a"
+      "postimage_sha256": "99b323cec68d74ad213013b028f2cf72e211a5678446c759527b64781e92c89a"
     },
     {
       "path": "clang/include/clang/Parse/Parser.h",
@@ -16,7 +16,7 @@
     {
       "path": "clang/lib/Parse/ParseExpr.cpp",
       "preimage_sha256": "387003fae2e5d5fb472f08ec5e22ab61b6bdc6bed10990e94c9d4c588113887b",
-      "postimage_sha256": "6da0807c377ecd9b3af669cfe99288844f739e2ddc468cca796e2127f4615031"
+      "postimage_sha256": "af8081bea652c61539cb95f903faa0b6f4276788ce92f3b88ebdb64c15534817"
     },
     {
       "path": "clang/include/clang/Sema/Sema.h",
@@ -31,12 +31,12 @@
     {
       "path": "clang/lib/Frontend/InitPreprocessor.cpp",
       "preimage_sha256": "b2174f7989dc8a15d6e48099d6c1fcc6e129d4d2183cfab4b414c73e53bf7c73",
-      "postimage_sha256": "772925bfd5f8f5855ec020fbcd7517ff6043ff862fbcb572552beddc58ccaa88"
+      "postimage_sha256": "476f6c970895426df84a87b718c16b8898dea930020cc87fcb6228a194c8858a"
     },
     {
       "path": "clang/lib/Sema/SemaAtlanticLayout.cpp",
       "preimage_sha256": null,
-      "postimage_sha256": "5c5d7959e411aa21ab40a01c2dd536e16fec3af0da3609e5d8fa5e58d680bab6"
+      "postimage_sha256": "f07b2ca5d6b1d0091859eb510f992d75a0e3834fdd3a7c9030c0477afe2af6f0"
     }
   ]
 }

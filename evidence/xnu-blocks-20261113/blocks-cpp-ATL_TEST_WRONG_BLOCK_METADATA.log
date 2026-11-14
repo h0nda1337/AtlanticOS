@@ -1,0 +1,113 @@
+In file included from <ROOT>/tests/xnu_port/blocks_layout.c:2:
+In file included from <ROOT>/work/xnu-lab-sources/d57ea0fd12721776/libkern/libkern/Block_private.h:24:
+In file included from <ROOT>/work/xnu-lab-sources/d57ea0fd12721776/bsd/sys/systm.h:110:
+In file included from <ROOT>/work/xnu-lab-sources/d57ea0fd12721776/bsd/sys/proc.h:88:
+In file included from <ROOT>/work/xnu-lab-sources/d57ea0fd12721776/bsd/sys/codesign.h:32:
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/cs_blobs.h:201:2: warning: array designators are a C99 extension [-Wc99-designator]
+  201 |         [CS_LINKAGE_APPLICATION_OOPJIT_INVALID] = NULL,
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:35:8: error: static assertion failed due to requirement '__builtin_strcmp("1211", "2222") == 0': Block pointer metadata mismatch
+   35 | ASSERT(__builtin_strcmp(KALLOC_LAYOUT_SIGNATURE(struct Block_layout), "2222") == 0,
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:35:79: note: expression evaluates to '-1 == 0'
+   35 | ASSERT(__builtin_strcmp(KALLOC_LAYOUT_SIGNATURE(struct Block_layout), "2222") == 0,
+      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:47:1: warning: ISO C++ requires field designators to be specified in declaration order; field 'kt_flags' will be initialized after field 'kt_size_hdr' [-Wreorder-init-list]
+   47 | KALLOC_TYPE_VAR_DEFINE(ATL_BLOCK_LAYOUT, struct Block_layout, void *, KT_DEFAULT);
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:524:37: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE'
+  524 | #define KALLOC_TYPE_VAR_DEFINE(...) KALLOC_DISPATCH(KALLOC_TYPE_VAR_DEFINE, ##__VA_ARGS__)
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1544:2: note: expanded from macro 'KALLOC_DISPATCH'
+ 1544 |         KALLOC_DISPATCH1(base, KALLOC_COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1542:40: note: expanded from macro 'KALLOC_DISPATCH1'
+ 1542 | #define KALLOC_DISPATCH1(base, N, ...) __CONCAT(base, N)(__VA_ARGS__)
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/bsd/sys/cdefs.h:116:26: note: expanded from macro '__CONCAT'
+  116 | #define __CONCAT(x, y)   x ## y
+      |                          ^
+<scratch space>:45:1: note: expanded from here
+   45 | KALLOC_TYPE_VAR_DEFINE_4
+      | ^
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1665:21: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE_4'
+ 1665 |             .kt_size_hdr = sizeof(hdr),                                 \
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:47:1: note: previous initialization for field 'kt_flags' is here
+   47 | KALLOC_TYPE_VAR_DEFINE(ATL_BLOCK_LAYOUT, struct Block_layout, void *, KT_DEFAULT);
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:524:37: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE'
+  524 | #define KALLOC_TYPE_VAR_DEFINE(...) KALLOC_DISPATCH(KALLOC_TYPE_VAR_DEFINE, ##__VA_ARGS__)
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1544:2: note: expanded from macro 'KALLOC_DISPATCH'
+ 1544 |         KALLOC_DISPATCH1(base, KALLOC_COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1542:40: note: expanded from macro 'KALLOC_DISPATCH1'
+ 1542 | #define KALLOC_DISPATCH1(base, N, ...) __CONCAT(base, N)(__VA_ARGS__)
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note: (skipping 2 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1664:18: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE_4'
+ 1664 |             .kt_flags = KALLOC_TYPE_ADJUST_FLAGS(flags, hdr, type),     \
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1627:2: note: expanded from macro 'KALLOC_TYPE_ADJUST_FLAGS'
+ 1627 |         KALLOC_TYPE_CAST_FLAGS((flags | KT_CHANGED | KT_CHANGED2 |               \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1628 |         (KALLOC_TYPE_CHECK(KT_SUMMARY_MASK_DATA, __VA_ARGS__)? KT_DATA_ONLY: 0) |\
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1629 |         (KALLOC_TYPE_CHECK(KT_SUMMARY_MASK_PTR, __VA_ARGS__)? KT_PTR_ARRAY: 0) | \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1630 |         (KALLOC_TYPE_VM_SIZE_CHECK(__VA_ARGS__)? KT_VM : 0)))
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1600:39: note: expanded from macro 'KALLOC_TYPE_CAST_FLAGS'
+ 1600 | #define KALLOC_TYPE_CAST_FLAGS(flags) static_cast<kalloc_type_flags_t>(flags)
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:48:1: warning: ISO C++ requires field designators to be specified in declaration order; field 'kt_flags' will be initialized after field 'kt_size_hdr' [-Wreorder-init-list]
+   48 | KALLOC_TYPE_VAR_DEFINE(ATL_BLOCK_BYREF, struct Block_byref, void *, KT_DEFAULT);
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:524:37: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE'
+  524 | #define KALLOC_TYPE_VAR_DEFINE(...) KALLOC_DISPATCH(KALLOC_TYPE_VAR_DEFINE, ##__VA_ARGS__)
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1544:2: note: expanded from macro 'KALLOC_DISPATCH'
+ 1544 |         KALLOC_DISPATCH1(base, KALLOC_COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1542:40: note: expanded from macro 'KALLOC_DISPATCH1'
+ 1542 | #define KALLOC_DISPATCH1(base, N, ...) __CONCAT(base, N)(__VA_ARGS__)
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/bsd/sys/cdefs.h:116:26: note: expanded from macro '__CONCAT'
+  116 | #define __CONCAT(x, y)   x ## y
+      |                          ^
+<scratch space>:57:1: note: expanded from here
+   57 | KALLOC_TYPE_VAR_DEFINE_4
+      | ^
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1665:21: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE_4'
+ 1665 |             .kt_size_hdr = sizeof(hdr),                                 \
+      |             ~~~~~~~~~~~~~~~^~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:48:1: note: previous initialization for field 'kt_flags' is here
+   48 | KALLOC_TYPE_VAR_DEFINE(ATL_BLOCK_BYREF, struct Block_byref, void *, KT_DEFAULT);
+      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:524:37: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE'
+  524 | #define KALLOC_TYPE_VAR_DEFINE(...) KALLOC_DISPATCH(KALLOC_TYPE_VAR_DEFINE, ##__VA_ARGS__)
+      |                                     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1544:2: note: expanded from macro 'KALLOC_DISPATCH'
+ 1544 |         KALLOC_DISPATCH1(base, KALLOC_COUNT_ARGS(__VA_ARGS__), ##__VA_ARGS__)
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1542:40: note: expanded from macro 'KALLOC_DISPATCH1'
+ 1542 | #define KALLOC_DISPATCH1(base, N, ...) __CONCAT(base, N)(__VA_ARGS__)
+      |                                        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+note: (skipping 2 expansions in backtrace; use -fmacro-backtrace-limit=0 to see all)
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1664:18: note: expanded from macro 'KALLOC_TYPE_VAR_DEFINE_4'
+ 1664 |             .kt_flags = KALLOC_TYPE_ADJUST_FLAGS(flags, hdr, type),     \
+      |                         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1627:2: note: expanded from macro 'KALLOC_TYPE_ADJUST_FLAGS'
+ 1627 |         KALLOC_TYPE_CAST_FLAGS((flags | KT_CHANGED | KT_CHANGED2 |               \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1628 |         (KALLOC_TYPE_CHECK(KT_SUMMARY_MASK_DATA, __VA_ARGS__)? KT_DATA_ONLY: 0) |\
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1629 |         (KALLOC_TYPE_CHECK(KT_SUMMARY_MASK_PTR, __VA_ARGS__)? KT_PTR_ARRAY: 0) | \
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 1630 |         (KALLOC_TYPE_VM_SIZE_CHECK(__VA_ARGS__)? KT_VM : 0)))
+      |         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:1600:39: note: expanded from macro 'KALLOC_TYPE_CAST_FLAGS'
+ 1600 | #define KALLOC_TYPE_CAST_FLAGS(flags) static_cast<kalloc_type_flags_t>(flags)
+      |                                       ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+3 warnings and 1 error generated.

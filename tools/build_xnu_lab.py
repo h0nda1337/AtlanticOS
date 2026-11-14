@@ -45,7 +45,8 @@ UNITS = {'osfmk/kern/startup.c': '_kernel_bootstrap',
 # IPC registers a genuine static initializer in STARTUP(MACH_IPC, ...).
 SYMBOL_TYPES = {'osfmk/ipc/ipc_init.c': 't', 'osfmk/kern/sched_dualq.c': 't',
                 'osfmk/ipc/ipc_importance.c': 't', 'osfmk/ipc/ipc_voucher.c': 't',
-                'osfmk/vm/vm_sanitize_error_compat.c': 'S', 'osfmk/arm/data.s': 'D'}
+                'osfmk/vm/vm_sanitize_error_compat.c': 'S', 'osfmk/arm/data.s': 'D',
+                'libkern/libclosure/libclosuredata.c': 'S'}
 STARTUP_SYMBOL_PREFIXES = {
     'osfmk/ipc/ipc_init.c': '___startup_MACH_IPC_entry_ipc_init_',
     'osfmk/ipc/ipc_importance.c': '___startup_MACH_IPC_entry_ipc_importance_init_',
@@ -276,6 +277,13 @@ EXPERIMENTAL_UNITS.update({
 EXPERIMENTAL_UNITS.update({
     'osfmk/arm/counter.c': '__Z11counter_addPPyy',
     'libkern/c++/priority_queue.cpp': '__Z21priority_queue_insertP24priority_queue_sched_maxP26priority_queue_entry_sched'})
+CPP_LAYOUT_UNITS = {
+    'libkern/libclosure/runtime.cpp': '__Block_copy',
+    'libkern/libclosure/libclosuredata.c': '__NSConcreteStackBlock'}
+EXTRA_SYMBOLS.update({
+    'libkern/libclosure/runtime.cpp': ['__Block_release', '__Block_object_assign', '__Block_object_dispose', '_Block_size'],
+    'libkern/libclosure/libclosuredata.c': ['__NSConcreteMallocBlock', '__NSConcreteGlobalBlock',
+        '__NSConcreteAutoBlock', '__NSConcreteFinalizingBlock', '__NSConcreteWeakBlockVariable']})
 EXTRA_SYMBOLS.update({
     'osfmk/atlantic/early_log.c': ['_atl_early_log_capture', '_atl_early_log_snapshot'],
     'osfmk/kern/atlantic_early_log.c': ['_PE_kputc', '_PE_putc', '_atlantic_xnu_log_snapshot']})
@@ -398,11 +406,15 @@ def main():
                     help='Explicit experimental compiler; also builds selected Mach, VM and IPC core units')
     ap.add_argument('--layout-proof', type=Path,
                     help='Successful tools/test_atlantic_clang.py report for this compiler')
+    ap.add_argument('--cpp-layout-proof', type=Path,
+                    help='Separate bounded C++ API proof; additionally selects the genuine Blocks runtime')
     args = ap.parse_args()
     if platform.system() != 'Linux' or platform.machine() != 'x86_64':
         ap.error('Use Linux x86_64 or Debian/WSL')
     if bool(args.layout_compiler) != bool(args.layout_proof):
         ap.error('--layout-compiler and --layout-proof must be selected together')
+    if args.cpp_layout_proof and not args.layout_compiler:
+        ap.error('--cpp-layout-proof additionally requires the explicit C layout compiler and proof')
     target_compiler = 'clang'
     provider = None
     if args.layout_compiler:
@@ -429,6 +441,26 @@ def main():
         provider = {'api': 'ATLANTIC_C_LAYOUT_USAGE_V2_EXPERIMENTAL', 'compiler_sha256': digest(target_compiler),
                     'proof_sha256': digest(args.layout_proof), 'proof_inputs': inputs,
                     'compiler_patch_sha256': digest(compiler_patch), 'api_checks_passed': len(outcomes)}
+        if args.cpp_layout_proof:
+            cpp = json.loads(args.cpp_layout_proof.read_text())
+            cpp_inputs = {p:digest(ROOT/p) for p in ['compiler-port/SemaAtlanticLayout.cpp',
+                'compiler-port/ParseAtlanticLayout.inc', 'compiler-port/patches.lock.json',
+                'tests/clang_layout/positive.cpp', 'tests/clang_layout/negative_cpp.json',
+                'tools/test_atlantic_cpp_layout.py']}
+            cpp_cases = json.loads((ROOT/'tests/clang_layout/negative_cpp.json').read_text())
+            expected_cpp = [('positive', 0, None), ('llvm-ir', 0, None)] + [
+                (c['name'], 1, c['diagnostic']) for c in cpp_cases]
+            cpp_outcomes = cpp.get('outcomes', [])
+            actual_cpp = [(c.get('name'), c.get('expected'), c.get('required_diagnostic')) for c in cpp_outcomes]
+            if (cpp.get('scope') != 'EXPERIMENTAL_BOUNDED_CPP_LAYOUT_COMPILER_API_ONLY_NOT_XNU_OR_PHONE_EXECUTION' or
+                cpp.get('label') != 'HOST_TESTED' or cpp.get('c_api_version') != 2 or cpp.get('cpp_api_version') != 1 or
+                cpp.get('inputs') != cpp_inputs or cpp.get('compiler_sha256') != digest(target_compiler) or
+                actual_cpp != expected_cpp or any(c.get('passed') is not True or
+                c.get('exit_code') != c.get('expected') for c in cpp_outcomes)):
+                ap.error('C++ compiler proof is stale, incomplete, or for another binary')
+            provider['cpp_layout'] = {'api':'ATLANTIC_BOUNDED_CPP_LAYOUT_V1_EXPERIMENTAL',
+                'proof_sha256':digest(args.cpp_layout_proof), 'proof_inputs':cpp_inputs,
+                'api_checks_passed':len(cpp_outcomes)}
     git = 'git.exe' if args.windows_git else 'git'
     for tool in [git, 'clang', 'bison', 'flex', 'csh', 'unifdef', 'perl', 'llvm-nm', 'llvm-size']:
         if not shutil.which(tool):
@@ -644,6 +676,8 @@ def main():
     target += ['-isystem', clang_resource+'/include', *defines]
     if provider:
         target += ['-DCONFIG_ATLANTIC_C_LAYOUT=1']
+        if provider.get('cpp_layout'):
+            target += ['-DCONFIG_ATLANTIC_CPP_LAYOUT=1']
         layout_fixture = str(ROOT/'tests/xnu_port/kalloc_layout.c')
         run([*target, '-c', layout_fixture, '-o', str(out/'kalloc-layout.o')], name='kalloc-layout')
         rejection = run([*target, '-DATL_TEST_BAD_POINTER=1', '-fsyntax-only', layout_fixture],
@@ -694,6 +728,8 @@ def main():
     selected_units = dict(UNITS)
     if provider:
         selected_units.update(EXPERIMENTAL_UNITS)
+        if provider.get('cpp_layout'):
+            selected_units.update(CPP_LAYOUT_UNITS)
     units = list(selected_units) + ([p for p in PROBES if p not in selected_units] if args.probe_remaining else [])
     for rel in units:
         obj = out/(Path(rel).stem+'.o')
@@ -706,7 +742,9 @@ def main():
             # Keep the C recipe unchanged for native C and assembly units.
             unit_target = [flag for flag in target if flag != '-std=gnu11']
             per_file += ['-x', 'c++', '-std=gnu++2b', '-fsized-deallocation', '-fapple-kext',
-                         '-DLIBKERN_KERNEL_PRIVATE=1', '-DOSALLOCDEBUG=1']
+                         '-UMACH_KERNEL_PRIVATE', '-DLIBKERN_KERNEL_PRIVATE=1', '-DOSALLOCDEBUG=1']
+        if rel == 'libkern/libclosure/libclosuredata.c':
+            per_file += ['-UMACH_KERNEL_PRIVATE', '-DLIBKERN_KERNEL_PRIVATE=1', '-DOSALLOCDEBUG=1']
         if rel in {'osfmk/atlantic/early_log.c', 'osfmk/kern/atlantic_early_log.c'}:
             # Byte buffers may be unaligned; emit inline, weak-CAS atomics.
             # This mapped-RAM transport is not used by the MMU-off entry.

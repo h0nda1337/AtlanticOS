@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "upstream_commit": "f6217f891ac0bb64f3d375211650a4c1ff8ca1ea",
-  "port_id": "560ed77e6b991310aa660d45319de4ef438447ada8a714c8fc88b0b27ed42c74",
+  "port_id": "d57ea0fd12721776a6e22f0886cf727c3f61b45ba4f5151801963f3bcfefe036",
   "patches": {
     "0001-add-atlantic-arm64-laboratory-profile.patch": "68f342277d68cbd35f532a0fcfe35f99742569f960a7f37fa155c774055e1d5c",
     "0002-define-atlantic-laboratory-boot-line-abi.patch": "5c62558a6221b17377966b5b4c678004cd813fd37cacdf6849cc9dd011f6ea84",
@@ -33,7 +33,8 @@
     "0028-scope-bsd-throttle-callbacks-and-fix-native-resource-failure-path.patch": "306dab51ce7db3acb84be207a1015b267e53ecb59fa7d027df95d1a61c726611",
     "0029-match-bank-telemetry-uses-to-native-field-guard.patch": "67d594c0a1f46679b376621ac4077d560f0475e12d9be8b90015363cf4df344f",
     "0030-add-original-early-ram-log-transport.patch": "99e42eaa0ecb19c290a16c1bc84c1669d00a535a22dfbc6d25ef0d3580f21f5b",
-    "0031-retain-native-vm-wait-and-page-worker-synchronization.patch": "c59637a09576cbdb41d404f853052ad4ad395afd26ba5f74c257536d2055de97"
+    "0031-retain-native-vm-wait-and-page-worker-synchronization.patch": "c59637a09576cbdb41d404f853052ad4ad395afd26ba5f74c257536d2055de97",
+    "0032-select-separately-proved-cpp-layout-metadata.patch": "9433f9de329bec6f2d7b549bc946d2fcf7788757b1218b9feb37d5b2caafd128"
   },
   "canonical_lf_files": [
     {
@@ -74,7 +75,7 @@
     {
       "path": "osfmk/kern/kalloc.h",
       "preimage_sha256": "94bce42abcae3dbb290b15bc5f32269d7cbaefa75a078bb439311928fff306d6",
-      "postimage_sha256": "dbdc1a942dfee6dca6b5d20c20a8dd5daeff4fe7ca4d18af00a3579a91f97c39"
+      "postimage_sha256": "d11655479b8d639a5f4cfb9bedf9266586dca5f1f23929597d8fd883f4ffb74d"
     },
     {
       "path": "osfmk/kern/thread.c",

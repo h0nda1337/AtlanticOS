@@ -1,4 +1,10 @@
-# Extensión experimental del compilador para layouts C
+# Extensión experimental del compilador para layouts C y C++
+
+La API C++ v1 incorpora records completos, triviales y de layout estándar.
+Usa operaciones propias y una prueba independiente para seleccionar el runtime
+Blocks nativo de XNU. La receta ejecuta los 26 casos C y los 32 casos C++ y guarda
+sus informes bajo `tests/` y `cpp-tests/`, respectivamente.
+Véase [runtime Blocks y metadata C++](../docs/XNU_BLOCKS_RUNTIME.md).
 
 V2: compilador completo reconstruido desde cero y 26 comprobaciones aprobadas,
 con anotaciones de uso de typedefs/campos conservadas y ocho rechazos nuevos.

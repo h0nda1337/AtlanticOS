@@ -1,0 +1,48 @@
+{
+  "source_parent_commit": "d2b700c",
+  "port_id": "d57ea0fd12721776a6e22f0886cf727c3f61b45ba4f5151801963f3bcfefe036",
+  "native_source_hashes": {
+    "libkern/libclosure/runtime.cpp": "5491b762a75e4660612be5ae0b07886bea187aa11c4f1a285f0dd99f0f72d927",
+    "libkern/libclosure/libclosuredata.c": "a92541b06b13b57e2c417e8a2ce1aa6bf545279fd6f5ae8538a7d45e8b426082"
+  },
+  "objects": {
+    "libkern/libclosure/runtime.cpp": {
+      "object_sha256": "2ffc7a6503009bf163c3ae2cc5c907fbd469dd1a5ec3bde3fa690712c46827ff",
+      "imports": [
+        "__NSConcreteMallocBlock",
+        "_kalloc_ext",
+        "_kfree_ext",
+        "_mach_assert_jump_key",
+        "_memmove"
+      ]
+    },
+    "libkern/libclosure/libclosuredata.c": {
+      "object_sha256": "036440cc97d086fb18148e0861efc07c56e6eece48399b3bac4c36c1566c133b"
+    }
+  },
+  "compiler_sha256": "39b9eea45d88a46eb4405509ac5dae9689f6a56dc09a89b3e98d3e7605c84b14",
+  "compiler_incremental": true,
+  "checks": {
+    "c_api": 26,
+    "cpp_api": 32,
+    "blocks_native": 15,
+    "exp_reports": 24,
+    "std_reports": 20
+  },
+  "strict_link": {
+    "previous_undefined": 436,
+    "current_undefined": 432,
+    "resolved": [
+      "__Block_object_assign",
+      "__Block_object_dispose",
+      "__NSConcreteGlobalBlock",
+      "__NSConcreteStackBlock"
+    ],
+    "new_undefined": [],
+    "duplicate_symbols": 0,
+    "output_exists": false
+  },
+  "xnu_executed": false,
+  "phone_accessed": false,
+  "edk2_handoff_executed": false
+}

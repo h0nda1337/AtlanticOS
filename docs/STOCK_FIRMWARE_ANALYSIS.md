@@ -137,6 +137,14 @@ y falta identificar su U-Boot exacto. Sigue abierta la disponibilidad de una
 vía OEM a RAM para esa unidad. El registro del desensamblado y sus límites
 quedan en [la evidencia](../evidence/g20-stock-dispatch-20261113/manifest.json).
 
+Motorola documenta en Software Fix el paso de descarga del paquete antes de
+iniciar la recuperación. El servicio selecciona el paquete por modelo y
+operador. Esto permite buscar una copia oficial para el análisis offline hasta
+el paso de descarga. La comparación aún necesita la compilación exacta y el
+hash del U-Boot, porque el servicio puede ofrecer una actualización más reciente.
+[Descarga en Software Fix](https://es-latam.support.motorola.com/app/answers/detail/a_id/171325/~/aprenda-a-ejecutar-la-funci%C3%B3n-recuperaci%C3%B3n).
+[Selección del firmware](https://en-us.support.motorola.com/app/answers/detail/a_id/175777/~/software-fix---how-is-the-correct-firmware-selected-for-my-phone%3F).
+
 ## Reproducción
 
 Con el ZIP ya descargado, la extracción PAC se hace mediante zipfile de Python

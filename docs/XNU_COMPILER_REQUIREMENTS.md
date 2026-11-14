@@ -7,9 +7,10 @@ Revisión 2026-11-02: la API original C v2 se utiliza en el build experimental d
 privados de libkern, el compilador rechaza esas llamadas porque su contrato v2
 solo admite C. La compilación de `priority_queue.cpp` no prueba este requisito:
 esa unidad no instancia estos descriptores. El [diagnóstico conservado](../evidence/progress-review-20261102/blocks-runtime-exp.log)
-es un fallo de integración, sin objeto runtime ni ejecución. Corresponde ampliar
-el compilador con semántica C++ explícita y pruebas propias; no compilar el
-runtime como C, vaciar su metadata o aceptar la prueba C como validación C++.
+registra el fallo anterior de integración. La ampliación introduce una API C++
+específica para records triviales de layout estándar. La prueba independiente
+conserva las comprobaciones del allocator sobre los descriptores del runtime.
+[Integración y pruebas del runtime Blocks](XNU_BLOCKS_RUNTIME.md).
 
 La compilación incremental aprobada no acredita que Clang genérico pueda
 construir todas las unidades. El probe real de thread.c llega a tres builtins

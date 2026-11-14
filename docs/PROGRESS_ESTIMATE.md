@@ -18,7 +18,7 @@ hechos verificables. Un crédito parcial no equivale a una puerta superada.
 | Bloque hasta primer XNU físico | Peso | Crédito estimado | Estado comprobado |
 |---|---:|---:|---|
 | Infraestructura inicial: fuentes, toolchain C, MIG y pruebas | 10 | 10 | Clang reconstruido desde fuentes y CI limpia de 157 unidades; 70 headers MIG y 42 probes RPC. Este crédito cubre la infraestructura inicial, no todos los requisitos futuros del compilador |
-| Integración nativa y enlace | 25 | 10 | 159 unidades base experimentales y 26 RPC seleccionados; 185 objetos dejan 436 nombres sin proveedor y ninguna imagen. Falta cerrar y validar el ejecutable; el runtime Blocks requiere ampliar y probar la metadata C++ del compilador |
+| Integración nativa y enlace | 25 | 10 | 161 unidades experimentales con Blocks nativo y 26 RPC seleccionados. El enlace de 187 objetos deja 432 símbolos sin proveedor. Sigue pendiente la imagen ejecutable |
 | Entry, datos, carga y MMU | 20 | 7 | Entry original y productor candidato ejecutados en QEMU; ABI boot_args cotejado. Faltan colocar imagen, contexto retenido, propiedad de RAM y traducciones conectadas a XNU |
 | Bootstrap Mach operativo | 15 | 0 | Sin ejecución XNU: VM/allocators, primer hilo, transición de contexto y timer pendientes |
 | BSP e instrumentación física G20 | 20 | 0 | Sin payload AtlanticOS ejecutado ni IRQ, timer o logging físico propios comprobados |
@@ -81,13 +81,16 @@ provisional del bloque, sin declarar cerrada P1.
 
 CI del commit 1073f78 consultada el 2026-11-02: [host](https://github.com/h0nda1337/AtlanticOS/actions/runs/41495850965)
 y [carril XNU estándar](https://github.com/h0nda1337/AtlanticOS/actions/runs/41495851003)
-terminaron success. La [reconstrucción experimental limpia de 159 unidades](https://github.com/h0nda1337/AtlanticOS/actions/runs/41496031846)
-seguía in_progress al consultar; no se le atribuye un resultado futuro ni la
-prueba local del enlazador estático original. El carril estándar compila trece
-unidades base y no reproduce el núcleo experimental completo.
+terminaron success. La reconstrucción experimental limpia de 159 unidades
+también terminó success en 1073f78, según la revisión del 2026-11-13.
+[Reconstrucción experimental](https://github.com/h0nda1337/AtlanticOS/actions/runs/41496031846).
 
-Bloqueo de integración identificado en un probe posterior: el runtime nativo
-`libkern/libclosure/runtime.cpp` necesita descriptores kalloc de records C++.
-Nuestra API de layout v2 es explícitamente C y rechaza ese uso, como exige su
-contrato actual. No se han eliminado los descriptores ni añadido proveedores
-ficticios; la ampliación del compilador y su validación siguen pendientes.
+El probe de esa revisión identificó que `libkern/libclosure/runtime.cpp`
+necesita descriptores kalloc de records C++ y queda fuera del contrato C v2.
+
+La revisión del 2026-11-13 cerró ese requisito con la API C++ v1 y el runtime
+original. El enlace resuelve cuatro nombres adicionales y aún carece de imagen.
+En el G20 queda pendiente comprobar la vía de carga temporal. El U-Boot del
+mirror RETBR dirige `boot` a la partición y falta identificar el binario amxmx.
+Estos resultados mantienen abiertos los hitos y el crédito estimado.
+[Runtime Blocks](XNU_BLOCKS_RUNTIME.md) · [Análisis del mirror](STOCK_FIRMWARE_ANALYSIS.md).

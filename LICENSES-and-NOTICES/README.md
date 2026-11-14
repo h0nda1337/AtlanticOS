@@ -32,6 +32,13 @@ de vm_object.c, conservando sus avisos y cuerpos nativos. Los fixtures C/C++,
 auditor y adaptación del builder son originales MIT; los algoritmos de heap,
 atómicos y sincronización VM siguen siendo XNU, con su licencia original.
 
+La extensión de layouts C++ y su integración en el frontend de LLVM conservan
+Apache-2.0 WITH LLVM-exception. `libkern/libclosure/runtime.cpp` y
+`libclosuredata.c` se compilan desde el checkout oficial fijado. Sus archivos
+contienen copyright de Apple y el marcador `@APPLE_LLVM_LICENSE_HEADER@`.
+La evidencia incluye hashes y diagnósticos de esos objetos y fixtures propios.
+[Procedencia y reproducción de Blocks](../docs/XNU_BLOCKS_RUNTIME.md).
+
 XNU oficial fijado en dependencies.lock.json: fuente externa intacta, checkout
 ignorado, no incorporado en el paquete fuente AtlanticOS. Se conserva su
 APPLE_LICENSE íntegra junto a este archivo; los avisos por archivo siguen en

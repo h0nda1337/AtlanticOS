@@ -3,10 +3,10 @@
 Firmware de prearranque ARM64 propuesto, basado en un port auténtico y reducido
 de XNU. Primera placa: Motorola Moto G20 / Unisoc T700 (UMS512).
 
-**Estado 2026-11-02: auditoría Fase 0, prototipo host Fase 1 y port XNU
+**Estado 2026-11-13: auditoría Fase 0, prototipo host Fase 1 y port XNU
 incremental. Trece unidades reales de XNU compilan a objetos ARM64 con Clang
-estándar; 159 unidades de XNU y soporte original con el proveedor experimental explícito, incluidos
-VM residente/faults/objetos, hilos, tareas, locks, ledgers, SMR e IPC/importance.
+estándar; 161 unidades de XNU y soporte original con el proveedor experimental explícito, incluidos
+VM residente/faults/objetos, hilos, tareas, locks, ledgers, SMR, IPC/importance y Blocks.
 Se compilan además 42 archivos RPC generados por MIG como probes, con 70 headers
 coherentes; el configurador oficial selecciona 26 para el enlace de este perfil.
 Tres interfaces no contienen métodos; esos objetos no acreditan servicios.

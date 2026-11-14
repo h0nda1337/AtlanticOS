@@ -1,0 +1,36 @@
+AtlanticOS: select separately proved C++ layout metadata for native kalloc.
+No allocator algorithm, descriptor, check or native Blocks body is removed.
+
+diff --git a/osfmk/kern/kalloc.h b/osfmk/kern/kalloc.h
+--- a/osfmk/kern/kalloc.h
++++ b/osfmk/kern/kalloc.h
+@@ -802,6 +802,9 @@
+  * This is our own compiler API, not a declaration of private Apple builtins.
+  * Other builds preserve their original provider and all allocator checks.
+  */
++#if CONFIG_ATLANTIC_CPP_LAYOUT && !CONFIG_ATLANTIC_C_LAYOUT
++#error Atlantic C++ layout requires the explicit Atlantic C layout provider
++#endif
+ #if CONFIG_ATLANTIC_C_LAYOUT
+ #if !CONFIG_ATLANTIC_FIRMWARE || !ATLANTIC_ARM64_LAB
+ #error Atlantic C layout requires the AtlanticOS firmware laboratory profile
+@@ -809,9 +812,19 @@
+ #if !defined(__ATLANTIC_XNU_LAYOUT__) || __ATLANTIC_XNU_LAYOUT__ != 2
+ #error Atlantic C layout requires the tested AtlanticOS compiler API v2
+ #endif
++#if defined(__cplusplus) && CONFIG_ATLANTIC_CPP_LAYOUT
++/* Separate opt-in: the C v2 proof does not validate C++ object metadata. */
++#if !defined(__ATLANTIC_XNU_CPP_LAYOUT__) || __ATLANTIC_XNU_CPP_LAYOUT__ != 1
++#error Atlantic C++ layout requires the tested AtlanticOS C++ compiler API v1
++#endif
++#define KALLOC_LAYOUT_SUMMARY(type) __atlantic_cpp_layout_summary(type)
++#define KALLOC_LAYOUT_SIGNATURE(type) __atlantic_cpp_layout_signature(type)
++#define KALLOC_LAYOUT_COMPATIBLE(a, b) __atlantic_cpp_layout_compatible(a, b)
++#else
+ #define KALLOC_LAYOUT_SUMMARY(type) __atlantic_layout_summary(type)
+ #define KALLOC_LAYOUT_SIGNATURE(type) __atlantic_layout_signature(type)
+ #define KALLOC_LAYOUT_COMPATIBLE(a, b) __atlantic_layout_compatible(a, b)
++#endif
+ #else
+ #define KALLOC_LAYOUT_SUMMARY(type) __builtin_xnu_type_summary(type)
+ #define KALLOC_LAYOUT_SIGNATURE(type) __builtin_xnu_type_signature(type)

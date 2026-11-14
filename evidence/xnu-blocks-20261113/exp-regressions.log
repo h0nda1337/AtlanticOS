@@ -1,0 +1,36 @@
+{"compiled_rpc_units": 42, "failed_rpc_units": 0, "generation_failures": 0, "empty_interfaces": 3, "kernel_linked": false, "report": "/mnt/g/AtlanticOS/work/xnu-rpc-builds/b7dc79898a076854/report.json"}
+{"passed": 2, "cases": 2, "descriptors": 21, "required_subsystems": 14, "kobject_table_checked": true}
+{"object_count": 187, "link_exit_code": 1, "unsupported_static_option_diagnostic_found": false, "output_exists": false, "kernel_linked": false}
+{"passed": 15, "native_runtime_executed": false}
+{"host_model_records": 6000, "host_concurrent_attempts": 16000, "host_checks": 75362, "native_checks": 14}
+{"checks_passed": 21, "selected": true}
+{"passed": 13, "objects_selected_in_base": true, "generated_headers": 70, "xnu_executed": false}
+{"passed": 12, "objects_selected_in_base": true, "timers_executed": false}
+{"passed": 12, "objects_selected_in_base": true, "xnu_executed": false}
+{"host_cases": 79344, "sanitizers": true, "native_checks": 8, "objects_selected_in_base": true}
+{"passed": 8, "unselected_service_imports": 0, "xnu_executed": false}
+{"passed": 11, "pe_object_in_base": true, "bsp_implementation_provided": false}
+{"passed": 15, "native_sleh_audited": true}
+{"passed": 9, "scope": "NATIVE_SOURCE_PREPROCESSOR_SCOPE_AND_TARGET_PRINTF_ABI_ONLY_NOT_RUNTIME_EXECUTION"}
+{"passed": 3, "cases": 3, "pmap_object_checked": true, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-pmap-exp/report.json"}
+{"passed": 3, "cases": 3, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-pmap-scope-exp/report.json"}
+{"passed": 5, "cases": 5, "shared_fields_match": true, "task_objects_checked": 5, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-task-exp/report.json"}
+{"passed": 4, "cases": 4, "header_count": 70, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-mig-exp/report.json"}
+{"passed": 5, "scope": "NATIVE_KOBJECT_TABLE_PREPROCESSOR_SELECTION_ONLY_NOT_DISPATCH_OR_EXECUTION"}
+{"passed": 24, "new_native_units_selected": true, "xnu_executed": false}
+{"passed": 27, "native_units_unchanged": 6, "native_units_guarded": 1, "cache_executed": false}
+Traceback (most recent call last):
+  File "/mnt/g/AtlanticOS/tools/test_xnu_usage_semantics.py", line 116, in <module>
+    main()
+    ~~~~^^
+  File "/mnt/g/AtlanticOS/tools/test_xnu_usage_semantics.py", line 66, in main
+    run(name,[*target,*flags,'-S','-emit-llvm',str(fixture),'-o',str(ir)])
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/g/AtlanticOS/tools/test_xnu_usage_semantics.py", line 58, in run
+    raise RuntimeError(name+' failed: '+result.stderr[-2000:])
+RuntimeError: no-usage-control failed: In file included from /mnt/g/AtlanticOS/tests/xnu_port/usage_semantics.c:4:
+/mnt/g/AtlanticOS/work/xnu-lab-sources/d57ea0fd12721776/osfmk/kern/kalloc.h:806:2: error: Atlantic C++ layout requires the explicit Atlantic C layout provider
+  806 | #error Atlantic C++ layout requires the explicit Atlantic C layout provider
+      |  ^
+1 error generated.
+

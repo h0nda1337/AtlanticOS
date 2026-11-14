@@ -1,4 +1,4 @@
-"""Build the experimental C-layout compiler from a pinned LLVM archive.
+"""Build the experimental C and bounded C++ layout APIs from pinned LLVM.
 
 Linux development only; produces no firmware or phone image. Sources, build and
 download stay under work/. This tool never formats or mounts a filesystem.
@@ -51,7 +51,10 @@ def main():
         lock['patch_sha256'] != digest(patch)):
         ap.error('Compiler patch provenance mismatch')
     inputs = {p:digest(ROOT/p) for p in ['tools/build_atlantic_clang.py','compiler-port/patches.lock.json',
-              'compiler-port/ParseAtlanticLayout.inc','compiler-port/SemaAtlanticLayout.cpp']}
+              'compiler-port/ParseAtlanticLayout.inc','compiler-port/SemaAtlanticLayout.cpp',
+              'tools/test_atlantic_clang.py','tools/test_atlantic_cpp_layout.py',
+              'tests/clang_layout/positive.c','tests/clang_layout/negative.json',
+              'tests/clang_layout/positive.cpp','tests/clang_layout/negative_cpp.json']}
     archive = args.archive.resolve() if args.archive else cache/'llvm-source.tar.gz'
     if args.archive and not archive.is_file():
         ap.error('The supplied archive does not exist')
@@ -147,6 +150,8 @@ def main():
     compiler = build/'bin/clang'
     run('test-api',['python3',str(ROOT/'tools/test_atlantic_clang.py'),'--compiler',str(compiler),
                     '--output',str(cache/'tests')])
+    run('test-cpp-api',['python3',str(ROOT/'tools/test_atlantic_cpp_layout.py'),'--compiler',str(compiler),
+                        '--output',str(cache/'cpp-tests')])
     report = {'scope':'EXPERIMENTAL_HOST_COMPILER_ONLY_NOT_A_KERNEL_OR_HARDWARE_PORT','label':'HOST_TESTED',
               'upstream_commit':COMMIT,'archive_sha256':ARCHIVE_SHA256,'patch_sha256':lock['patch_sha256'],
               'inputs':inputs,'commands':commands,'compiler_sha256':digest(compiler),

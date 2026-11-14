@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 WITH LLVM-exception
 // Original AtlanticOS compiler extension, not an Apple builtin implementation.
-// The API emits the documented low-bit layout model needed by the C-only port.
+// C v2 and the separate bounded C++ v1 API use actual target representations.
 #include "clang/AST/ASTContext.h"
 #include "clang/AST/Attr.h"
 #include "clang/AST/Decl.h"
@@ -18,6 +18,7 @@ using namespace clang;
 namespace {
 class AtlanticLayout {
   ASTContext &Context;
+  bool AllowCXX;
   uint64_t TotalBits = 0;
   llvm::SmallVector<uint8_t, 64> Granules;
   std::string Failure;
@@ -99,6 +100,12 @@ class AtlanticLayout {
         Type->isIncompleteType() || Type->isSizelessType() ||
         Type->isFunctionType() || Type->isVoidType())
       return fail("requires a complete, fixed-size object type");
+    // Reject these before scalar usage overrides or sizeof: a member pointer
+    // is scalar in C++, and a reference's sizeof names the referred-to type.
+    if (Type->isReferenceType())
+      return fail("C++ references are unsupported");
+    if (Type->isMemberPointerType())
+      return fail("C++ member pointers are unsupported");
     uint64_t Width = Context.getTypeSize(Type);
     if (Offset > TotalBits || Width > TotalBits - Offset)
       return fail("nested object exceeds its target representation");
@@ -129,8 +136,18 @@ class AtlanticLayout {
       return mark(Offset, Width, 1);
     if (const auto *Record = Type->getAs<RecordType>()) {
       const RecordDecl *Decl = Record->getDecl()->getDefinition();
-      if (!Decl || isa<CXXRecordDecl>(Decl))
+      if (!Decl)
         return fail("only complete C records are supported");
+      if (const auto *CXX = dyn_cast<CXXRecordDecl>(Decl)) {
+        if (!AllowCXX)
+          return fail("only complete C records are supported");
+        if (CXX->isLambda())
+          return fail("C++ lambda records are unsupported");
+        if (CXX->getNumBases())
+          return fail("C++ base classes are unsupported");
+        if (!CXX->isStandardLayout() || !CXX->isTrivial())
+          return fail("C++ records require trivial standard layout");
+      }
       uint8_t RecordKind = 0;
       if (!usage(Decl, RecordKind))
         return false;
@@ -142,6 +159,8 @@ class AtlanticLayout {
         Last = Field;
       unsigned Index = 0;
       for (const FieldDecl *Field : Decl->fields()) {
+        if (AllowCXX && Field->hasAttr<NoUniqueAddressAttr>())
+          return fail("C++ no_unique_address fields are unsupported");
         uint64_t FieldOffset = Offset + Layout.getFieldOffset(Index++);
         uint8_t FieldKind = 0;
         if (!usage(Field, FieldKind))
@@ -177,9 +196,14 @@ class AtlanticLayout {
   }
 
 public:
-  explicit AtlanticLayout(ASTContext &Context) : Context(Context) {}
+  explicit AtlanticLayout(ASTContext &Context, bool AllowCXX = false)
+      : Context(Context), AllowCXX(AllowCXX) {}
 
   bool compute(QualType Type) {
+    if (Type->isReferenceType())
+      return fail("C++ references are unsupported");
+    if (Type->isMemberPointerType())
+      return fail("C++ member pointers are unsupported");
     if (Type->isDependentType() || Type->isVariablyModifiedType() ||
         Type->isIncompleteType() || Type->isSizelessType() ||
         Type->isFunctionType() || Type->isVoidType())
@@ -222,38 +246,57 @@ ExprResult Sema::ActOnAtlanticLayout(SourceLocation Loc, unsigned Operation,
     Diag(Loc, ID) << Message;
     return ExprError();
   };
+  const bool CXX = Operation == tok::kw___atlantic_cpp_layout_summary ||
+                   Operation == tok::kw___atlantic_cpp_layout_signature ||
+                   Operation == tok::kw___atlantic_cpp_layout_compatible;
   const auto &Target = Context.getTargetInfo();
-  if (getLangOpts().CPlusPlus || getLangOpts().ObjC ||
+  if (getLangOpts().CPlusPlus != CXX || getLangOpts().ObjC ||
       !Target.getTriple().isAArch64() || Target.isBigEndian() ||
       Target.getPointerWidth(LangAS::Default) != 64 || Target.getCharWidth() != 8 ||
       Target.getTriple().getArchName() == "arm64e")
-    return Error("requires C and little-endian, non-arm64e AArch64 LP64");
+    return Error(CXX ? "requires C++ and little-endian, non-arm64e AArch64 LP64"
+                     : "requires C and little-endian, non-arm64e AArch64 LP64");
   QualType Left = GetTypeFromParser(First);
-  if (Operation == tok::kw___atlantic_layout_compatible) {
+  auto Complete = [&](QualType Type) {
+    // Querying metadata requires the real specialization, like sizeof. A
+    // nondependent template-id can be incomplete until Sema instantiates it.
+    return !CXX || Type->isDependentType() ||
+           !(Type->isRecordType() || Type->isArrayType()) ||
+           isCompleteType(Loc, Type);
+  };
+  if (Operation == tok::kw___atlantic_layout_compatible ||
+      Operation == tok::kw___atlantic_cpp_layout_compatible) {
     QualType Right = GetTypeFromParser(Second);
     // void is not a layout wildcard. XNU's pointer macro tests void==void.
     if (Left->isVoidType() || Right->isVoidType())
       return ActOnIntegerConstant(Loc, Left->isVoidType() && Right->isVoidType());
+    if (!Complete(Left) || !Complete(Right))
+      return Error("requires a complete, fixed-size object type");
     // C type identity discards declaration annotations. Always compare the
     // computed layouts, including for annotated aliases of the same C type.
-    AtlanticLayout A(Context), B(Context);
+    AtlanticLayout A(Context, CXX), B(Context, CXX);
     if (!A.compute(Left))
       return Error(A.error());
     if (!B.compute(Right))
       return Error(B.error());
     return ActOnIntegerConstant(Loc, A.equivalent(B));
   }
-  AtlanticLayout Layout(Context);
+  if (!Complete(Left))
+    return Error("requires a complete, fixed-size object type");
+  AtlanticLayout Layout(Context, CXX);
   if (!Layout.compute(Left))
     return Error(Layout.error());
-  if (Operation == tok::kw___atlantic_layout_summary)
+  if (Operation == tok::kw___atlantic_layout_summary ||
+      Operation == tok::kw___atlantic_cpp_layout_summary)
     return IntegerLiteral::Create(Context, llvm::APInt(32, Layout.summary()),
                                   Context.UnsignedIntTy, Loc);
-  if (Operation != tok::kw___atlantic_layout_signature)
+  if (Operation != tok::kw___atlantic_layout_signature &&
+      Operation != tok::kw___atlantic_cpp_layout_signature)
     return Error("unknown layout operation");
   std::string Text = Layout.signature();
   QualType Array = Context.getConstantArrayType(
-      Context.CharTy, llvm::APInt(64, Text.size() + 1), nullptr,
+      CXX ? Context.getConstType(Context.CharTy) : Context.CharTy,
+      llvm::APInt(64, Text.size() + 1), nullptr,
       ArraySizeModifier::Normal, 0);
   return StringLiteral::Create(Context, Text, StringLiteralKind::Ordinary,
                                false, Array, Loc);

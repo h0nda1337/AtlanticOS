@@ -1,0 +1,22 @@
+{"compiled_rpc_units": 42, "failed_rpc_units": 0, "generation_failures": 0, "empty_interfaces": 3, "kernel_linked": false, "report": "/mnt/g/AtlanticOS/work/xnu-rpc-builds/a9d510f51881c4d1/report.json"}
+{"host_model_records": 6000, "host_concurrent_attempts": 16000, "host_checks": 86723, "native_checks": 16}
+{"checks_passed": 24, "selected": false}
+{"passed": 11, "objects_selected_in_base": false, "generated_headers": 70, "xnu_executed": false}
+{"passed": 10, "objects_selected_in_base": false, "timers_executed": false}
+{"passed": 14, "objects_selected_in_base": false, "xnu_executed": false}
+{"host_cases": 79344, "sanitizers": true, "native_checks": 9, "objects_selected_in_base": false}
+{"passed": 8, "unselected_service_imports": 0, "xnu_executed": false}
+{"passed": 12, "pe_object_in_base": false, "bsp_implementation_provided": false}
+{"passed": 15, "native_sleh_audited": false}
+{"passed": 9, "scope": "NATIVE_SOURCE_PREPROCESSOR_SCOPE_AND_TARGET_PRINTF_ABI_ONLY_NOT_RUNTIME_EXECUTION"}
+{"passed": 3, "cases": 3, "pmap_object_checked": false, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-pmap-std/report.json"}
+{"passed": 3, "cases": 3, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-pmap-scope-std/report.json"}
+{"passed": 5, "cases": 5, "shared_fields_match": true, "task_objects_checked": 0, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-task-std/report.json"}
+{"passed": 4, "cases": 4, "header_count": 70, "report": "/mnt/g/AtlanticOS/work/blocks-regression-20261113-mig-std/report.json"}
+{"passed": 5, "scope": "NATIVE_KOBJECT_TABLE_PREPROCESSOR_SELECTION_ONLY_NOT_DISPATCH_OR_EXECUTION"}
+{"passed": 26, "new_native_units_selected": false, "xnu_executed": false}
+{"passed": 2, "cases": 2, "descriptors": 21, "required_subsystems": 0, "kobject_table_checked": false}
+{"object_count": 39, "link_exit_code": 1, "unsupported_static_option_diagnostic_found": true, "output_exists": false, "kernel_linked": false}
+{"host_passed": true, "sanitizers": true, "native_abi_checked": true}
+{"host_passed": true, "cases": 10038, "directed_rejections": 30, "mutations": 10000, "record_bytes": 1152, "native_abi": true}
+{"host_passed": true, "cases": 45099, "truncations": 33024, "mutations": 12000, "rejections": 53, "files": 15, "lld_images": 15, "native_abi": true}

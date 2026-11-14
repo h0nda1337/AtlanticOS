@@ -1,0 +1,7 @@
+<ROOT>/tests/xnu_port/blocks_layout.c:19:8: error: static assertion failed due to requirement 'sizeof(struct Block_layout) == 24': Block_layout target ABI mismatch
+   19 | ASSERT(sizeof(struct Block_layout) == 24, "Block_layout target ABI mismatch");
+      |        ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<ROOT>/tests/xnu_port/blocks_layout.c:19:36: note: expression evaluates to '32 == 24'
+   19 | ASSERT(sizeof(struct Block_layout) == 24, "Block_layout target ABI mismatch");
+      |        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~
+1 error generated.

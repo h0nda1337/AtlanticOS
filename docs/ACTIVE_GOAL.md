@@ -215,3 +215,9 @@ estricto de 185 objetos registra 436 indefinidos y cero duplicados, sin imagen.
 Se recuperan 27 proveedores y no aparecen dependencias nuevas. No se ejecutan
 colas, contadores, VM o kernel. La CI limpia de 157 unidades terminó success
 en 5ce46c8; la aceptación física del G20 y el handoff siguen pendientes.
+
+El runtime Blocks nativo se integra con metadata C++ probada en el compilador.
+Las 161 unidades experimentales y 26 RPC seleccionados dejan 432 símbolos
+indefinidos en el enlace estricto, cuatro menos que el perfil anterior. El
+ensayo de imagen, el bootstrap Mach y el handoff físico continúan pendientes.
+[Pruebas y reproducción](XNU_BLOCKS_RUNTIME.md).

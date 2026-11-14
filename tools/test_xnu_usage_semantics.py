@@ -60,7 +60,8 @@ def main():
 
     for name, flags, expected in [('native-usage',[],
          {'ppnum_summary':2,'page_info_summary':8,'offset_summary':2,'slide_summary':4,'lock_ptr_summary':8}),
-        ('no-usage-control',['-UCONFIG_ATLANTIC_C_LAYOUT','-DCONFIG_ATLANTIC_C_LAYOUT=0'],
+         ('no-usage-control',['-UCONFIG_ATLANTIC_C_LAYOUT','-DCONFIG_ATLANTIC_C_LAYOUT=0',
+                              '-UCONFIG_ATLANTIC_CPP_LAYOUT'],
          {'ppnum_summary':4,'page_info_summary':4,'offset_summary':4,'slide_summary':4,'lock_ptr_summary':4})]:
         ir = out/(name+'.ll')
         run(name,[*target,*flags,'-S','-emit-llvm',str(fixture),'-o',str(ir)])
